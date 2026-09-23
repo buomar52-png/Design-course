@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تصميم المناهج التربوية باستخدام الذكاء الاصطناعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05090a; --bg2:#0a0f11; --surface:#121518; --surface2:#171b1f; --line:#232a2f;
+  --text:#f2f4f5; --muted:#9aa4aa; --faint:#5d676d;
+  --cyan:#19c3e6; --cyan-soft:rgba(25,195,230,.12);
+  --lime:#b3ee00; --lime-soft:rgba(179,238,0,.12);
+  --on-accent:#05090a;
+  --dot:rgba(255,255,255,.06);
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f5f7f7; --bg2:#eef2f2; --surface:#ffffff; --surface2:#f3f6f6; --line:#dde3e5;
+    --text:#0c1418; --muted:#4f5b61; --faint:#8a959a;
+    --cyan:#0786a3; --cyan-soft:rgba(7,134,163,.1);
+    --lime:#5b7d00; --lime-soft:rgba(91,125,0,.1);
+    --on-accent:#ffffff; --dot:rgba(0,0,0,.07); color-scheme:light;
+  }
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#05090a; --bg2:#0a0f11; --surface:#121518; --surface2:#171b1f; --line:#232a2f;
+  --text:#f2f4f5; --muted:#9aa4aa; --faint:#5d676d;
+  --cyan:#19c3e6; --cyan-soft:rgba(25,195,230,.12);
+  --lime:#b3ee00; --lime-soft:rgba(179,238,0,.12);
+  --on-accent:#05090a; --dot:rgba(255,255,255,.06); color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f7f7; --bg2:#eef2f2; --surface:#ffffff; --surface2:#f3f6f6; --line:#dde3e5;
+  --text:#0c1418; --muted:#4f5b61; --faint:#8a959a;
+  --cyan:#0786a3; --cyan-soft:rgba(7,134,163,.1);
+  --lime:#5b7d00; --lime-soft:rgba(91,125,0,.1);
+  --on-accent:#ffffff; --dot:rgba(0,0,0,.07); color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px)}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",system-ui,sans-serif;
+  font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:28px 28px;
+}
+img,svg{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+
+/* progress + nav */
+.progress{position:fixed;top:0;right:0;left:0;height:3px;z-index:60;padding-top:env(safe-area-inset-top,0px);pointer-events:none}
+.progress i{display:block;height:3px;width:0;background:linear-gradient(to left,var(--cyan),var(--lime));transition:width .1s linear}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:62px}
+.brand{font-weight:700;font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand b{width:10px;height:10px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px var(--lime-soft)}
+.links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+.links::-webkit-scrollbar{display:none}
+.links a{text-decoration:none;font-size:14px;color:var(--muted);padding:6px 12px;border-radius:999px;white-space:nowrap}
+.links a:hover,.links a.on{color:var(--text);background:var(--surface2)}
+.theme{border:1px solid var(--line);background:var(--surface);color:var(--text);width:38px;height:38px;border-radius:10px;cursor:pointer;display:grid;place-items:center;flex:none}
+
+/* hero */
+.hero{position:relative;padding:90px 0 40px;overflow:hidden}
+.hero .corner{position:absolute;width:46px;height:46px;border-color:var(--cyan);border-style:solid}
+.hero .c1{top:28px;left:20px;border-width:2px 0 0 2px}
+.hero .c2{bottom:10px;right:20px;border-width:0 2px 2px 0}
+.hero h1{font-size:clamp(40px,7.4vw,96px);line-height:1.12;font-weight:700;margin:0;letter-spacing:-.5px;text-align:center}
+.hero h1 .l2{display:block;background:linear-gradient(to left,var(--text) 30%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+.hero .sub{text-align:center;color:var(--muted);font-size:clamp(17px,2vw,21px);font-weight:300;margin:22px auto 0;max-width:36ch}
+.divider{display:flex;align-items:center;justify-content:center;gap:12px;margin:28px auto 0}
+.divider span{height:1.5px;width:110px;background:var(--cyan)}
+.divider i{width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+.by{text-align:center;margin-top:26px}
+.by small{display:block;color:var(--faint);font-size:13px}
+.by strong{color:var(--lime);font-size:20px}
+
+.road{margin:54px auto 0;max-width:1000px;position:relative}
+.road svg{width:100%;height:auto;display:block;overflow:visible}
+.road .path{fill:none;stroke:var(--cyan);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 2.6s cubic-bezier(.6,.1,.2,1) .4s forwards}
+.road .ghost{fill:none;stroke:var(--line);stroke-width:2.5;stroke-dasharray:2 8;stroke-linecap:round}
+.road .stop{opacity:0;animation:pop .5s ease forwards;cursor:pointer}
+.road .stop circle.o{fill:var(--bg);stroke:var(--cyan);stroke-width:2.5}
+.road .stop circle.i{fill:var(--cyan)}
+.road .stop.last circle.o{stroke:var(--lime)} .road .stop.last circle.i{fill:var(--lime)}
+.road .stop text{fill:var(--muted);font-size:15px;font-family:inherit;text-anchor:middle}
+.road .stop .yr{fill:var(--text);font-weight:600;font-size:17px}
+.road .stop.last .yr{fill:var(--lime)}
+.road .halo{fill:none;stroke:var(--lime);stroke-width:2;opacity:0;transform-origin:center;transform-box:fill-box;animation:halo 2.4s ease-out 3.2s infinite}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{to{opacity:1}}
+@keyframes halo{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(2.6)}}
+.cta{display:flex;justify-content:center;gap:12px;margin-top:36px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-family:inherit;color:var(--text)}
+.btn.primary{background:var(--lime);color:var(--on-accent);border-color:transparent}
+
+/* sections */
+section.blk{padding:84px 0;border-top:1px solid var(--line)}
+.head{display:flex;gap:18px;align-items:stretch;margin-bottom:40px}
+.head .bar{width:4px;border-radius:4px;background:var(--cyan);flex:none}
+.head h2{font-size:clamp(28px,4vw,44px);line-height:1.25;margin:0;font-weight:700}
+.head p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.axis-tag{display:inline-block;font-size:13px;font-weight:600;color:var(--cyan);margin-bottom:4px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
+.muted{color:var(--muted)}
+h3{font-size:22px;margin:0 0 8px;line-height:1.4}
+.ico{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:var(--cyan-soft);color:var(--cyan);flex:none}
+.ico.l{background:var(--lime-soft);color:var(--lime)}
+.ico svg{width:24px;height:24px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* journey */
+.stations{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-bottom:26px}
+.stations::before{content:"";position:absolute;top:21px;right:10%;left:10%;height:2px;background:var(--line)}
+.st{background:none;border:0;color:inherit;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 4px;position:relative}
+.st .d{width:44px;height:44px;border-radius:50%;background:var(--bg);border:2px solid var(--line);display:grid;place-items:center;font-weight:700;color:var(--muted);transition:.25s}
+.st small{color:var(--muted);font-size:13px;text-align:center;line-height:1.4}
+.st[aria-selected="true"] .d{border-color:var(--cyan);background:var(--cyan);color:var(--on-accent);box-shadow:0 0 0 6px var(--cyan-soft)}
+.st.last[aria-selected="true"] .d{border-color:var(--lime);background:var(--lime);box-shadow:0 0 0 6px var(--lime-soft)}
+.st[aria-selected="true"] small{color:var(--text)}
+.panel{display:grid;grid-template-columns:1.1fr 1fr;gap:0;overflow:hidden;padding:0}
+.panel .a{padding:34px;border-left:1px solid var(--line)}
+.panel .b{padding:34px;background:var(--surface2)}
+.panel .when{color:var(--cyan);font-weight:600}
+.panel.isLast .when{color:var(--lime)}
+.panel h3{font-size:30px;margin:4px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.chips li{padding:8px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--line);font-size:15px}
+.fade{animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:760px){
+  .stations{grid-template-columns:repeat(5,minmax(64px,1fr));overflow-x:auto}
+  .st small{font-size:11px}
+  .panel{grid-template-columns:1fr}.panel .a{border-left:0;border-bottom:1px solid var(--line)}
+}
+
+/* milestones */
+.miles{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)}
+.mile{padding:30px;border-left:1px solid var(--line);position:relative}
+.mile:last-child{border-left:0}
+.mile .k{display:inline-block;font-size:13px;font-weight:600;padding:4px 10px;border-radius:8px;background:var(--surface2);color:var(--muted);margin:14px 0 10px}
+.mile h3{color:var(--lime);margin-top:16px}
+@media (max-width:860px){.miles{grid-template-columns:1fr}.mile{border-left:0;border-bottom:1px solid var(--line)}.mile:last-child{border-bottom:0}}
+
+/* axes index */
+.axes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.axes a{display:flex;gap:18px;align-items:flex-start;padding:28px;background:var(--surface);text-decoration:none;height:100%;transition:background .2s}
+.axes a:hover{background:var(--surface2)}
+.axes .n{font-size:34px;font-weight:700;color:var(--lime);line-height:1;font-variant-numeric:tabular-nums}
+.axes b{display:block;font-size:18px;line-height:1.5;font-weight:600}
+.axes span{color:var(--muted);font-size:14px}
+@media (max-width:860px){.axes{grid-template-columns:1fr}}
+
+/* axis 1 */
+.big-q{font-size:clamp(20px,2.4vw,26px);font-weight:300;line-height:1.7;max-width:48ch;margin:0 0 22px}
+.pillars{display:flex;flex-wrap:wrap;gap:10px}
+.pill{padding:10px 18px;border-radius:12px;border:1px solid color-mix(in srgb,var(--lime) 35%,transparent);color:var(--lime);background:var(--lime-soft);font-weight:600}
+.qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
+.q{padding:18px;background:var(--surface2);border-radius:12px;border-right:3px solid var(--cyan)}
+.q b{color:var(--cyan);font-size:14px;display:block}
+.dash{border:1.5px dashed color-mix(in srgb,var(--lime) 60%,transparent);border-radius:14px;padding:26px;text-align:center;background:var(--lime-soft)}
+.dash h3{color:var(--lime);font-size:26px}
+.quote-box{margin-top:22px;border-right:3px solid var(--lime);padding:16px 20px;background:var(--surface2);border-radius:12px}
+.quote-box small{color:var(--lime);font-weight:600}
+.quote-box p{margin:6px 0 0;font-size:18px}
+.sub-h{font-size:20px;font-weight:600;margin:56px 0 18px;display:flex;align-items:center;gap:10px}
+.sub-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.row{display:flex;gap:16px;align-items:flex-start}
+.tag{display:inline-block;margin-top:16px;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;background:var(--cyan-soft);color:var(--cyan)}
+.tag.l{background:var(--lime-soft);color:var(--lime)}
+.src4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.src4 div{padding:16px;border-radius:12px;background:var(--surface2);display:flex;gap:10px;align-items:center;font-size:15px}
+.src4 svg{width:20px;height:20px;color:var(--cyan);flex:none}
+
+/* compare */
+.seg{display:inline-flex;padding:5px;background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:22px}
+.seg button{font-family:inherit;font-size:15px;font-weight:600;border:0;background:none;color:var(--muted);padding:10px 20px;border-radius:10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--text);color:var(--bg)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cmp .card{transition:opacity .3s,transform .3s,border-color .3s}
+.cmp .card.dim{opacity:.35;transform:scale(.98)}
+.cmp .card.hi{border-color:var(--cyan)}
+.cmp ul{margin:18px 0 0;padding:0;list-style:none}
+.cmp li{padding:14px 0;border-top:1px solid var(--line)}
+.cmp li b{display:block}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}}
+
+/* tree */
+.tree{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px 20px;overflow-x:auto}
+.tree-inner{min-width:720px}
+.node{display:inline-block;padding:10px 20px;border-radius:12px;font-weight:600;text-align:center}
+.root{background:var(--cyan);color:var(--on-accent);font-size:20px;padding:12px 32px;border-radius:999px}
+.t-top{text-align:center}
+.t-stem{width:2px;height:26px;background:var(--line);margin:0 auto}
+.t-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative;padding-top:26px}
+.t-row::before{content:"";position:absolute;top:0;right:16.6%;left:16.6%;height:2px;background:var(--line)}
+.branch{position:relative;text-align:center}
+.branch::before{content:"";position:absolute;top:-26px;left:50%;width:2px;height:26px;background:var(--line)}
+.branch .node{background:var(--surface2);border:1px solid var(--line);color:var(--text);font-size:17px}
+.leaves{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:6px}
+.leaves li{font-size:14px;color:var(--muted);padding:7px 10px;border-radius:8px;background:var(--bg2)}
+.leaves li.hl{color:var(--lime)}
+.cap{color:var(--lime);font-size:14px;margin-top:12px}
+.limits{border:1px solid color-mix(in srgb,var(--lime) 50%,transparent)}
+.limits ol{margin:12px 0 0;padding-inline-start:22px}
+.limits li::marker{color:var(--lime);font-weight:700}
+
+/* sources */
+.proverb{font-size:clamp(34px,6vw,70px);font-weight:700;line-height:1.2;text-align:center;margin:0;color:var(--cyan)}
+.proverb-wrap{padding:56px 24px;border-top:1px dashed var(--cyan);border-bottom:1px dashed var(--cyan);margin-bottom:32px;text-align:center}
+.proverb-wrap p{color:var(--muted);margin:14px 0 0}
+.site{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:16px 0;border-top:1px solid var(--line)}
+.site b{font-size:18px}
+
+/* design */
+.apps{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.apps div{padding:18px;background:var(--surface2);border-radius:12px;direction:ltr;text-align:right;font-weight:500}
+.specimen{margin-top:18px;padding:24px;border-radius:14px;background:var(--surface2)}
+.specimen .aa{font-size:60px;line-height:1;font-weight:700}
+.weights{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.weights span{font-size:20px}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.sw{height:88px;border-radius:12px;border:1px solid var(--line);cursor:pointer;display:flex;align-items:flex-end;padding:8px;font-family:inherit;font-size:12px;font-weight:600;direction:ltr}
+.contrast{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.contrast span{padding:10px 18px;border-radius:8px;font-weight:700;font-size:14px}
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:10px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;z-index:70}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* applied */
+.applied{display:grid;grid-template-columns:1fr 1.05fr;gap:24px;align-items:start}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:flex;flex-direction:column;gap:12px}
+.steps li{counter-increment:s;display:flex;gap:16px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.steps li::before{content:counter(s);flex:none;width:36px;height:36px;border-radius:10px;background:var(--cyan-soft);color:var(--cyan);display:grid;place-items:center;font-weight:700}
+.steps b{color:var(--lime);display:block;font-size:18px}
+.model{border:1px solid var(--cyan);background:linear-gradient(var(--surface),var(--surface)) padding-box;position:relative}
+.model .badge{display:inline-block;background:var(--cyan);color:var(--on-accent);padding:4px 14px;border-radius:8px;font-weight:700;font-size:14px}
+.model h3{font-size:30px;margin:14px 0 16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.model dl{margin:0}
+.model dt{color:var(--faint);font-size:14px;margin-top:14px}
+.model dd{margin:4px 0 0;padding-right:14px;border-right:3px solid var(--lime);font-size:18px}
+@media (max-width:860px){.applied{grid-template-columns:1fr}}
+
+/* tools */
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tool{padding:24px 20px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.tool h3{direction:ltr;text-align:right;font-size:21px;margin:14px 0 8px}
+.tool p{margin:0;color:var(--muted);font-size:15px;line-height:1.7}
+@media (max-width:1000px){.tools{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.tools{grid-template-columns:1fr}}
+
+/* summary */
+.summary-lead{text-align:center;padding:48px 28px;border-radius:22px;background:var(--surface);border:1px solid var(--line)}
+.summary-lead h3{color:var(--lime);font-size:clamp(26px,3.4vw,38px)}
+.summary-lead p{max-width:60ch;margin:10px auto 0;font-size:19px;color:var(--muted)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);margin-top:20px;gap:20px}
+.trio div{padding:26px;border-right:2px solid var(--line)}
+.trio svg{width:36px;height:36px;color:var(--cyan)}
+@media (max-width:860px){.trio{grid-template-columns:1fr}}
+footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.foot-line{height:3px;background:linear-gradient(to left,var(--cyan),var(--lime))}
+
+
+/* skywork + steps */
+.conds{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.conds .card h3{margin-top:18px}
+.conds .hl-c{color:var(--cyan);font-weight:700;direction:ltr;unicode-bidi:isolate}
+.conds .hl-l{color:var(--lime);font-weight:700;direction:ltr;unicode-bidi:isolate}
+.conds ul{margin:8px 0 0;padding-inline-start:20px}
+.conds .why{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--faint)}
+.ico.warn{background:var(--lime-soft);color:var(--lime);border:1px solid color-mix(in srgb,var(--lime) 50%,transparent)}
+.ico.bd{border:1px solid color-mix(in srgb,var(--cyan) 50%,transparent)}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.flow li{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:18px;min-height:190px}
+.flow .top{display:flex;justify-content:space-between;align-items:center}
+.flow .num{width:44px;height:44px;border-radius:50%;background:var(--lime-soft);color:var(--lime);display:grid;place-items:center;font-weight:700;font-size:18px}
+.flow .top svg{width:34px;height:34px;color:var(--cyan)}
+.flow b{font-size:20px;line-height:1.5}
+.flow-note{margin-top:24px;padding:20px 24px;border-radius:14px;background:var(--surface2);border-right:3px solid var(--lime);color:var(--muted)}
+@media (max-width:1000px){.flow{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:860px){.conds{grid-template-columns:1fr}}
+@media (max-width:520px){.flow{grid-template-columns:1fr}}
+
+
+/* font size control */
+.fsz{display:flex;border:1px solid var(--line);background:var(--surface);border-radius:10px;overflow:hidden;flex:none}
+.fsz button{width:38px;height:36px;border:0;background:none;color:var(--text);font-family:inherit;font-weight:700;cursor:pointer;line-height:1}
+.fsz button:hover{background:var(--surface2)}
+.fsz button:disabled{opacity:.35;cursor:default}
+.fsz button+button{border-right:1px solid var(--line)}
+.fsz .sm{font-size:13px}.fsz .lg{font-size:18px}
+.scale{zoom:var(--fs,1)}
+
+
+/* features */
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat{position:relative;text-align:center;padding:40px 28px 32px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.feat::before{content:"";position:absolute;top:0;right:0;left:0;height:4px;background:var(--cyan)}
+.feat.lime::before{background:var(--lime)}
+.feat .ring{width:88px;height:88px;margin:0 auto 22px;border-radius:50%;display:grid;place-items:center;background:var(--bg2);border:1px solid var(--line)}
+.feat .ring svg{width:38px;height:38px}
+.feat h3{font-size:24px}
+.feat p{color:var(--muted);margin:0 auto;max-width:30ch}
+.feat .act{margin-top:22px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--text);font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none}
+.feat .act:hover{border-color:var(--cyan)}
+.devices{display:flex;justify-content:center;align-items:flex-end;gap:10px;margin-top:22px;color:var(--faint)}
+.devices span{display:block;border:2px solid currentColor;border-radius:6px}
+@media (max-width:860px){.feats{grid-template-columns:1fr}}
+
+/* closing */
+.closing{position:relative;min-height:92vh;display:grid;place-items:center;text-align:center;overflow:hidden;border-top:1px solid var(--line);padding:100px 0;isolation:isolate}
+.closing::before{content:"";position:absolute;inset:0;z-index:-2;
+  background:radial-gradient(40% 45% at 30% 60%,color-mix(in srgb,var(--lime) 16%,transparent),transparent 70%),
+             radial-gradient(45% 50% at 72% 40%,color-mix(in srgb,var(--cyan) 18%,transparent),transparent 70%)}
+.star{position:absolute;inset:50% auto auto 50%;width:min(760px,130vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:-1;color:var(--line);animation:spin 120s linear infinite}
+.star .s2{color:color-mix(in srgb,var(--cyan) 30%,transparent)}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.closing .orn{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:34px}
+.closing .orn span{height:1.5px;width:70px;background:linear-gradient(to left,transparent,var(--cyan))}
+.closing .orn span:last-child{background:linear-gradient(to right,transparent,var(--lime))}
+.closing .orn svg{width:26px;height:26px;color:var(--lime)}
+.closing h2{margin:0;font-weight:700;line-height:1.35}
+.closing .l1{display:block;font-size:clamp(40px,8vw,104px);letter-spacing:-.5px}
+.closing .l2{display:block;font-size:clamp(24px,4.2vw,52px);font-weight:500;margin-top:14px;
+  background:linear-gradient(to left,var(--cyan),var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.1em}
+.closing .w{display:inline-block;opacity:0;transform:translateY(24px);filter:blur(8px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .9s ease}
+.closing.in .w{opacity:1;transform:none;filter:none}
+.closing .ayah{margin:38px auto 0;color:var(--muted);font-size:18px;opacity:0;transition:opacity 1.2s ease 2.4s}
+.closing .ayah b{color:var(--text);font-weight:600}
+.closing .sign{margin-top:46px;opacity:0;transition:opacity 1s ease 2.9s}
+.closing.in .ayah,.closing.in .sign{opacity:1}
+.closing .sign small{display:block;color:var(--faint);font-size:13px}
+.closing .sign strong{color:var(--lime);font-size:20px}
+
+@media (prefers-reduced-motion:reduce){
+  .closing .w,.closing .ayah,.closing .sign{opacity:1!important;transform:none!important;filter:none!important}
+  .star{animation:none!important}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .road .path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"><i id="prog"></i></div>
+
+<nav class="nav" aria-label="التنقل">
+  <div class="wrap">
+    <a href="#top" class="brand"><b></b>تصميم المناهج</a>
+    <div class="links" id="links">
+      <a href="#journey">الرحلة</a>
+      <a href="#axes">المحاور</a>
+      <a href="#topic">اختيار الموضوع</a>
+      <a href="#compare">الاختلافات</a>
+      <a href="#models">نماذج</a>
+      <a href="#sources">المصادر</a>
+      <a href="#design">التصميم</a>
+      <a href="#applied">التطبيق</a>
+      <a href="#ai">الذكاء الاصطناعي</a>
+      <a href="#summary">الخلاصة</a>
+      <a href="#skywork">شروط Skywork</a>
+      <a href="#steps">خطوات الموقع</a>
+      <a href="#features">مميزات الموقع</a>
+      <a href="#closing">الختام</a>
+    </div>
+    <div class="fsz" role="group" aria-label="حجم الخط">
+      <button class="lg" id="fsUp" aria-label="تكبير الخط" title="تكبير الخط">أ+</button>
+      <button class="sm" id="fsDown" aria-label="تصغير الخط" title="تصغير الخط">أ−</button>
+    </div>
+    <button class="theme" id="themeBtn" aria-label="تبديل الوضع الفاتح والداكن">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="hero scale" id="top">
+  <span class="corner c1"></span><span class="corner c2"></span>
+  <div class="wrap">
+    <h1>تصميم المناهج التربوية<span class="l2">باستخدام الذكاء الاصطناعي</span></h1>
+    <div class="divider"><span></span><i></i><span></span></div>
+    <p class="sub">دليل شامل في التخطيط، والهيكلة، والتصميم الرقمي</p>
+    <div class="by"><small>إعداد وتقديم</small><strong>أ. عبدالله حمدان</strong></div>
+
+    <div class="road" aria-label="رحلة من صيف ٢٠١٥ إلى سبتمبر ٢٠٢٦">
+      <svg viewBox="0 0 1000 170" role="img">
+        <path class="ghost" d="M950,110 C850,110 840,50 740,50 S620,105 520,105 S400,45 300,45 S160,85 60,85"/>
+        <path class="path" d="M950,110 C850,110 840,50 740,50 S620,105 520,105 S400,45 300,45 S160,85 60,85"/>
+        <g class="stop" data-i="0" style="animation-delay:.5s"><circle class="o" cx="950" cy="110" r="10"/><circle class="i" cx="950" cy="110" r="4"/><text class="yr" x="950" y="145">٢٠١٥</text><text x="950" y="164">البداية</text></g>
+        <g class="stop" data-i="1" style="animation-delay:1s"><circle class="o" cx="740" cy="50" r="10"/><circle class="i" cx="740" cy="50" r="4"/><text class="yr" x="740" y="22">٢٠٢٢</text><text x="740" y="84">منهج الربيع</text></g>
+        <g class="stop" data-i="2" style="animation-delay:1.6s"><circle class="o" cx="520" cy="105" r="10"/><circle class="i" cx="520" cy="105" r="4"/><text class="yr" x="520" y="140">٢٠٢٥</text><text x="520" y="159">سفرة قطر</text></g>
+        <g class="stop" data-i="3" style="animation-delay:2.1s"><circle class="o" cx="300" cy="45" r="10"/><circle class="i" cx="300" cy="45" r="4"/><text class="yr" x="300" y="17">صيف ٢٠٢٦</text><text x="300" y="79">منهج الصيف</text></g>
+        <g class="stop last" data-i="4" style="animation-delay:2.7s"><circle class="halo" cx="60" cy="85" r="10"/><circle class="o" cx="60" cy="85" r="11"/><circle class="i" cx="60" cy="85" r="5"/><text class="yr" x="60" y="122">اليوم</text><text x="60" y="141">٢٦ سبتمبر</text></g>
+      </svg>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="#axes">ابدأ الدورة</a>
+      <a class="btn" href="#journey">اقرأ قصة الرحلة</a>
+    </div>
+  </div>
+</header>
+
+<main class="scale">
+<!-- JOURNEY -->
+<section class="blk" id="journey">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><h2>رحلة تصميم المناهج</h2><p>خمس محطات لتطوّر تصميم المناهج، من صيف ٢٠١٥ حتى سبتمبر ٢٠٢٦. اختر محطة لترى ما تعلّمته فيها.</p></div></div>
+    <div class="stations" role="tablist" id="stations"></div>
+    <div class="card panel" id="panel" role="tabpanel"></div>
+
+    <h3 class="sub-h">محطات فارقة ساعدتني على الكتابة</h3>
+    <div class="miles">
+      <div class="mile">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z" fill="currentColor"/></svg></div>
+        <h3>برنامج الروّاد</h3><span class="k">فترة كورونا</span>
+        <p class="muted">التعرّف على كنز هائل من المحتوى، سواءً مقاطع فيديو أو كتب.</p>
+      </div>
+      <div class="mile">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg></div>
+        <h3>دخول البرامج العلمية</h3><span class="k">البناء المنهجي وصناعة المحاور</span>
+        <p class="muted">كيفية صناعة برنامج ثقافي متكامل.</p>
+      </div>
+      <div class="mile">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></div>
+        <h3>صناعة المحتوى</h3><span class="k">سلاسل قرآنية على انستقرام</span>
+        <p class="muted">كيفية صناعة محتوى مركّز وواضح ومختصر.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AXES -->
+<section class="blk" id="axes">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><h2>محاور الدورة</h2><p>تصميم المناهج التربوية للبرامج الشبابية، في ستة محاور متتابعة.</p></div></div>
+    <ol class="axes">
+      <li><a href="#topic"><span class="n">٠١</span><div><b>أسس اختيار الموضوع المناسب للمنهج التربوي</b></div></a></li>
+      <li><a href="#clarity"><span class="n">٠٢</span><div><b>كيفية تصميم منهج تربوي مختصر وشامل</b></div></a></li>
+      <li><a href="#compare"><span class="n">٠٣</span><div><b>الاختلافات بين المنهج الفصلي ومنهج الصيف والسفرات</b></div></a></li>
+      <li><a href="#models"><span class="n">٠٤</span><div><b>كيفية اختيار المواضيع الفرعية للمنهج</b></div></a></li>
+      <li><a href="#sources"><span class="n">٠٥</span><div><b>أهم المراجع والمصادر للتحضير التربوي</b></div></a></li>
+      <li><a href="#design"><span class="n">٠٦</span><div><b>مبادئ في تصميم المحتوى الرقمي التفاعلي</b></div></a></li>
+    </ol>
+  </div>
+</section>
+
+<!-- AXIS 1 -->
+<section class="blk" id="topic">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><span class="axis-tag">المحور الأول</span><h2>أسس اختيار الموضوع المناسب</h2></div></div>
+    <p class="big-q">القواعد الأساسية التي يجب اتباعها عند تحديد الموضوع التربوي، لضمان ملاءمته للفئة المستهدفة وأهداف البرنامج.</p>
+    <div class="pillars"><span class="pill">إيصال قيمة تربوية</span><span class="pill">الارتباط بالمرحلة</span><span class="pill">أثر حقيقي للطالب</span></div>
+
+    <h3 class="sub-h">التذكير بأهمية المنهج</h3>
+    <div class="grid2">
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></div>
+        <h3 style="margin-top:16px">صلب العمل التربوي</h3>
+        <p class="muted">المنهج ليس مجرد نسخ ولصق، بل هو الركيزة الأساسية والجوهر الحقيقي الذي يقوم عليه نجاح أي برنامج تربوي.</p>
+        <span class="tag">الأساس المتين</span>
+      </div>
+      <div class="card">
+        <div class="ico l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 2 6 5"/></svg></div>
+        <h3 style="margin-top:16px">شمولية التطبيق</h3>
+        <p class="muted">لا يقتصر المنهج على الدروس وجلسات المجموعة، وإنما روح تسري في تفاصيل البرنامج، يتشبّع منها المعلم والطالب طوال الوقت.</p>
+        <span class="tag l">تجربة متكاملة</span>
+      </div>
+    </div>
+
+    <h3 class="sub-h">معرفة موقع الموضوع والاستفادة من المناهج</h3>
+    <div class="grid2">
+      <div class="card">
+        <div class="row"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg></div><div><h3>موقع الموضوع من خارطة الإصلاح</h3><p class="muted" style="margin:0">اسأل هذه الأسئلة الأربعة قبل أن تبدأ.</p></div></div>
+        <div class="qgrid">
+          <div class="q"><b>الشمولية</b>هل هو موضوع يهمّ المسلم عمومًا؟</div>
+          <div class="q"><b>الخصوصية</b>هل يخصّ المرحلة التربوية خصوصًا؟</div>
+          <div class="q"><b>الواقعية</b>هل هو سلوك منتشر في طلاب الفرع؟</div>
+          <div class="q"><b>المعاصرة</b>هل هو حدث حالي كأحداث غزة؟</div>
+        </div>
+        <p class="muted" style="font-size:15px;margin:18px 0 0">تحديد موقع الموضوع يساعد في توجيه الخطاب التربوي بدقة وفاعلية.</p>
+      </div>
+      <div class="card">
+        <div class="dash">
+          <h3>استفد ولا تستنسخ</h3>
+          <p class="muted" style="margin:0">استفد من المناهج الجاهزة لتطوير محتواك الخاص، وتجنّب الاستنساخ الأعمى الذي قد لا يناسب احتياج طلابك.</p>
+        </div>
+        <div class="quote-box"><p style="font-size:17px;margin:0">المنهج أو المحتوى الجاهز مرجعٌ وليس قيدًا؛ تستلهم منه الأفكار، وتستفيد من المتخصصين في المجال.</p></div>
+      </div>
+    </div>
+
+    <h3 class="sub-h" id="clarity">وضوح الأفكار والابتعاد عن الاستطراد</h3>
+    <div class="grid2">
+      <div class="card">
+        <h3>تسلسل الأفكار والوسائل البصرية</h3>
+        <p class="muted">الحرص على تسلسل الأفكار ووضوحها، مع توظيف الأشكال التوضيحية وتصاميم الإنفوجرافيك البسيطة لتعزيز الفهم السريع.</p>
+        <span class="tag">عناصر بصرية مبسّطة</span>
+      </div>
+      <div class="card">
+        <h3>التركيز والفائدة المباشرة</h3>
+        <p class="muted">الابتعاد التام عن الاستطراد والحشو الزائد، فالمشرف يبحث دائمًا عن المعلومة المركّزة أو الفائدة التربوية المباشرة.</p>
+        <span class="tag l">تجنّب الحشو والاستطراد</span>
+      </div>
+    </div>
+
+    <h3 class="sub-h">الجانب التطبيقي والمصادر الإضافية</h3>
+    <div class="grid2">
+      <div class="card">
+        <h3>التركيز على الجانب التطبيقي</h3>
+        <p class="muted">لا بدّ أن يلامس المنهج حياة الطالب اليومية من خلال طرح أسئلة واقعية تحاكي المواقف التي يمرّ بها.</p>
+        <div class="quote-box"><small>نموذج تساؤل تطبيقي</small><p>«ماذا أفعل إذا أذّن المؤذن لصلاة المغرب وأنا مع أصدقائي في الملعب؟ علمًا أن اللعب سيمتد بعد العشاء.»</p></div>
+      </div>
+      <div class="card">
+        <h3>تزويد المنهج بمصادر إضافية</h3>
+        <p class="muted">إثراء المحتوى التربوي بمواد مساندة تعمّق الفهم وتفتح آفاقًا جديدة للتعلّم الذاتي.</p>
+        <div class="src4">
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>بودكاستات تربوية</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg>مقتطفات من كتب</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg>مقالات ومواقع</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg>محاضرات مرئية</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section class="blk" id="compare">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><span class="axis-tag">المحور الثالث</span><h2>الاختلافات بين المناهج التربوية</h2><p>اختر نوع البرنامج الذي تحضّر له.</p></div></div>
+    <div class="seg" role="group" aria-label="نوع المنهج">
+      <button aria-pressed="false" data-k="all">الاثنان معًا</button>
+      <button aria-pressed="false" data-k="trip">الربيعي والسفرات</button>
+      <button aria-pressed="false" data-k="term">منهج الفصل</button>
+    </div>
+    <div class="cmp">
+      <div class="card" data-c="trip">
+        <div class="row"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></div><h3 style="margin-top:8px">منهج البرامج الربيعية أو السفرات</h3></div>
+        <ul>
+          <li><b>تركيز أكثر</b><span class="muted">يتّسم بتركيز عالٍ على أهداف محددة خلال فترة زمنية ممتدة.</span></li>
+          <li><b>تنوّع المحتوى</b><span class="muted">الحرص على تنوّع المحتوى بحيث يتناسب مع جلسات المجموعة والخواطر التربوية.</span></li>
+        </ul>
+      </div>
+      <div class="card" data-c="term">
+        <div class="row"><div class="ico l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16M6 19l6-12 6 12M12 7V4"/></svg></div><h3 style="margin-top:8px">منهج الفصل</h3></div>
+        <ul>
+          <li><b>تنوّع أكثر</b><span class="muted">من خلال الدروس التي تكون في أكثر من موضوع.</span></li>
+          <li><b>الشمولية والامتداد</b><span class="muted">مواضيع أعمّ وأشمل، وبالإمكان التركيز على موضوع واحد طويل وعميق.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section class="blk" id="models">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><span class="axis-tag">المحور الرابع</span><h2>نماذج عملية لاختيار المواضيع الفرعية</h2></div></div>
+    <div class="grid3">
+      <div class="card"><h3>الصلاة</h3><p class="muted" style="margin:0">أهمية الصلاة ومركزيتها في حياة المسلم، والأجور المترتبة على الصلاة، وفضل النوافل.</p></div>
+      <div class="card"><h3>السنة النبوية</h3><p class="muted" style="margin:0">أحاديث معيّنة مختارة، مثل: «اتق الله حيثما كنت»، لتعزيز المراقبة الذاتية.</p></div>
+      <div class="card"><h3>القرآن الكريم</h3><p class="muted" style="margin:0">واجب المسلم تجاه القرآن: التلاوة، والتدبّر، والفهم، والعمل.</p></div>
+    </div>
+
+    <h3 class="sub-h">نموذج: أهداف المسلم</h3>
+    <div class="tree">
+      <div class="tree-inner">
+        <div class="t-top"><span class="node root">أهداف المسلم</span></div>
+        <div class="t-stem"></div>
+        <div class="t-row">
+          <div class="branch"><span class="node">إصلاح الدين</span>
+            <ul class="leaves"><li>إصلاح القلب من كل الأمراض</li><li>تخليته من المعاصي، وتحليته بالطاعات</li><li>بالإخلاص لله والمتابعة لرسوله ﷺ</li><li class="hl">التمسك بالكتاب والسنة</li></ul></div>
+          <div class="branch"><span class="node">إصلاح الدنيا</span>
+            <ul class="leaves"><li>إصلاح الدين</li><li>إصلاح الأسرة</li><li>إصلاح المجتمع</li><li>إصلاح التعليم</li><li>إصلاح الحياة</li></ul></div>
+          <div class="branch"><span class="node">إصلاح الآخرة</span>
+            <ul class="leaves"><li>التوفيق لفعل الطاعات</li><li>المداومة والثبات</li><li>التوفيق لحسن الخاتمة</li></ul>
+            <div class="cap">صلاح الآخرة يشتمل على ثلاثة أركان</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="muted" style="font-size:14px;margin:10px 0 24px">النموذج للأستاذ عبدالعزيز المدفعي، أُعيد رسمه هنا.</p>
+
+    <div class="card limits">
+      <h3>محددات التنفيذ</h3>
+      <ol>
+        <li><b>نوع المنهج:</b> <span class="muted">تحديد ما إذا كان فصليًا أو لبرنامج قصير.</span></li>
+        <li><b>الوقت المتاح:</b> <span class="muted">ملاءمة المحتوى للفترة الزمنية المخصصة.</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section class="blk" id="sources">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><span class="axis-tag">المحور الخامس</span><h2>أهم المصادر والمراجع للتحضير</h2></div></div>
+    <div class="proverb-wrap">
+      <p class="proverb">«فاقد الشيء لا يعطيه»</p>
+      <p>القراءة المستمرة والمشاركة الفعّالة في البرامج العلمية هي الركيزة الأساسية لتمكين المحضّر من بناء محتوى تربوي قوي ومؤثر يواكب الاحتياجات المتجددة.</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>المقالات والمواقع المتخصصة</h3>
+        <p class="muted">الاستفادة من المواقع الموثوقة كمصدر أساسي للمحتوى الشرعي والتربوي.</p>
+        <div class="site"><b>إسلام ويب</b><span class="muted">للبحث عن المقالات في المواضيع المختلفة</span></div>
+        <div class="site"><b>الدرر السنية</b><span class="muted">للتأكد من صحة الأحاديث، وكذلك المقالات</span></div>
+      </div>
+      <div class="card">
+        <h3>السلاسل التربوية المتكاملة</h3>
+        <p class="muted" style="margin-bottom:0">توظيف السلاسل العلمية والتربوية الجاهزة لبناء هيكل المنهج، والاستفادة من المحتوى المرئي والمسموع لتعزيز الجانب التفاعلي.</p>
+        <div class="quote-box"><small>مثال تطبيقي</small><p>سلسلة «سويّة المؤمن» للشيخ أحمد السيد، كنموذج للمحتوى التربوي المتسلسل.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN -->
+<section class="blk" id="design">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><span class="axis-tag">المحور السادس</span><h2>مبادئ في تصميم المناهج التفاعلية</h2></div></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>استخدام التطبيقات المناسبة</h3>
+        <div class="apps"><div>Microsoft Word</div><div>Microsoft PowerPoint</div><div>Pages</div><div>Keynote · Canva</div></div>
+      </div>
+      <div class="card">
+        <h3>استخدام الخطوط المناسبة</h3>
+        <p class="muted" style="margin:0">يوفّر Google Fonts مجموعة واسعة من الخطوط الجميلة والعصرية، مثل الخط المستخدم في هذا الموقع.</p>
+        <div class="specimen">
+          <div class="aa">أبجد</div>
+          <div class="muted" style="direction:ltr;text-align:right;margin-top:6px">IBM Plex Sans Arabic</div>
+          <div class="weights">
+            <span style="font-weight:200">المنهج روح البرنامج — رفيع</span>
+            <span style="font-weight:400">المنهج روح البرنامج — عادي</span>
+            <span style="font-weight:600">المنهج روح البرنامج — متوسط</span>
+            <span style="font-weight:700">المنهج روح البرنامج — عريض</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>استخدام الألوان المناسبة</h3>
+        <p class="muted" style="margin:0">اختيار لوحة ألوان متناسقة أساسيٌّ لجمالية المنهج وجاذبيته. يُنصح بالأدوات المتخصصة مثل <b style="color:var(--lime)">Coolors</b>. هذه لوحة الدورة، اضغط أي لون لنسخه:</p>
+        <div class="swatches">
+          <button class="sw" style="background:#05090a;color:#f2f4f5" data-hex="#05090A">#05090A</button>
+          <button class="sw" style="background:#121518;color:#f2f4f5" data-hex="#121518">#121518</button>
+          <button class="sw" style="background:#19c3e6;color:#05090a" data-hex="#19C3E6">#19C3E6</button>
+          <button class="sw" style="background:#b3ee00;color:#05090a" data-hex="#B3EE00">#B3EE00</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>استخدام التباين البصري</h3>
+        <p class="muted" style="margin:0">التباين هو المفتاح لسهولة القراءة: فرق واضح بين لون الخلفية ولون النص، وبين أحجام الخطوط المختلفة.</p>
+        <div class="contrast"><span style="background:#f2f4f5;color:#05090a">عنوان فرعي ١</span><span style="background:#19c3e6;color:#05090a">نص فرعي ٢</span><span style="background:#b3ee00;color:#05090a">نص فرعي ٣</span></div>
+        <p class="muted" style="font-size:14px;margin:14px 0 0">التباين في الألوان والخطوط يسهّل على القارئ الوصول للأفكار.</p>
+      </div>
+      <div class="card">
+        <h3>استخدام الروابط (Hyperlink)</h3>
+        <p class="muted">تفعيل الارتباط التشعبي للانتقال السلس بين الصفحات الرئيسية للمنهج، مما يسهّل على المشرف الوصول السريع للشرائح أو الروابط. جرّبه الآن: <a href="#axes" style="color:var(--cyan)">عُد إلى المحاور</a>.</p>
+        <span class="tag">تجربة تصفّح أسهل للمناهج الطويلة</span>
+      </div>
+      <div class="card">
+        <h3>التصدير بصيغة PDF</h3>
+        <p class="muted">تصدير العمل النهائي بصيغة PDF يضمن ثبات التنسيق البصري، فلا تتغير الخطوط أو توزيع العناصر عند فتحه على أجهزة مختلفة.</p>
+        <span class="tag l">الحفاظ على جودة التصميم</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLIED -->
+<section class="blk" id="applied">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><h2>نموذج تطبيقي</h2><p>المحاور كلها في منهج واحد، من الفكرة إلى الملف النهائي.</p></div></div>
+    <div class="applied">
+      <ol class="steps">
+        <li><div><b>تحديد الهدف المركزي</b><span class="muted">ربط الموضوع بخارطة الإصلاح واحتياجات الطلاب الحالية.</span></div></li>
+        <li><div><b>هيكلة المحتوى</b><span class="muted">تسلسل الأفكار والابتعاد عن الاستطراد لضمان الفائدة المباشرة.</span></div></li>
+        <li><div><b>الإسقاط العملي</b><span class="muted">تحويل المفاهيم إلى أسئلة واقعية تمسّ حياة الطالب اليومية.</span></div></li>
+        <li><div><b>الإخراج الرقمي</b><span class="muted">استخدام الخطوط المناسبة والتصدير بصيغة PDF ثابتة.</span></div></li>
+      </ol>
+      <div class="card model">
+        <span class="badge">نموذج عملي متكامل</span>
+        <h3>منهج: الصلاة ومركزيتها</h3>
+        <dl>
+          <dt>نوع المنهج والوقت</dt><dd>برنامج ربيعي مكثّف (٣ أيام)</dd>
+          <dt>المحتوى الأساسي</dt><dd>وجوب الصلاة وفضلها</dd>
+          <dt>الجانب التطبيقي</dt><dd>تحدٍّ: «الصلاة مع الأصدقاء في الملعب وقت المغرب»</dd>
+          <dt>المصادر الإثرائية</dt><dd>محاضرة: «ماذا أضاع من ضيّع الصلاة» — د. خالد السبت</dd>
+        </dl>
+        <p class="muted" style="font-size:14px;margin:20px 0 0">طُبّقت في هذا النموذج معايير الاختصار والشمولية ووضوح الأفكار.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="blk" id="ai">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><h2>أهم تطبيقات الذكاء الاصطناعي لتصميم المناهج</h2><p>توظيف التقنيات الحديثة في البحث والتلخيص وهيكلة المحتوى، لجودة وسرعة أكبر في الإنتاج التربوي.</p></div></div>
+    <div class="tools">
+      <div class="tool"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13v2M15 13v2"/></svg></div><h3>ChatGPT</h3><p>البحث والتلخيص، وتوليد أفكار للكتابة والصور</p></div>
+      <div class="tool"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c0 5.5 4.5 10 10 10-5.5 0-10 4.5-10 10 0-5.5-4.5-10-10-10 5.5 0 10-4.5 10-10z"/></svg></div><h3>Gemini</h3><p>تلخيص مقاطع يوتيوب</p></div>
+      <div class="tool"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></svg></div><h3>Skywork</h3><p>تصميم وهيكلة المنهج، وبناء العروض التقديمية</p></div>
+      <div class="tool"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6v18h6M14 3v4h4v4"/><path d="m14 21 1-3 5-5 2 2-5 5z"/></svg></div><h3>Word · Docs</h3><p>تحرير النصوص وتنسيقها</p></div>
+      <div class="tool"><div class="ico l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 20 12-12M14 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1zM19 11l.6 1.4L21 13l-1.4.6L19 15l-.6-1.4L17 13l1.4-.6z"/></svg></div><h3>Canva</h3><p>التعديل على التصميم، والإخراج البصري النهائي</p></div>
+      <div class="tool"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></div><h3>Claude</h3><p>لتحويل المنهج إلى موقع تفاعلي احترافي، والربط بمنصة «تراث» للمصادر الموثوقة</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section class="blk" id="summary">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><h2>خلاصة تصميم المناهج التربوية</h2><p>العمل الطلابي والشبابي</p></div></div>
+    <div class="summary-lead">
+      <h3>نحو عمل تربوي طلابي متميّز</h3>
+      <p>تصميم المنهج التربوي ليس مجرد إعداد دروس، بل هو رسم خارطة طريق متكاملة تتشبّع منها روح البرنامج، وتلامس واقع الطالب واحتياجاته.</p>
+    </div>
+    <div class="trio">
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg><h3 style="margin-top:12px">الرؤية والهدف</h3><p class="muted" style="margin:0">المنهج صلب العمل التربوي، ويجب أن يكون مرتبطًا بخارطة الإصلاح واحتياجات المرحلة العمرية للطلاب.</p></div>
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h12a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M4 16a4 4 0 0 1 4-4h12"/></svg><h3 style="margin-top:12px">المنهجية العلمية</h3><p class="muted" style="margin:0">التوازن بين الشمول والاختصار، والتركيز على الجانب التطبيقي والواقعي بعيدًا عن الاستطراد المملّ.</p></div>
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><h3 style="margin-top:12px">الأدوات الرقمية</h3><p class="muted" style="margin:0">توظيف التقنية الحديثة والتصميم التفاعلي لتعزيز وصول المعلومة وضمان ثبات الأثر التربوي.</p></div>
+    </div>
+  </div>
+</section>
+<!-- SKYWORK -->
+<section class="blk" id="skywork">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><h2>أهم الشروط في التصميم باستخدام Skywork</h2></div></div>
+    <div class="conds">
+      <div class="card">
+        <div class="ico bd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 20 12 4l7 16M8 14h8"/></svg></div>
+        <h3>اختيار الخطوط</h3>
+        <p class="muted" style="margin:0">يجب استخدام خطوط محددة لضمان الهوية البصرية:</p>
+        <ul class="muted"><li>خط <span class="hl-c">IBM Plex Sans Arabic</span></li><li>أو خط <span class="hl-c">Tajawal</span></li></ul>
+      </div>
+      <div class="card">
+        <div class="ico warn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 16.5v.5" stroke="var(--surface)" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        <h3>تجنّب النماذج المقيّدة</h3>
+        <p class="muted" style="margin:0">لا تستخدم نموذج <span class="hl-l">Nano Banana</span>.</p>
+        <p class="why">السبب: يصعب من خلاله التعديل على منصة Canva بعد الانتهاء.</p>
+      </div>
+      <div class="card">
+        <div class="ico bd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 7 5 5-5 5M13 18h6"/></svg></div>
+        <h3>صياغة الأوامر</h3>
+        <p class="muted" style="margin:0">للحصول على أفضل النتائج في التصميم التعليمي: اكتب <b style="color:var(--cyan)">«أمرًا» بسيطًا وواضحًا</b> ومباشرًا للمنصة.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="blk" id="steps">
+  <div class="wrap">
+    <div class="head"><span class="bar"></span><div><h2>الخطوات الرئيسية لصناعة موقع تفاعلي للمنهج</h2></div></div>
+    <ol class="flow">
+      <li><div class="top"><span class="num">٠١</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg></div><b>كتابة المحتوى والبحث في المصادر</b></li>
+      <li><div class="top"><span class="num">٠٢</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 20 12-12M14 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1zM19 11l.6 1.4L21 13l-1.4.6L19 15l-.6-1.4L17 13l1.4-.6z"/></svg></div><b>التصميم عن طريق <span dir="ltr">Skywork</span></b></li>
+      <li><div class="top"><span class="num">٠٣</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4l6 6L9 21H3v-6z"/><path d="m11 7 6 6"/></svg></div><b>التعديل عن طريق <span dir="ltr">Canva</span> أو <span dir="ltr">PowerPoint</span></b></li>
+      <li><div class="top"><span class="num">٠٤</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 18a5 5 0 0 1-.5-10A6 6 0 0 1 18 9a4.5 4.5 0 0 1-1 9z"/><path d="M12 16v-5M9.5 13.5 12 11l2.5 2.5"/></svg></div><b>وضع الملف النهائي في <span dir="ltr">Claude</span></b></li>
+    </ol>
+    <p class="flow-note">المراحل الأربع لبناء الموقع التفاعلي: بدءًا من البحث والمحتوى، مرورًا بالتصميم والتعديل، وصولًا إلى حفظ الملف النهائي في Claude، لضمان تدفّق عمل احترافي ومتكامل.</p>
+  </div>
+</section>
+<!-- FEATURES -->
+<section class="blk" id="features">
+  <div class="wrap">
+    <div class="head"><span class="bar" style="background:linear-gradient(var(--cyan),var(--lime))"></span><div><span class="axis-tag">المنصات الرقمية التعليمية</span><h2>مميزات تصميم المنهج على موقع</h2></div></div>
+    <div class="feats">
+      <div class="feat">
+        <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="url(#gFeat)" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+        <h3>سهولة التصفح</h3>
+        <p>تجربة سلسة ومتكاملة عبر كافة الأجهزة، سواء كنت تستخدم الهاتف المحمول، أو الآيباد، أو اللابتوب بمرونة تامة.</p>
+        <div class="devices" aria-hidden="true"><span style="width:16px;height:28px"></span><span style="width:32px;height:42px"></span><span style="width:62px;height:40px;border-bottom-width:5px"></span></div>
+      </div>
+      <div class="feat lime">
+        <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="url(#gFeat)" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></div>
+        <h3>سهولة المشاركة</h3>
+        <p>إمكانية مشاركة المحتوى التعليمي مع الآخرين بضغطة زر، مما يعزز التفاعل والتعاون بين المعلمين والطلاب.</p>
+        <button class="act" id="shareBtn">جرّبها: شارك هذا الموقع</button>
+      </div>
+      <div class="feat">
+        <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="url(#gFeat)" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></div>
+        <h3>ميزة الربط الرقمي</h3>
+        <p>كفاءة عالية في ربط المصادر والمحتويات التعليمية ببعضها عبر الروابط (links)، لخلق بيئة تعلّم مترابطة.</p>
+        <a class="act" href="#axes">جرّبها: انتقل إلى المحاور</a>
+      </div>
+    </div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gFeat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--cyan)"/><stop offset="1" style="stop-color:var(--lime)"/></linearGradient></defs></svg>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing" id="closing">
+  <svg class="star" viewBox="0 0 400 400" aria-hidden="true" fill="none" stroke="currentColor">
+    <g stroke-width="1"><rect x="80" y="80" width="240" height="240"/><rect x="80" y="80" width="240" height="240" transform="rotate(45 200 200)"/>
+    <circle cx="200" cy="200" r="170"/><circle cx="200" cy="200" r="190" stroke-dasharray="2 6"/></g>
+    <g class="s2" stroke-width="1.2"><rect x="130" y="130" width="140" height="140"/><rect x="130" y="130" width="140" height="140" transform="rotate(45 200 200)"/><circle cx="200" cy="200" r="60"/></g>
+  </svg>
+  <div class="wrap">
+    <div class="orn" aria-hidden="true"><span></span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 5.6L20 6l-1.6 5.6L24 12l-5.6 2.4L20 18l-5.6-1.6L12 22l-2.4-5.6L4 18l1.6-3.6L0 12l5.6-2.4L4 6l5.6 1.6z"/></svg><span></span></div>
+    <h2 aria-label="أحسن في دعوتك.. وتذكر بأن الله يحب المحسنين">
+      <span class="l1" aria-hidden="true"><span class="w" style="transition-delay:.1s">أحسِن</span> <span class="w" style="transition-delay:.35s">في</span> <span class="w" style="transition-delay:.6s">دعوتك..</span></span>
+      <span class="l2" aria-hidden="true"><span class="w" style="transition-delay:1.1s">وتذكّر</span> <span class="w" style="transition-delay:1.3s">بأن</span> <span class="w" style="transition-delay:1.5s">الله</span> <span class="w" style="transition-delay:1.7s">يحب</span> <span class="w" style="transition-delay:1.9s">المحسنين</span></span>
+    </h2>
+    <p class="ayah">﴿ وَأَحْسِنُوا ۛ إِنَّ اللَّهَ يُحِبُّ الْمُحْسِنِينَ ﴾ <b>[البقرة: ١٩٥]</b></p>
+    <div class="sign"><small>أ. عبدالله حمدان</small><strong>تصميم المناهج التربوية</strong></div>
+  </div>
+</section>
+</main>
+
+<div class="foot-line"></div>
+<footer class="scale">
+  <div class="wrap"><span>أ. عبدالله حمدان — تصميم المناهج التربوية للبرامج الشبابية</span><a href="#top" style="color:var(--cyan)">العودة للأعلى</a></div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  // theme
+  var root=document.documentElement;
+  try{var saved=localStorage.getItem('cd-theme');if(saved)root.setAttribute('data-theme',saved);}catch(e){}
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+    var next=cur==='dark'?'light':'dark';root.setAttribute('data-theme',next);
+    try{localStorage.setItem('cd-theme',next);}catch(e){}
+  });
+
+  // progress + active nav
+  var prog=document.getElementById('prog');
+  var links=[].slice.call(document.querySelectorAll('#links a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function onScroll(){
+    var h=document.documentElement;var max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(h.scrollTop/max*100):0)+'%';
+    var idx=-1;secs.forEach(function(s,i){if(s&&s.getBoundingClientRect().top<140)idx=i;});
+    links.forEach(function(a,i){a.classList.toggle('on',i===idx);});
+    if(idx>=0){var a=links[idx];var box=a.parentNode;var off=a.offsetLeft-box.clientWidth/2+a.clientWidth/2;if(Math.abs(box.scrollLeft-off)>40)box.scrollTo({left:off,behavior:'smooth'});}
+  }
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // journey
+  var data=[
+    {when:'صيف ٢٠١٥م',name:'المحطة الأولى',title:'بداية تصميم المناهج',label:'ما كان ينقصني',items:['تخبّط','عدم معرفة المصادر','عدم وجود أسلوب للكتابة']},
+    {when:'ربيع ٢٠٢٢م',name:'المحطة الثانية',title:'منهج الربيع ٢٠٢٢م',label:'ما أضفته',items:['اختيار الألوان','استخدام Keynote','كتابة المحتوى بالكامل','ملف تفاعلي']},
+    {when:'صيف ٢٠٢٥م',name:'المحطة الثالثة',title:'منهج سفرة قطر',label:'ما أضفته',items:['الاستفادة أكثر من المصادر','المقالات']},
+    {when:'صيف ٢٠٢٦م',name:'المحطة الرابعة',title:'منهج صيف ٢٠٢٦م',label:'التحدي',items:['عدم توفر الوقت الكافي','عدم معرفة أدوات الذكاء الاصطناعي المناسبة للمنهج']},
+    {when:'٢٦ سبتمبر ٢٠٢٦م',name:'المحطة الخامسة',title:'الدورة اليوم',label:'ما ستخرج به',items:['تقنيات جديدة تختصر عليك الكثير','جودة عمل أكبر']}
+  ];
+  var nums=['١','٢','٣','٤','٥'];
+  var st=document.getElementById('stations'),panel=document.getElementById('panel');
+  data.forEach(function(d,i){
+    var b=document.createElement('button');b.className='st'+(i===4?' last':'');b.setAttribute('role','tab');
+    b.innerHTML='<span class="d">'+nums[i]+'</span><small>'+d.when+'</small>';
+    b.addEventListener('click',function(){pick(i);});st.appendChild(b);
+  });
+  function pick(i){
+    [].forEach.call(st.children,function(b,j){b.setAttribute('aria-selected',j===i?'true':'false');});
+    var d=data[i];panel.classList.toggle('isLast',i===4);
+    panel.innerHTML='<div class="a fade"><span class="when">'+d.when+'</span><h3>'+d.name+'</h3><p class="muted" style="margin:0;font-size:19px">'+d.title+'</p></div><div class="b fade"><p class="muted" style="margin:0 0 12px;font-size:14px">'+d.label+'</p><ul class="chips">'+d.items.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></div>';
+  }
+  pick(4);
+  [].forEach.call(document.querySelectorAll('.road .stop'),function(g){
+    g.addEventListener('click',function(){pick(+g.dataset.i);document.getElementById('journey').scrollIntoView({behavior:'smooth'});});
+  });
+
+  // compare
+  var segBtns=[].slice.call(document.querySelectorAll('.seg button'));
+  var cards=[].slice.call(document.querySelectorAll('.cmp .card'));
+  function setCmp(k){
+    segBtns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.k===k?'true':'false');});
+    cards.forEach(function(c){var on=k==='all'||c.dataset.c===k;c.classList.toggle('dim',!on);c.classList.toggle('hi',k!=='all'&&on);});
+  }
+  segBtns.forEach(function(b){b.addEventListener('click',function(){setCmp(b.dataset.k);});});
+  setCmp('all');
+
+  // swatches
+  var toast=document.getElementById('toast'),tt;
+  [].forEach.call(document.querySelectorAll('.sw'),function(s){
+    s.addEventListener('click',function(){
+      var hex=s.dataset.hex;
+      var done=function(){toast.textContent='نُسخ اللون '+hex;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},1600);};
+      if(navigator.clipboard){navigator.clipboard.writeText(hex).then(done,done);}else done();
+    });
+  });
+  // font size
+  var steps=[0.9,1,1.1,1.2,1.3],fi=1;
+  try{var sf=parseInt(localStorage.getItem('cd-fs'),10);if(sf>=0&&sf<steps.length)fi=sf;}catch(e){}
+  var up=document.getElementById('fsUp'),down=document.getElementById('fsDown');
+  function applyFs(show){
+    root.style.setProperty('--fs',steps[fi]);
+    up.disabled=fi===steps.length-1;down.disabled=fi===0;
+    try{localStorage.setItem('cd-fs',fi);}catch(e){}
+    if(show){toast.textContent='حجم الخط '+Math.round(steps[fi]*100).toLocaleString('ar-EG')+'٪';toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},1200);}
+    onScroll();
+  }
+  up.addEventListener('click',function(){if(fi<steps.length-1){fi++;applyFs(true);}});
+  down.addEventListener('click',function(){if(fi>0){fi--;applyFs(true);}});
+  applyFs(false);
+  // closing reveal
+  var cl=document.getElementById('closing');
+  if('IntersectionObserver' in window){new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){cl.classList.add('in');o.disconnect();}});},{threshold:.35}).observe(cl);}else cl.classList.add('in');
+  // share
+  document.getElementById('shareBtn').addEventListener('click',function(){
+    var url=location.href.split('#')[0],t=document.title;
+    function msg(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},1600);}
+    if(navigator.share){navigator.share({title:t,url:url}).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){msg('نُسخ رابط الموقع');},function(){msg('تعذّر النسخ، انسخ الرابط من المتصفح');});}
+    else msg('انسخ الرابط من شريط المتصفح');
+  });
+})();
+</script>
+</body>
+</html>
