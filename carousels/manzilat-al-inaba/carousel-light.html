@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>منزلة الإنابة — نهاري</title>
+<style>
+@font-face{font-family:"Orn";src:url(f/amiri-quran-arabic-400-normal.woff2);unicode-range:U+FD3E-FD3F,U+FDFA,U+FDFD}
+@font-face{font-family:"PlexLat";src:url(f/plex-r.ttf);font-weight:400;unicode-range:U+0000-00FF}
+@font-face{font-family:"PlexLat";src:url(f/plex-sb.ttf);font-weight:600 700;unicode-range:U+0000-00FF}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-300-normal.woff2);font-weight:300}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-400-normal.woff2);font-weight:400}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-600-normal.woff2);font-weight:600}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-700-normal.woff2);font-weight:700}
+
+:root{
+  --bg:#f4f6f5; --bg2:#ffffff; --line:rgba(14,44,58,.055);
+  --text:#0f1316; --muted:#5f6970; --dim:#8a939a;
+  --blue:#1a7d9e; --sky:#65bdd5; --lime:#c4e773; --limeD:#4d7410; --olive:#c4e773; --card:#ffffff; --border:#e2e7ea; --soft:#3a4249;
+}
+@page{size:1080px 1350px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:"Orn","PlexLat","Plex",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+
+.slide{
+  width:1080px;height:1350px;position:relative;overflow:hidden;page-break-after:always;
+  background:
+    radial-gradient(circle 620px at 100% 0%, rgba(101,189,213,.20), transparent 70%),
+    radial-gradient(circle 560px at 0% 100%, rgba(196,231,115,.22), transparent 70%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    var(--bg);
+  display:flex;flex-direction:column;padding:120px 110px 0;
+}
+.slide:last-child{page-break-after:auto}
+
+/* header */
+.head{display:flex;align-items:center;gap:18px;font-size:28px;font-weight:500;color:var(--muted)}
+.head::before{content:"";width:5px;height:40px;background:var(--blue);border-radius:3px}
+.count{margin-inline-start:auto;font-size:24px;color:var(--dim);font-weight:400;letter-spacing:.04em}
+
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px}
+
+p.t{font-size:58px;line-height:1.75;font-weight:400;text-align:right}
+p.t + p.t{margin-top:28px}
+p.s{font-size:44px;line-height:1.8;font-weight:400;color:var(--soft)}
+b{font-weight:700;color:var(--blue)}
+.lime{color:var(--text);font-weight:700;background:linear-gradient(transparent 56%,rgba(196,231,115,.85) 56%,rgba(196,231,115,.85) 90%,transparent 90%);padding:0 4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+.tag{align-self:flex-start;display:inline-block;background:var(--lime);color:#1c2806;box-shadow:0 10px 30px -12px rgba(77,116,16,.45);
+  font-size:40px;font-weight:700;padding:10px 30px 16px;border-radius:12px;margin-bottom:56px}
+
+.verse{text-align:center;margin:64px 0 0}
+.verse .v{font-size:56px;line-height:1.95;font-weight:500;color:var(--text)}
+.verse .br{color:var(--blue);font-size:60px}
+.verse .ref{margin-top:14px;font-size:28px;color:var(--muted)}
+
+.note{margin-top:70px;background:var(--card);border:1px solid var(--border);border-radius:28px;padding:44px 52px;box-shadow:0 30px 60px -30px rgba(14,44,58,.25),0 2px 6px rgba(14,44,58,.05)}
+.note .lbl{font-size:28px;color:var(--blue);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.note .lbl::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--lime)}
+.note p{font-size:44px;line-height:1.7}
+.note .src{font-size:26px;color:var(--muted);margin-top:18px}
+
+.hadith{margin-top:60px;border-inline-start:6px solid #9fcb3c;padding:16px 44px 20px;background:linear-gradient(270deg,rgba(196,231,115,.28),rgba(196,231,115,0));border-radius:0 18px 18px 0}
+.hadith p{font-size:52px;line-height:1.85;font-weight:500}
+.hadith .ref{font-size:28px;color:var(--muted);margin-top:12px}
+
+.foot{height:120px;display:flex;align-items:center;justify-content:center;font-family:"PlexLat";font-size:26px;color:var(--dim);letter-spacing:.02em;position:relative}
+.swipe{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:12px;font-family:"Plex";font-size:24px;color:var(--muted)}
+.swipe svg{width:40px;height:40px}
+.send{position:absolute;left:0;top:50%;transform:translateY(-55%);width:84px;height:84px}
+
+/* cover */
+.cover .body{justify-content:flex-start;padding-top:40px;padding-bottom:40px}
+.cover .kicker{font-size:34px;color:var(--lime);font-weight:600;margin-bottom:10px}
+.cover h1{font-size:176px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+.cover h1 span{color:var(--blue)}
+.cover .rule{width:140px;height:6px;background:var(--blue);border-radius:3px;margin:46px 0 46px}
+.cover .sub{font-size:50px;line-height:1.7;color:#c9cdd2;font-weight:400}
+.ring{position:absolute;left:-250px;bottom:150px;width:600px;height:600px;transform:rotate(180deg)}
+
+.cover h1.ct{font-size:112px;line-height:1.45;font-weight:700}
+.cover h1.ct span{font-size:170px;line-height:1.15;color:var(--blue);display:inline-block;margin:6px 0}
+.cover h1.ct em{display:block;margin-top:-6px;font-style:normal;font-size:52px;font-weight:500;color:var(--muted)}
+.big-q{font-size:200px;line-height:1;color:var(--blue);opacity:.18;font-family:"Plex";position:absolute;top:150px;left:100px}
+</style>
+</head>
+<body>
+
+<!-- 1 Cover -->
+<section class="slide cover">
+  <svg class="ring" viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="100" r="78" stroke="#1a7d9e" stroke-opacity=".14" stroke-width="1"/>
+    <circle cx="100" cy="100" r="62" stroke="#1a7d9e" stroke-opacity=".10" stroke-width="1"/>
+    <path d="M100 22 A78 78 0 1 1 30 64" stroke="#1a7d9e" stroke-opacity=".75" stroke-width="3" stroke-linecap="round"/>
+    <path d="M22 54 L30 66 L43 59" stroke="#1a7d9e" stroke-opacity=".75" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="100" cy="22" r="5" fill="#b4dc52" stroke="#ffffff" stroke-width="1.5"/>
+  </svg>
+  <div class="body">
+    <div style="width:24px;height:24px;border-radius:50%;background:#b4dc52;box-shadow:0 0 0 8px rgba(196,231,115,.35);margin:8px 8px 52px"></div>
+    <h1 class="ct">طريق الهداية<br>يبدأ بالرجوع إلى<br><span>"التوّاب"</span><br><em>عز وجل</em></h1>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#4d7410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
+  </div>
+</section>
+
+<!-- 2 Verse + tafsir -->
+<section class="slide">
+  <div class="head">منزلة الإنابة<span class="count">٢ / ٧</span></div>
+  <div class="body">
+    <p class="t">قال الله تعالى:</p>
+    <div class="verse">
+      <div class="v"><span class="br">﴿</span>اللَّهُ يَجْتَبِي إِلَيْهِ مَن يَشَاءُ<br>وَيَهْدِي إِلَيْهِ مَن يُنِيبُ<span class="br">﴾</span></div>
+      <div class="ref">[سورة الشورى: ١٣]</div>
+    </div>
+    <div class="note">
+      <div class="lbl">مَن يُنيب</div>
+      <p>أي: يهدي إليه مَن <b>يرجع إليه</b> منهم <b>بالتوبة</b> من ذنوبه.</p>
+      <div class="src">من كتاب: المختصر في التفسير</div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 3 Goal: hidaya -->
+<section class="slide">
+  <div class="head">منزلة الإنابة<span class="count">٣ / ٧</span></div>
+  <div class="body">
+    <p class="t">ما من مؤمنٍ إلا وغايته التي يسعى إليها دومًا: أن ينال <b>الهداية</b> من ربه.</p>
+    <p class="t">فيسير على <b>الصراط المستقيم</b> في الدنيا..<br>كي يجوز <b>الصراط</b> في الآخرة.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 4 Inaba as cause -->
+<section class="slide">
+  <div class="head">منزلة الإنابة<span class="count">٤ / ٧</span></div>
+  <div class="body">
+    <p class="t">ومن أعظم أسباب الهداية لهذا الصراط:</p>
+    <p class="t" style="font-size:110px;line-height:1.5;font-weight:700;margin-top:30px">الإنابة<br><span style="color:var(--blue)">لرب العالمين</span></p>
+    <p class="s" style="margin-top:40px">أن ترجع إليه بقلبك في كل حال،<br>تائبًا مستغفرًا.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 5 Ibrahim -->
+<section class="slide">
+  <div class="head">منزلة الإنابة<span class="count">٥ / ٧</span></div>
+  <div class="body">
+    <div class="tag">الإنابة ليست للعاصين</div>
+    <p class="t">فهذا إبراهيم <span style="font-size:.8em">عليه السلام</span>، خليل الرحمن، يصفه ربه بقوله:</p>
+    <div class="verse">
+      <div class="v"><span class="br">﴿</span>إِنَّ إِبْرَاهِيمَ لَحَلِيمٌ أَوَّاهٌ مُّنِيبٌ<span class="br">﴾</span></div>
+      <div class="ref">[سورة هود: ٧٥]</div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 6 Prophet -->
+<section class="slide">
+  <div class="head">منزلة الإنابة<span class="count">٦ / ٧</span></div>
+  <div class="body">
+    <p class="t">و<b>أتقى الأتقياء</b> و<b>أنقى الأنقياء</b> ينيبون إلى ربهم ويتوبون إليه..</p>
+    <p class="t">فقد كان رسول الله ﷺ يقول:</p>
+    <div class="hadith">
+      <p>«وَاللهِ إِنِّي لَأَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ فِي الْيَوْمِ <span class="lime">أَكْثَرَ مِنْ سَبْعِينَ مَرَّةً</span>»</p>
+      <div class="ref">[رواه البخاري]</div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 7 Message to da'i -->
+<section class="slide">
+  <div class="head">منزلة الإنابة<span class="count">٧ / ٧</span></div>
+  <div class="body">
+    <p class="t" style="color:var(--soft)">لا تفتُر أبدًا عن</p>
+    <p style="font-size:120px;line-height:1.35;font-weight:700;color:var(--blue);margin-top:10px">الاستغفار<br>والإنابة..</p>
+    <div style="width:140px;height:6px;background:#9fcb3c;border-radius:3px;margin:56px 0 52px"></div>
+    <p class="t">فهي من أعظم روافد <span class="lime">الهداية</span> و<span class="lime">الثبات</span><br>من رب العالمين عز وجل.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <svg class="send" viewBox="0 0 24 24" fill="none" stroke="#0f1316" stroke-width="1.3" stroke-linejoin="round"><path d="M21.5 2.5 2.8 9.6l7.4 3.3 3.3 7.4z"/><path d="m21.5 2.5-11.3 10.4"/></svg>
+  </div>
+</section>
+
+</body>
+</html>
