@@ -71,48 +71,34 @@ b{font-weight:700;color:var(--blue)}
 .send{position:absolute;left:0;top:50%;transform:translateY(-55%);width:84px;height:84px}
 
 /* cover */
-.cover .body{justify-content:center;padding-bottom:40px}
+.cover .body{justify-content:flex-start;padding-top:40px;padding-bottom:40px}
 .cover .kicker{font-size:34px;color:var(--lime);font-weight:600;margin-bottom:10px}
 .cover h1{font-size:176px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
 .cover h1 span{color:var(--blue)}
 .cover .rule{width:140px;height:6px;background:var(--blue);border-radius:3px;margin:46px 0 46px}
 .cover .sub{font-size:50px;line-height:1.7;color:#c9cdd2;font-weight:400}
-.ring{position:absolute;left:-230px;top:-230px;width:640px;height:640px;transform:rotate(180deg)}
+.ring{position:absolute;left:-250px;bottom:150px;width:600px;height:600px;transform:rotate(180deg)}
 
 .cover h1.ct{font-size:112px;line-height:1.45;font-weight:700}
 .cover h1.ct span{font-size:170px;line-height:1.15;color:var(--blue);display:inline-block;margin:6px 0}
 .cover h1.ct em{display:block;margin-top:-6px;font-style:normal;font-size:52px;font-weight:500;color:var(--muted)}
-.cover2 .body{align-items:center;text-align:center;justify-content:center;padding-bottom:20px}
-.cover2 .glow{position:absolute;left:50%;top:52%;width:900px;height:900px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(101,189,213,.13),transparent 60%)}
-.cover2 .l1{font-size:96px;font-weight:700;line-height:1.4}
-.cover2 .l2{font-size:60px;font-weight:400;color:#c9cdd2;line-height:1.5;margin-top:4px}
-.cover2 .orb{position:relative;width:620px;height:620px;margin:20px 0 10px;display:flex;align-items:center;justify-content:center}
-.cover2 .orb svg{position:absolute;inset:0;width:100%;height:100%}
-.cover2 .word{position:relative;font-size:168px;font-weight:700;color:var(--blue);line-height:1;padding-bottom:30px}
-.cover2 .word i{font-style:normal;color:var(--lime);font-weight:500;font-size:.6em;vertical-align:.35em;margin:0 6px}
-.cover2 .l3{font-size:48px;font-weight:500;color:var(--muted);letter-spacing:.02em}
 .big-q{font-size:200px;line-height:1;color:var(--blue);opacity:.18;font-family:"Plex";position:absolute;top:150px;left:100px}
 </style>
 </head>
 <body>
 
 <!-- 1 Cover -->
-<section class="slide cover2">
-  <div class="glow"></div>
+<section class="slide cover">
+  <svg class="ring" viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="100" r="78" stroke="#65bdd5" stroke-opacity=".10" stroke-width="1"/>
+    <circle cx="100" cy="100" r="62" stroke="#65bdd5" stroke-opacity=".07" stroke-width="1"/>
+    <path d="M100 22 A78 78 0 1 1 30 64" stroke="#65bdd5" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+    <path d="M22 54 L30 66 L43 59" stroke="#65bdd5" stroke-opacity=".55" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="100" cy="22" r="4" fill="#c4e773"/>
+  </svg>
   <div class="body">
-    <p class="l1">طريق الهداية</p>
-    <p class="l2">يبدأ بالرجوع إلى</p>
-    <div class="orb">
-      <svg viewBox="0 0 200 200" fill="none">
-        <circle cx="100" cy="100" r="96" stroke="#65bdd5" stroke-opacity=".08" stroke-width=".6"/>
-        <circle cx="100" cy="100" r="74" stroke="#65bdd5" stroke-opacity=".10" stroke-width=".6" stroke-dasharray="1.5 3"/>
-        <path d="M100 14 A86 86 0 1 1 36 42.5" stroke="#65bdd5" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M30 34 L36 43.5 L46.5 39" stroke="#65bdd5" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="100" cy="14" r="3" fill="#c4e773"/>
-      </svg>
-      <div class="word"><i>"</i>التوّاب<i>"</i></div>
-    </div>
-    <p class="l3">عز وجل</p>
+    <div class="rule" style="background:var(--lime);margin:0 0 56px"></div>
+    <h1 class="ct">طريق الهداية<br>يبدأ بالرجوع إلى<br><span>"التوّاب"</span><br><em>عز وجل</em></h1>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
     <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
