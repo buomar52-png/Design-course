@@ -104,6 +104,14 @@ b{font-weight:700;color:var(--blue)}
 .verb .q small{display:block;font-size:24px;color:var(--muted);font-weight:400}
 .bigquote{font-size:76px;line-height:1.55;font-weight:700;margin-top:10px}
 .bigquote .qm{color:var(--blue)}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);row-gap:64px;column-gap:22px;margin-top:50px}
+.sgrid .c{text-align:right}
+.sgrid .w{font-size:66px;line-height:1.35;font-weight:700;color:var(--text)}
+.sgrid .f .w{font-weight:400;color:#9aa3a9;font-size:56px}
+.sgrid .h .w{color:var(--blue);font-size:70px}
+.sgrid .h .w{background:linear-gradient(transparent 62%,rgba(196,231,115,.85) 62%,rgba(196,231,115,.85) 88%,transparent 88%);display:inline-block}
+.sgrid .s{font-size:22px;line-height:1.6;color:var(--soft);margin-top:6px}
+.sgrid .r{font-size:18px;color:var(--dim);margin-top:2px}
 </style>
 </head>
 <body>
@@ -119,7 +127,7 @@ b{font-weight:700;color:var(--blue)}
   </svg>
   <div class="body">
     <div style="width:40px;height:40px;border-radius:50%;background:#b4dc52;background-clip:padding-box;border:8px solid rgba(196,231,115,.4);margin:0 0 44px"></div>
-    <h1 class="ct">أتريد أن تكون<br><span>أقوى الناس؟</span></h1>
+    <h1 class="ct" style="font-size:200px;line-height:1.2">أقوى<br><span style="font-size:200px">الناس</span></h1>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
     <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#4d7410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
@@ -155,7 +163,7 @@ b{font-weight:700;color:var(--blue)}
   <div class="body">
     <p class="t">وقال الله تعالى:</p>
     <div class="verse">
-      <div class="v" style="font-size:50px;line-height:1.85"><span class="br">﴿</span>قُل لَّن يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا<br>هُوَ مَوْلَانَا وَعَلَى اللَّهِ<br>فَلْيَتَوَكَّلِ الْمُؤْمِنُونَ<span class="br">﴾</span></div>
+      <div class="v" style="font-size:50px;line-height:1.85"><span class="br">﴿</span>قُل لَّن يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا<br>هُوَ مَوْلَانَا<br>وَعَلَى اللَّهِ فَلْيَتَوَكَّلِ الْمُؤْمِنُونَ<span class="br">﴾</span></div>
       <div class="ref">[سورة التوبة: ٥١]</div>
     </div>
     <div class="note" style="margin-top:48px;padding:36px 46px">
@@ -172,10 +180,19 @@ b{font-weight:700;color:var(--blue)}
   <div class="head">أقوى الناس<span class="count">٤ / ٧</span></div>
   <div class="body">
     <p class="t">والشيطان كما هو معلوم:</p>
-    <div class="verbs">
-      <div class="verb"><div class="w">يُزِلّ</div><div class="q">﴿فَأَزَلَّهُمَا الشَّيْطَانُ عَنْهَا﴾<small>[البقرة: ٣٦]</small></div></div>
-      <div class="verb"><div class="w">يَفتِن</div><div class="q">﴿لَا يَفْتِنَنَّكُمُ الشَّيْطَانُ﴾<small>[الأعراف: ٢٧]</small></div></div>
-      <div class="verb"><div class="w">يُزيِّن</div><div class="q">﴿وَزَيَّنَ لَهُمُ الشَّيْطَانُ أَعْمَالَهُمْ﴾<small>[النمل: ٢٤]</small></div></div>
+    <div class="sgrid">
+      <div class="c b"><div class="w">يُزِلّ</div><div class="s">﴿فَأَزَلَّهُمَا الشَّيْطَانُ﴾</div><div class="r">[البقرة: ٣٦]</div></div>
+      <div class="c f"><div class="w">يستزِلّ</div><div class="s">﴿إِنَّمَا اسْتَزَلَّهُمُ الشَّيْطَانُ﴾</div><div class="r">[آل عمران: ١٥٥]</div></div>
+      <div class="c b"><div class="w">يفتِن</div><div class="s">﴿لَا يَفْتِنَنَّكُمُ الشَّيْطَانُ﴾</div><div class="r">[الأعراف: ٢٧]</div></div>
+      <div class="c f"><div class="w">ينزَغ</div><div class="s">﴿وَإِمَّا يَنزَغَنَّكَ مِنَ الشَّيْطَانِ نَزْغٌ﴾</div><div class="r">[الأعراف: ٢٠٠]</div></div>
+      <div class="c f"><div class="w">يهمِز</div><div class="s">﴿أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ﴾</div><div class="r">[المؤمنون: ٩٧]</div></div>
+      <div class="c h"><div class="w">يوسوِس</div><div class="s">﴿الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ﴾</div><div class="r">[الناس: ٥]</div></div>
+      <div class="c f"><div class="w">يسوِّل</div><div class="s">﴿الشَّيْطَانُ سَوَّلَ لَهُمْ﴾</div><div class="r">[محمد: ٢٥]</div></div>
+      <div class="c b"><div class="w">يُملي</div><div class="s">﴿سَوَّلَ لَهُمْ وَأَمْلَىٰ لَهُمْ﴾</div><div class="r">[محمد: ٢٥]</div></div>
+      <div class="c b"><div class="w">يؤزّ</div><div class="s">﴿الشَّيَاطِينَ عَلَى الْكَافِرِينَ تَؤُزُّهُمْ أَزًّا﴾</div><div class="r">[مريم: ٨٣]</div></div>
+      <div class="c f"><div class="w">يُضِلّ</div><div class="s">﴿وَيُرِيدُ الشَّيْطَانُ أَن يُضِلَّهُمْ﴾</div><div class="r">[النساء: ٦٠]</div></div>
+      <div class="c b"><div class="w">يصُدّ</div><div class="s">﴿وَلَا يَصُدَّنَّكُمُ الشَّيْطَانُ﴾</div><div class="r">[الزخرف: ٦٢]</div></div>
+      <div class="c f"><div class="w">يستهوي</div><div class="s">﴿كَالَّذِي اسْتَهْوَتْهُ الشَّيَاطِينُ﴾</div><div class="r">[الأنعام: ٧١]</div></div>
     </div>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
