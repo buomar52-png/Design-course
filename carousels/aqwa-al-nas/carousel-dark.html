@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>أقوى الناس — ليلي</title>
+<style>
+@font-face{font-family:"Orn";src:url(f/amiri-quran-arabic-400-normal.woff2);unicode-range:U+FD3E-FD3F,U+FDFA,U+FDFD}
+@font-face{font-family:"PlexLat";src:url(f/plex-r.ttf);font-weight:400;unicode-range:U+0000-00FF}
+@font-face{font-family:"PlexLat";src:url(f/plex-sb.ttf);font-weight:600 700;unicode-range:U+0000-00FF}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-300-normal.woff2);font-weight:300}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-400-normal.woff2);font-weight:400}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-600-normal.woff2);font-weight:600}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-700-normal.woff2);font-weight:700}
+
+:root{
+  --bg:#0f1012; --bg2:#161719; --line:rgba(255,255,255,.045);
+  --text:#eef0f2; --muted:#8b9198; --dim:#5b6067;
+  --blue:#65bdd5; --lime:#c4e773; --soft:#c9cdd2; --olive:#232f09; --card:#1b1d20; --border:#2a2d31;
+}
+@page{size:1080px 1350px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:"Orn","PlexLat","Plex",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+
+.slide{
+  width:1080px;height:1350px;position:relative;overflow:hidden;page-break-after:always;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 45%, transparent 40%, rgba(0,0,0,.55) 100%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    var(--bg);
+  display:flex;flex-direction:column;padding:120px 110px 0;
+}
+.slide:last-child{page-break-after:auto}
+
+/* header */
+.head{display:flex;align-items:center;gap:18px;font-size:28px;font-weight:500;color:var(--muted)}
+.head::before{content:"";width:5px;height:40px;background:var(--blue);border-radius:3px}
+.count{margin-inline-start:auto;font-size:24px;color:var(--dim);font-weight:400;letter-spacing:.04em}
+
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px}
+
+p.t{font-size:58px;line-height:1.75;font-weight:400;text-align:right}
+p.t + p.t{margin-top:28px}
+p.s{font-size:44px;line-height:1.8;font-weight:400;color:#c9cdd2}
+b{font-weight:700;color:var(--blue)}
+.lime{color:var(--lime);font-weight:700}
+
+.tag{align-self:flex-start;display:inline-block;background:var(--olive);color:var(--lime);
+  font-size:40px;font-weight:700;padding:10px 30px 16px;border-radius:12px;margin-bottom:56px}
+
+.verse{text-align:center;margin:64px 0 0}
+.verse .v{font-size:56px;line-height:1.95;font-weight:500;color:var(--text)}
+.verse .br{color:var(--blue);font-size:60px;line-height:0}
+.verse .ref{margin-top:14px;font-size:28px;color:var(--muted)}
+
+.note{margin-top:70px;background:var(--card);border:1px solid var(--border);border-radius:28px;padding:44px 52px}
+.note .lbl{font-size:28px;color:var(--blue);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.note .lbl::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--lime)}
+.note p{font-size:44px;line-height:1.7}
+.note .src{font-size:26px;color:var(--muted);margin-top:18px}
+
+.hadith{margin-top:60px;border-inline-start:6px solid var(--lime);padding:16px 44px 20px;background:linear-gradient(270deg,rgba(196,231,115,.07),transparent)}
+.hadith p{font-size:52px;line-height:1.85;font-weight:500}
+.hadith .ref{font-size:28px;color:var(--muted);margin-top:12px}
+
+.foot{height:120px;display:flex;align-items:center;justify-content:center;font-family:"PlexLat";font-size:26px;color:var(--dim);letter-spacing:.02em;position:relative}
+.swipe{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:12px;font-family:"Plex";font-size:24px;color:var(--muted)}
+.swipe svg{width:40px;height:40px}
+.send{position:absolute;left:0;top:50%;transform:translateY(-55%);width:84px;height:84px}
+
+/* cover */
+.cover .body{justify-content:flex-start;padding-top:40px;padding-bottom:40px}
+.cover .kicker{font-size:34px;color:var(--lime);font-weight:600;margin-bottom:10px}
+.cover h1{font-size:176px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+.cover h1 span{color:var(--blue)}
+.cover .rule{width:140px;height:6px;background:var(--blue);border-radius:3px;margin:46px 0 46px}
+.cover .sub{font-size:50px;line-height:1.7;color:#c9cdd2;font-weight:400}
+.ring{position:absolute;left:-250px;bottom:150px;width:600px;height:600px;transform:rotate(180deg)}
+
+.cover h1.ct{font-size:112px;line-height:1.45;font-weight:700}
+.cover h1.ct span{font-size:170px;line-height:1.15;color:var(--blue);display:inline-block;margin:6px 0}
+.cover h1.ct em{display:block;margin-top:-6px;font-style:normal;font-size:52px;font-weight:500;color:var(--muted)}
+.big-q{font-size:200px;line-height:1;color:var(--blue);opacity:.18;font-family:"Plex";position:absolute;top:150px;left:100px}
+.ice{position:absolute;left:40px;bottom:150px;width:400px;height:440px}
+.kick{font-size:30px;color:var(--muted);font-weight:500;display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.kick::before{content:"";width:12px;height:12px;border-radius:50%;background:#b4dc52}
+.split{display:flex;gap:0;margin-top:40px}
+.split .col{flex:1;padding:0 34px}
+.split .col:first-child{padding-right:0;border-left:1px solid var(--border)}
+.split .col:last-child{padding-left:0}
+.split .pre{font-size:34px;line-height:1.7;color:var(--muted)}
+.split .pre strong{color:var(--text);font-weight:600}
+.split .main{font-size:46px;line-height:1.5;font-weight:700;margin-top:22px}
+.split .big{font-size:150px;line-height:1.2;font-weight:700;margin-top:6px}
+.cite{margin-top:56px;font-size:28px;color:var(--muted);display:flex;align-items:center;gap:18px}
+.verbs{display:flex;flex-direction:column;gap:26px;margin-top:20px}
+.verb{display:flex;align-items:center;gap:40px;background:var(--card);border:1px solid var(--border);border-radius:26px;padding:28px 44px;box-shadow:0 8px 0 0 #e3e9ec}
+.verb .w{font-size:84px;font-weight:700;color:var(--blue);min-width:250px;line-height:1.3}
+.verb .q{font-size:34px;line-height:1.7;font-weight:500}
+.verb .q small{display:block;font-size:24px;color:var(--muted);font-weight:400}
+.bigquote{font-size:76px;line-height:1.55;font-weight:700;margin-top:10px}
+.bigquote .qm{color:var(--blue)}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);row-gap:44px;column-gap:22px;margin-top:40px}
+.sgrid .c{text-align:right}
+.sgrid .w{font-size:66px;line-height:1.35;font-weight:700;color:var(--text)}
+.sgrid .f .w{font-weight:400;color:#5f666d;font-size:56px}
+.sgrid .h .w{color:var(--blue);font-size:70px}
+.sgrid .h .w{color:var(--lime)}
+.sgrid .s{font-size:22px;line-height:1.6;color:var(--soft);margin-top:6px}
+.sgrid .r{font-size:18px;color:var(--dim);margin-top:2px}
+@font-face{font-family:"AmiriQ";src:url(f/amiri-quran-arabic-400-normal.woff2)}
+.aya{font-family:"AmiriQ";color:var(--blue);font-size:.95em;line-height:0}
+</style>
+</head>
+<body>
+
+<!-- 1 Cover -->
+<section class="slide cover">
+  <svg class="ice" viewBox="0 0 200 220" fill="none">
+    <path d="M100 14 L174 42 V104 C174 152 142 188 100 206 C58 188 26 152 26 104 V42 Z" stroke="#65bdd5" stroke-opacity=".22" stroke-width="1.2" stroke-dasharray="2 6" stroke-linecap="round" transform="translate(100 110) scale(1.12) translate(-100 -110)"/>
+    <path d="M100 14 L174 42 V104 C174 152 142 188 100 206 C58 188 26 152 26 104 V42 Z" fill="#65bdd5" fill-opacity=".06" stroke="#65bdd5" stroke-opacity=".8" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M100 40 L150 60 V104 C150 138 128 164 100 178 C72 164 50 138 50 104 V60 Z" stroke="#65bdd5" stroke-opacity=".25" stroke-width="1.2" stroke-linejoin="round"/>
+    <circle cx="100" cy="14" r="5" fill="#c4e773"/>
+  </svg>
+  <div class="body">
+    <div style="width:40px;height:40px;border-radius:50%;background:var(--lime);background-clip:padding-box;border:8px solid rgba(196,231,115,.18);margin:0 0 44px"></div>
+    <h1 class="ct" style="font-size:200px;line-height:1.2">أقوى<br><span style="font-size:200px">الناس</span></h1>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
+  </div>
+</section>
+
+<!-- 2 Hadith -->
+<section class="slide">
+  <div class="head">أقوى الناس<span class="count">٢ / ٧</span></div>
+  <div class="body">
+    <p class="t" style="font-size:44px;line-height:1.7;color:var(--soft)">علّم رسولُ الله ﷺ ابنَ عباس التوكّلَ<br>وهو غلام، فقال:</p>
+    <p style="font-size:84px;line-height:1.3;font-weight:700;color:var(--blue);margin-top:18px">«وَاعْلَمْ...</p>
+    <div class="split" style="margin-top:34px">
+      <div class="col">
+        <p class="pre">أَنَّ الأُمَّةَ لَوِ اجْتَمَعَتْ<br>عَلَى أَنْ <strong>يَنْفَعُوكَ</strong> بِشَيْءٍ</p>
+        <p class="main">لَمْ يَنْفَعُوكَ إِلَّا بِشَيْءٍ<br>قَدْ كَتَبَهُ اللَّهُ</p>
+        <p class="big" style="color:var(--blue)">لَكَ</p>
+      </div>
+      <div class="col">
+        <p class="pre">وَلَوِ اجْتَمَعُوا<br>عَلَى أَنْ <strong>يَضُرُّوكَ</strong> بِشَيْءٍ</p>
+        <p class="main">لَمْ يَضُرُّوكَ إِلَّا بِشَيْءٍ<br>قَدْ كَتَبَهُ اللَّهُ</p>
+        <p class="big">عَلَيْكَ<span style="color:var(--dim);font-size:.5em">»</span></p>
+      </div>
+    </div>
+    <div class="cite">رواه الترمذي (٢٥١٦) وقال: حسن صحيح</div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 3 Verse 9:51 -->
+<section class="slide">
+  <div class="head">أقوى الناس<span class="count">٣ / ٧</span></div>
+  <div class="body">
+    <p class="t">وقال الله تعالى:</p>
+    <div class="verse">
+      <div class="v" style="font-size:50px;line-height:1.85"><span class="br">﴿</span>قُل لَّن يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا<br>هُوَ مَوْلَانَا<br>وَعَلَى اللَّهِ فَلْيَتَوَكَّلِ الْمُؤْمِنُونَ<span class="br">﴾</span></div>
+      <div class="ref">[سورة التوبة: ٥١]</div>
+    </div>
+    <div class="note" style="margin-top:48px;padding:36px 46px">
+      <div class="lbl">معنى الآية</div>
+      <p style="font-size:35px">لن ينالنا إلا ما كتبه الله لنا، فهو سبحانه <b>سيدنا وملجؤنا</b> الذي نلجأ إليه، ونحن متوكلون عليه في أمورنا، وإليه وحده يفوّض المؤمنون أمورهم، فهو <span class="lime">كافيهم، ونعم الوكيل</span>.</p>
+      <div class="src">من كتاب: المختصر في التفسير</div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 4 Satan -->
+<section class="slide">
+  <div class="head">أقوى الناس<span class="count">٤ / ٧</span></div>
+  <div class="body">
+    <p class="t">والشيطان كما هو معلوم:</p>
+    <div class="sgrid">
+      <div class="c b"><div class="w">يُزِلّ</div><div class="s">﴿فَأَزَلَّهُمَا الشَّيْطَانُ﴾</div><div class="r">[البقرة: ٣٦]</div></div>
+      <div class="c f"><div class="w">يستزِلّ</div><div class="s">﴿إِنَّمَا اسْتَزَلَّهُمُ الشَّيْطَانُ﴾</div><div class="r">[آل عمران: ١٥٥]</div></div>
+      <div class="c b"><div class="w">يفتِن</div><div class="s">﴿لَا يَفْتِنَنَّكُمُ الشَّيْطَانُ﴾</div><div class="r">[الأعراف: ٢٧]</div></div>
+      <div class="c f"><div class="w">ينزَغ</div><div class="s">﴿وَإِمَّا يَنزَغَنَّكَ مِنَ الشَّيْطَانِ نَزْغٌ﴾</div><div class="r">[الأعراف: ٢٠٠]</div></div>
+      <div class="c f"><div class="w">يهمِز</div><div class="s">﴿أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ﴾</div><div class="r">[المؤمنون: ٩٧]</div></div>
+      <div class="c h"><div class="w">يوسوِس</div><div class="s">﴿الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ﴾</div><div class="r">[الناس: ٥]</div></div>
+      <div class="c f"><div class="w">يسوِّل</div><div class="s">﴿الشَّيْطَانُ سَوَّلَ لَهُمْ﴾</div><div class="r">[محمد: ٢٥]</div></div>
+      <div class="c b"><div class="w" style="font-size:52px">يزيّن الباطل</div><div class="s">﴿وَزَيَّنَ لَهُمُ الشَّيْطَانُ مَا كَانُوا يَعْمَلُونَ﴾</div><div class="r">[الأنعام: ٤٣]</div></div>
+      <div class="c b"><div class="w">يؤزّ</div><div class="s">﴿الشَّيَاطِينَ عَلَى الْكَافِرِينَ تَؤُزُّهُمْ أَزًّا﴾</div><div class="r">[مريم: ٨٣]</div></div>
+      <div class="c f"><div class="w">يُضِلّ</div><div class="s">﴿وَيُرِيدُ الشَّيْطَانُ أَن يُضِلَّهُمْ﴾</div><div class="r">[النساء: ٦٠]</div></div>
+      <div class="c b"><div class="w">يصُدّ</div><div class="s">﴿وَلَا يَصُدَّنَّكُمُ الشَّيْطَانُ﴾</div><div class="r">[الزخرف: ٦٢]</div></div>
+      <div class="c f"><div class="w">يُحزِن</div><div class="s">﴿إِنَّمَا النَّجْوَىٰ مِنَ الشَّيْطَانِ لِيَحْزُنَ الَّذِينَ آمَنُوا﴾</div><div class="r">[المجادلة: ١٠]</div></div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 5 Verse 16:98-99 -->
+<section class="slide">
+  <div class="head">أقوى الناس<span class="count">٥ / ٧</span></div>
+  <div class="body">
+    <p class="t">ولن نقوى على مواجهته<br>إلا <b>بالتوكّل على الله</b>:</p>
+    <div class="verse">
+      <div class="v" style="font-size:50px"><span class="br">﴿</span>فَإِذَا قَرَأْتَ الْقُرْآنَ فَاسْتَعِذْ بِاللَّهِ<br>مِنَ الشَّيْطَانِ الرَّجِيمِ <span class="aya">&#x06DD;&#x0669;&#x0668;</span><br>إِنَّهُ لَيْسَ لَهُ سُلْطَانٌ عَلَى الَّذِينَ آمَنُوا<br>وَعَلَىٰ رَبِّهِمْ يَتَوَكَّلُونَ<span class="br">﴾</span></div>
+      <div class="ref">[سورة النحل: ٩٨-٩٩]</div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 6 Salaf -->
+<section class="slide">
+  <div class="head">أقوى الناس<span class="count">٦ / ٧</span></div>
+  <div class="body">
+    <div class="tag">قال بعض السلف</div>
+    <p class="bigquote"><span class="qm">«</span>مَن سرَّه أن يكون<br><span style="color:var(--blue)">أقوى الناس</span><br>فليتوكّل على الله<span class="qm">»</span></p>
+    <div class="cite">ذكره ابن القيم في «زاد المعاد»</div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 7 Why -->
+<section class="slide">
+  <div class="head">أقوى الناس<span class="count">٧ / ٧</span></div>
+  <div class="body">
+    <p class="t" style="color:var(--soft)">لماذا نتوكّل على الله؟</p>
+    <p style="font-size:110px;line-height:1.35;font-weight:700;color:var(--blue);margin-top:10px">لأنه حسبُنا<br>ونِعمَ الوكيل</p>
+    <div style="width:140px;height:6px;background:var(--lime);border-radius:3px;margin:56px 0 40px"></div>
+    <p class="t">قال تعالى:</p>
+    <div class="verse" style="margin-top:20px;text-align:right">
+      <div class="v"><span class="br">﴿</span>وَمَن يَتَوَكَّلْ عَلَى اللَّهِ <span class="lime">فَهُوَ حَسْبُهُ</span><span class="br">﴾</span></div>
+      <div class="ref">[سورة الطلاق: ٣]</div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <svg class="send" viewBox="0 0 24 24" fill="none" stroke="#eef0f2" stroke-width="1.3" stroke-linejoin="round"><path d="M21.5 2.5 2.8 9.6l7.4 3.3 3.3 7.4z"/><path d="m21.5 2.5-11.3 10.4"/></svg>
+  </div>
+</section>
+
+</body>
+</html>
