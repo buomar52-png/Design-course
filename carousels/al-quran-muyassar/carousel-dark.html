@@ -83,7 +83,7 @@ b{font-weight:700;color:var(--blue)}
 .cover h1.ct span{font-size:170px;line-height:1.15;color:var(--blue);display:inline-block;margin:6px 0}
 .cover h1.ct em{display:block;margin-top:-6px;font-style:normal;font-size:52px;font-weight:500;color:var(--muted)}
 .big-q{font-size:200px;line-height:1;color:var(--blue);opacity:.18;font-family:"Plex";position:absolute;top:150px;left:100px}
-.ice{position:absolute;left:50%;bottom:150px;width:620px;height:430px;transform:translateX(-50%)}
+.ice{position:absolute;left:50%;bottom:140px;width:560px;height:462px;transform:translateX(-50%)}
 .wm{position:absolute;inset:auto 0 300px 0;text-align:center;font-size:330px;font-weight:700;color:#fff;opacity:.025;line-height:1;pointer-events:none}
 .cv .body{justify-content:flex-start;padding-top:60px}
 .cv h1{font-size:96px;line-height:1.35;font-weight:600;color:var(--soft)}
@@ -115,29 +115,48 @@ b{font-weight:700;color:var(--blue)}
 
 <!-- 1 Cover -->
 <section class="slide cover cv">
-  <div class="wm">يسّرنا</div>
-  <svg class="ice" viewBox="0 0 300 210" fill="none">
+    <svg class="ice" viewBox="0 0 400 330" fill="none">
+    <defs>
+      <radialGradient id="gl" cx="50%" cy="45%" r="50%"><stop offset="0" stop-color="#65bdd5" stop-opacity=".22"/><stop offset="1" stop-color="#65bdd5" stop-opacity="0"/></radialGradient>
+    </defs>
+    <circle cx="200" cy="150" r="150" fill="url(#gl)"/>
+    <circle cx="200" cy="150" r="128" stroke="#65bdd5" stroke-opacity=".12" stroke-width="1" stroke-dasharray="2 6"/>
+    <g stroke="#65bdd5" stroke-opacity=".22" stroke-width="1.2">
+      <rect x="125" y="75" width="150" height="150" transform="rotate(0 200 150)"/>
+      <rect x="125" y="75" width="150" height="150" transform="rotate(45 200 150)"/>
+    </g>
+    <circle cx="200" cy="150" r="58" stroke="#65bdd5" stroke-opacity=".14" stroke-width="1"/>
+    <!-- rays -->
+    <g stroke="#c4e773" stroke-linecap="round">
+      <path d="M200 70 V40" stroke-opacity=".7" stroke-width="2"/>
+      <path d="M200 70 L176 48" stroke-opacity=".45" stroke-width="1.6"/>
+      <path d="M200 70 L224 48" stroke-opacity=".45" stroke-width="1.6"/>
+      <path d="M200 70 L160 64" stroke-opacity=".25" stroke-width="1.4"/>
+      <path d="M200 70 L240 64" stroke-opacity=".25" stroke-width="1.4"/>
+    </g>
+    <circle cx="200" cy="70" r="7" fill="#c4e773"/>
+    <circle cx="200" cy="70" r="14" stroke="#c4e773" stroke-opacity=".35" stroke-width="1.2"/>
+    <!-- rehal legs -->
     <g stroke="#65bdd5" stroke-linecap="round">
-      <path d="M150 70 V20" stroke-opacity=".55" stroke-width="2"/>
-      <path d="M150 70 L112 30" stroke-opacity=".35" stroke-width="1.6"/>
-      <path d="M150 70 L188 30" stroke-opacity=".35" stroke-width="1.6"/>
-      <path d="M150 70 L84 50" stroke-opacity=".2" stroke-width="1.4"/>
-      <path d="M150 70 L216 50" stroke-opacity=".2" stroke-width="1.4"/>
-      <path d="M150 70 L64 74" stroke-opacity=".12" stroke-width="1.2" stroke-dasharray="2 5"/>
-      <path d="M150 70 L236 74" stroke-opacity=".12" stroke-width="1.2" stroke-dasharray="2 5"/>
+      <path d="M152 200 L262 306" stroke-width="11" stroke-opacity=".9"/>
+      <path d="M248 200 L138 306" stroke-width="11" stroke-opacity=".55"/>
     </g>
-    <path d="M150 112 C122 96 86 92 50 98 V176 C86 170 122 174 150 190 Z" fill="#65bdd5" fill-opacity=".07" stroke="#65bdd5" stroke-width="2.6" stroke-linejoin="round"/>
-    <path d="M150 112 C178 96 214 92 250 98 V176 C214 170 178 174 150 190 Z" fill="#65bdd5" fill-opacity=".07" stroke="#65bdd5" stroke-width="2.6" stroke-linejoin="round"/>
-    <path d="M150 112 V190" stroke="#65bdd5" stroke-width="2"/>
-    <g stroke="#65bdd5" stroke-opacity=".35" stroke-width="1.4" stroke-linecap="round">
-      <path d="M68 118 C92 114 116 116 136 124"/><path d="M68 134 C92 130 116 132 136 140"/><path d="M68 150 C92 146 116 148 136 156"/>
-      <path d="M232 118 C208 114 184 116 164 124"/><path d="M232 134 C208 130 184 132 164 140"/><path d="M232 150 C208 146 184 148 164 156"/>
+    <path d="M120 308 H160 M240 308 H280" stroke="#65bdd5" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="200" cy="253" r="5" fill="#0f1012" stroke="#65bdd5" stroke-width="2"/>
+    <!-- book -->
+    <path d="M200 214 C168 194 128 188 86 194 L92 124 C132 116 172 122 200 144 Z" fill="#17191c" stroke="#65bdd5" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M200 214 C232 194 272 188 314 194 L308 124 C268 116 228 122 200 144 Z" fill="#17191c" stroke="#65bdd5" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M200 144 V214" stroke="#65bdd5" stroke-width="2"/>
+    <g stroke="#65bdd5" stroke-opacity=".38" stroke-width="1.4" stroke-linecap="round">
+      <path d="M108 142 C138 137 166 141 186 154"/><path d="M106 158 C136 153 164 157 186 170"/><path d="M104 174 C134 169 162 173 186 186"/>
+      <path d="M292 142 C262 137 234 141 214 154"/><path d="M294 158 C264 153 236 157 214 170"/><path d="M296 174 C266 169 238 173 214 186"/>
     </g>
-    <circle cx="150" cy="70" r="6" fill="#c4e773"/>
+    <path d="M86 194 C128 188 168 194 200 214 C232 194 272 188 314 194 L316 202 C274 196 234 202 200 222 C166 202 126 196 84 202 Z" fill="#65bdd5" fill-opacity=".35"/>
   </svg>
   <div class="body">
     <div style="width:40px;height:40px;border-radius:50%;background:var(--lime);background-clip:padding-box;border:8px solid rgba(196,231,115,.18);margin:0 0 40px"></div>
     <h1>القرآن ميسّر،<span>فهل من مقبل؟</span></h1>
+    <p style="font-size:34px;color:var(--muted);margin-top:22px;display:flex;align-items:center;gap:16px"><span style="width:48px;height:2px;background:var(--lime);display:inline-block"></span>من تفسير السعدي رحمه الله</p>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
     <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
@@ -177,7 +196,7 @@ b{font-weight:700;color:var(--blue)}
     <p class="lead">لأنه..</p>
     <div class="tri">
       <div class="r"><span class="a">أحسن الكلام</span><span class="b">لفظًا</span><span class="n">01</span></div>
-      <div class="r"><span class="a">وأصدقه</span><span class="b">معنى</span><span class="n">02</span></div>
+      <div class="r"><span class="a">وأصدقه</span><span class="b">معنىً</span><span class="n">02</span></div>
       <div class="r"><span class="a">وأبينه</span><span class="b">تفسيرًا</span><span class="n">03</span></div>
     </div>
   </div>
