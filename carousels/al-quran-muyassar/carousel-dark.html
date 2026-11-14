@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>القرآن ميسّر — ليلي</title>
+<style>
+@font-face{font-family:"Orn";src:url(f/amiri-quran-arabic-400-normal.woff2);unicode-range:U+FD3E-FD3F,U+FDFA,U+FDFD}
+@font-face{font-family:"PlexLat";src:url(f/plex-r.ttf);font-weight:400;unicode-range:U+0000-00FF}
+@font-face{font-family:"PlexLat";src:url(f/plex-sb.ttf);font-weight:600 700;unicode-range:U+0000-00FF}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-300-normal.woff2);font-weight:300}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-400-normal.woff2);font-weight:400}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-600-normal.woff2);font-weight:600}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-700-normal.woff2);font-weight:700}
+
+:root{
+  --bg:#0f1012; --bg2:#161719; --line:rgba(255,255,255,.045);
+  --text:#eef0f2; --muted:#8b9198; --dim:#5b6067;
+  --blue:#65bdd5; --lime:#c4e773; --soft:#c9cdd2; --olive:#232f09; --card:#1b1d20; --border:#2a2d31;
+}
+@page{size:1080px 1350px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:"Orn","PlexLat","Plex",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+
+.slide{
+  width:1080px;height:1350px;position:relative;overflow:hidden;page-break-after:always;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 45%, transparent 40%, rgba(0,0,0,.55) 100%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    var(--bg);
+  display:flex;flex-direction:column;padding:120px 110px 0;
+}
+.slide:last-child{page-break-after:auto}
+
+/* header */
+.head{display:flex;align-items:center;gap:18px;font-size:28px;font-weight:500;color:var(--muted)}
+.head::before{content:"";width:5px;height:40px;background:var(--blue);border-radius:3px}
+.count{margin-inline-start:auto;font-size:24px;color:var(--dim);font-weight:400;letter-spacing:.04em}
+
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px}
+
+p.t{font-size:58px;line-height:1.75;font-weight:400;text-align:right}
+p.t + p.t{margin-top:28px}
+p.s{font-size:44px;line-height:1.8;font-weight:400;color:#c9cdd2}
+b{font-weight:700;color:var(--blue)}
+.lime{color:var(--lime);font-weight:700}
+
+.tag{align-self:flex-start;display:inline-block;background:var(--olive);color:var(--lime);
+  font-size:40px;font-weight:700;padding:10px 30px 16px;border-radius:12px;margin-bottom:56px}
+
+.verse{text-align:center;margin:64px 0 0}
+.verse .v{font-size:56px;line-height:1.95;font-weight:500;color:var(--text)}
+.verse .br{color:var(--blue);font-size:60px;line-height:0}
+.verse .ref{margin-top:14px;font-size:28px;color:var(--muted)}
+
+.note{margin-top:70px;background:var(--card);border:1px solid var(--border);border-radius:28px;padding:44px 52px}
+.note .lbl{font-size:28px;color:var(--blue);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.note .lbl::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--lime)}
+.note p{font-size:44px;line-height:1.7}
+.note .src{font-size:26px;color:var(--muted);margin-top:18px}
+
+.hadith{margin-top:60px;border-inline-start:6px solid var(--lime);padding:16px 44px 20px;background:linear-gradient(270deg,rgba(196,231,115,.07),transparent)}
+.hadith p{font-size:52px;line-height:1.85;font-weight:500}
+.hadith .ref{font-size:28px;color:var(--muted);margin-top:12px}
+
+.foot{height:120px;display:flex;align-items:center;justify-content:center;font-family:"PlexLat";font-size:26px;color:var(--dim);letter-spacing:.02em;position:relative}
+.swipe{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:12px;font-family:"Plex";font-size:24px;color:var(--muted)}
+.swipe svg{width:40px;height:40px}
+.send{position:absolute;left:0;top:50%;transform:translateY(-55%);width:84px;height:84px}
+
+/* cover */
+.cover .body{justify-content:flex-start;padding-top:40px;padding-bottom:40px}
+.cover .kicker{font-size:34px;color:var(--lime);font-weight:600;margin-bottom:10px}
+.cover h1{font-size:176px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+.cover h1 span{color:var(--blue)}
+.cover .rule{width:140px;height:6px;background:var(--blue);border-radius:3px;margin:46px 0 46px}
+.cover .sub{font-size:50px;line-height:1.7;color:#c9cdd2;font-weight:400}
+.ring{position:absolute;left:-250px;bottom:150px;width:600px;height:600px;transform:rotate(180deg)}
+
+.cover h1.ct{font-size:112px;line-height:1.45;font-weight:700}
+.cover h1.ct span{font-size:170px;line-height:1.15;color:var(--blue);display:inline-block;margin:6px 0}
+.cover h1.ct em{display:block;margin-top:-6px;font-style:normal;font-size:52px;font-weight:500;color:var(--muted)}
+.big-q{font-size:200px;line-height:1;color:var(--blue);opacity:.18;font-family:"Plex";position:absolute;top:150px;left:100px}
+.ice{position:absolute;left:50%;bottom:150px;width:620px;height:430px;transform:translateX(-50%)}
+.wm{position:absolute;inset:auto 0 300px 0;text-align:center;font-size:330px;font-weight:700;color:#fff;opacity:.025;line-height:1;pointer-events:none}
+.cv .body{justify-content:flex-start;padding-top:60px}
+.cv h1{font-size:96px;line-height:1.35;font-weight:600;color:var(--soft)}
+.cv h1 span{display:block;font-size:124px;white-space:nowrap;font-weight:700;color:var(--blue);line-height:1.2}
+.lead{font-size:40px;line-height:1.7;color:var(--soft)}
+.duo{display:flex;flex-direction:column;gap:26px;margin-top:44px}
+.duo .row{display:flex;align-items:center;gap:30px;background:var(--card);border:1px solid var(--border);border-radius:28px;padding:30px 44px}
+.duo .k{font-size:80px;font-weight:700;color:var(--blue);min-width:300px;line-height:1.3}
+.duo .arrow{width:46px;height:46px;flex:none}
+.duo .v{font-size:48px;font-weight:600;line-height:1.5}
+.duo .v small{display:block;font-size:28px;color:var(--muted);font-weight:400}
+.tri{margin-top:40px;display:flex;flex-direction:column;gap:6px}
+.tri .r{display:flex;align-items:baseline;gap:26px;border-bottom:1px solid var(--border);padding:18px 0 26px}
+.tri .r:last-child{border-bottom:none}
+.tri .a{font-size:92px;font-weight:700;line-height:1.25}
+.tri .b{font-size:60px;font-weight:600;color:var(--blue)}
+.tri .n{margin-inline-start:auto;font-size:26px;color:var(--dim);font-family:"PlexLat"}
+.huge{font-size:84px;line-height:1.5;font-weight:700;margin-top:24px}
+.huge em{font-style:normal;color:var(--lime)}
+.chips{display:flex;flex-wrap:wrap;gap:18px;margin-top:44px}
+.chip{font-size:38px;font-weight:600;padding:16px 30px 22px;border-radius:999px;background:var(--card);border:1px solid var(--border)}
+.chip.l{background:var(--olive);color:var(--lime);border-color:#33440c}
+.srcline{margin-top:46px;font-size:26px;color:var(--muted)}
+.fin{font-size:100px;line-height:1.6;font-weight:500;text-align:center;margin-top:20px}
+.fin .br{color:var(--blue)}
+</style>
+</head>
+<body>
+
+<!-- 1 Cover -->
+<section class="slide cover cv">
+  <div class="wm">يسّرنا</div>
+  <svg class="ice" viewBox="0 0 300 210" fill="none">
+    <g stroke="#65bdd5" stroke-linecap="round">
+      <path d="M150 70 V20" stroke-opacity=".55" stroke-width="2"/>
+      <path d="M150 70 L112 30" stroke-opacity=".35" stroke-width="1.6"/>
+      <path d="M150 70 L188 30" stroke-opacity=".35" stroke-width="1.6"/>
+      <path d="M150 70 L84 50" stroke-opacity=".2" stroke-width="1.4"/>
+      <path d="M150 70 L216 50" stroke-opacity=".2" stroke-width="1.4"/>
+      <path d="M150 70 L64 74" stroke-opacity=".12" stroke-width="1.2" stroke-dasharray="2 5"/>
+      <path d="M150 70 L236 74" stroke-opacity=".12" stroke-width="1.2" stroke-dasharray="2 5"/>
+    </g>
+    <path d="M150 112 C122 96 86 92 50 98 V176 C86 170 122 174 150 190 Z" fill="#65bdd5" fill-opacity=".07" stroke="#65bdd5" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M150 112 C178 96 214 92 250 98 V176 C214 170 178 174 150 190 Z" fill="#65bdd5" fill-opacity=".07" stroke="#65bdd5" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M150 112 V190" stroke="#65bdd5" stroke-width="2"/>
+    <g stroke="#65bdd5" stroke-opacity=".35" stroke-width="1.4" stroke-linecap="round">
+      <path d="M68 118 C92 114 116 116 136 124"/><path d="M68 134 C92 130 116 132 136 140"/><path d="M68 150 C92 146 116 148 136 156"/>
+      <path d="M232 118 C208 114 184 116 164 124"/><path d="M232 134 C208 130 184 132 164 140"/><path d="M232 150 C208 146 184 148 164 156"/>
+    </g>
+    <circle cx="150" cy="70" r="6" fill="#c4e773"/>
+  </svg>
+  <div class="body">
+    <div style="width:40px;height:40px;border-radius:50%;background:var(--lime);background-clip:padding-box;border:8px solid rgba(196,231,115,.18);margin:0 0 40px"></div>
+    <h1>القرآن ميسّر،<span>فهل من مقبل؟</span></h1>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
+  </div>
+</section>
+
+<!-- 2 Verse -->
+<section class="slide">
+  <div class="head">من تفسير السعدي<span class="count">٢ / ٨</span></div>
+  <div class="body">
+    <p class="t">قال الله تعالى:</p>
+    <div class="verse" style="margin-top:80px">
+      <div class="v" style="font-size:76px;line-height:1.75"><span class="br" style="font-size:80px">﴿</span>وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ<br>فَهَلْ مِن مُّدَّكِرٍ<span class="br" style="font-size:80px">﴾</span></div>
+      <div class="ref" style="margin-top:28px">[سورة القمر: ١٧]</div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 3 Words & meanings -->
+<section class="slide">
+  <div class="head">من تفسير السعدي<span class="count">٣ / ٨</span></div>
+  <div class="body">
+    <p class="lead">أي: ولقد يسّرنا وسهّلنا<br><b>هذا القرآن الكريم</b>..</p>
+    <div class="duo">
+      <div class="row"><div class="k">ألفاظه</div><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><div class="v">للحفظ والأداء</div></div>
+      <div class="row"><div class="k">ومعانيه</div><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><div class="v">للفهم والعلم</div></div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 4 Why -->
+<section class="slide">
+  <div class="head">من تفسير السعدي<span class="count">٤ / ٨</span></div>
+  <div class="body">
+    <p class="lead">لأنه..</p>
+    <div class="tri">
+      <div class="r"><span class="a">أحسن الكلام</span><span class="b">لفظًا</span><span class="n">01</span></div>
+      <div class="r"><span class="a">وأصدقه</span><span class="b">معنى</span><span class="n">02</span></div>
+      <div class="r"><span class="a">وأبينه</span><span class="b">تفسيرًا</span><span class="n">03</span></div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 5 Whoever turns to it -->
+<section class="slide">
+  <div class="head">من تفسير السعدي<span class="count">٥ / ٨</span></div>
+  <div class="body">
+    <p class="huge">فكلُّ من <span style="color:var(--blue)">أقبل عليه</span><br>يسّر الله عليه مطلوبه<br><em>غاية التيسير</em>،<br><span style="font-weight:500;color:var(--soft);font-size:.7em">وسهّله عليه.</span></p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 6 Dhikr -->
+<section class="slide">
+  <div class="head">من تفسير السعدي<span class="count">٦ / ٨</span></div>
+  <div class="body">
+    <p class="t" style="font-size:54px;line-height:1.7">و<b>الذِّكر</b> شاملٌ لكل ما يتذكّر به العاملون من:</p>
+    <div class="chips">
+      <span class="chip">الحلال والحرام</span>
+      <span class="chip">أحكام الأمر والنهي</span>
+      <span class="chip">أحكام الجزاء</span>
+      <span class="chip l">المواعظ والعبر</span>
+      <span class="chip">العقائد النافعة</span>
+      <span class="chip l">الأخبار الصادقة</span>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 7 Easiest knowledge -->
+<section class="slide">
+  <div class="head">من تفسير السعدي<span class="count">٧ / ٨</span></div>
+  <div class="body">
+    <p class="lead">ولهذا كان علم القرآن حفظًا وتفسيرًا..</p>
+    <p style="font-size:128px;line-height:1.3;font-weight:700;color:var(--blue);margin-top:24px">أسهل العلوم</p>
+    <p style="font-size:72px;line-height:1.4;font-weight:700;margin-top:6px">وأجلّها على الإطلاق</p>
+    <div style="width:140px;height:6px;background:var(--lime);border-radius:3px;margin:52px 0 44px"></div>
+    <p class="t" style="font-size:48px">وهو العلم النافع الذي<br>إذا طلبه العبد <span class="lime">أُعِينَ عليه</span>.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 8 Closing -->
+<section class="slide">
+  <div class="head">من تفسير السعدي<span class="count">٨ / ٨</span></div>
+  <div class="body">
+    <div class="tag">قال بعض السلف عند هذه الآية</div>
+    <p style="font-size:68px;line-height:1.5;font-weight:700">«هل من طالب علمٍ<br><span style="color:var(--blue)">فيُعانَ عليه؟</span>»</p>
+    <p class="lead" style="margin-top:56px">ولهذا يدعو الله عباده إلى الإقبال عليه والتذكّر بقوله:</p>
+    <p class="fin"><span class="br">﴿</span>فَهَلْ مِن مُّدَّكِرٍ<span class="br">﴾</span></p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <svg class="send" viewBox="0 0 24 24" fill="none" stroke="#eef0f2" stroke-width="1.3" stroke-linejoin="round"><path d="M21.5 2.5 2.8 9.6l7.4 3.3 3.3 7.4z"/><path d="m21.5 2.5-11.3 10.4"/></svg>
+  </div>
+</section>
+
+</body>
+</html>
