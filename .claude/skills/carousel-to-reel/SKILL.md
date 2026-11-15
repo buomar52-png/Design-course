@@ -261,6 +261,12 @@ Reference: `motion-graphics/quran-tadabbur/`, a 126 s recording cut down to 95 s
     - a soft teal/lime glow band (`#tide`, screen blend, blur 18) rides the edge.
 
     The last scene gets a slow 1→1.03 push. Reference: `motion-graphics/quran-tadabbur/tools/build.py`.
+- **User feedback on quran-tadabbur (apply to every voice reel):**
+  - **Let the last word of a scene breathe.** The transition must not start until about 1 s after the scene's last word is spoken. Add `--hold c:dur[:window]` pauses (0.6–0.9 s) at idea boundaries, especially where no natural pause exists (e.g. «رونقًا، كما يقول»).
+  - **Never shorten pauses inside recited poetry or a quoted verse.** Protect the whole passage with `--protect`, and keep stumbles inside it unless the user asks otherwise.
+  - Protect a word whose soft ending gets clipped (e.g. «نقي») with `--protect` around it.
+  - **Abandoned takes:** «بأن الله سبحانه و…» → «بأن الله سيجعل…», or «فتتيقن بأنك…» → «فتتيقن بأن من…». Cut from the start of the first take to the start of the second. Confirm by transcribing each piece of the original on its own: Whisper merges takes when given a longer clip.
+  - **Illustrate concrete examples with animated line icons** that tell the turn of the idea. For example: a rain cloud → the sun rises on «فتستبشر»; a wallet shakes → coins pop out on «عوّضه»; a fork with «؟» → the right path glows on «مخرجًا». Use stroke-draw (`path.draw` + `data-draw`), `data-pop`, `data-shake` and `data-glow`. See `quran-tadabbur/tools/build.py`.
 - Big display words (≥200 px): drop the tanween (مختلفٌ → مختلف). It collides with the neighbouring lines.
 
 ## Gotchas (learned the hard way)

@@ -13,7 +13,7 @@
   to -16 LUFS. Never add a compressor or dynamic loudnorm: they lift the hiss between words.
 - --cut a-b (repeatable) removes a retracted sentence, a repeated sentence (keep the better-worded take),
   a stumble or a filler; --move-to-end a-b plays that passage last (e.g. a closing verse) after
-  --move-gap 0.7 s of silence, keeping its own pauses as recited (--trim-moved to shorten them).
+  --move-gap 0.7 s of silence; --hold c:dur inserts a breathing pause at original time c; keeping its own pauses as recited (--trim-moved to shorten them).
   Times are original-audio seconds; find them from the transcript + loudness.
 - --reuse-cuts old/timing.json applies the exact cuts of an earlier run (motion stays in sync);
   --name file.m4a sets the output name.
@@ -102,6 +102,29 @@ keep = keep_between(main_cuts, 0.0, dur)
 if mv:
     while keep and keep[-1][1] - keep[-1][0] < 0.02: keep.pop()
     keep += [("gap", MOVE_GAP)] + keep_between(moved_cuts, *mv)
+# --hold c:dur (repeatable): insert dur s of silence at the quietest point within ±0.4 s of original time c,
+# so a scene can breathe before the next idea (e.g. let a key word stay on screen before the transition)
+holds = [tuple(map(float, a[k + 1].split(":"))) for k in range(len(a)) if a[k] == "--hold"]   # c:dur[:window]
+for h in sorted(holds, reverse=True):
+    c, hd, win = h[0], h[1], (h[2] if len(h) > 2 else 0.4)
+    done = False
+    # 1) a join between two kept pieces (a shortened pause) near c: put the silence right there
+    for n in range(len(keep) - 1):
+        k, k2 = keep[n], keep[n + 1]
+        if k[0] != "gap" and k2[0] != "gap" and abs(k[1] - c) <= min(0.6, win + 0.2) and k2[0] > k[1]:
+            keep.insert(n + 1, ("gap", hd)); done = True
+            print(f"  hold {hd:.2f}s at join {k[1]:.2f} (asked {c:.2f})"); break
+    if done: continue
+    # 2) otherwise the quietest 10 ms point within ±0.4 s that is inside a kept piece
+    for n, k in enumerate(keep):
+        if k[0] != "gap" and k[0] < c + win and k[1] > c - win:
+            lo, hi = int(max(k[0], c - win) * 100), int(min(k[1], c + win) * 100) + 1
+            if hi <= lo: continue
+            q = (lo + int(np.argmin(db[lo:hi]))) / 100
+            keep[n:n + 1] = [(k[0], q), ("gap", hd), (q, k[1])]
+            print(f"  hold {hd:.2f}s at {q:.2f} (asked {c:.2f})"); done = True
+            break
+    if not done: print(f"  ! hold at {c:.2f} not placed")
 seg_len = lambda k: k[1] if k[0] == "gap" else k[1] - k[0]
 total = sum(seg_len(k) for k in keep)
 print(f"{dur:.2f}s -> {total:.2f}s")
