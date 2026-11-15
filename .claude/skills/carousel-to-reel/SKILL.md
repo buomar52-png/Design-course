@@ -18,7 +18,7 @@ All files go in `motion-graphics/<slug>/`:
 | `output/<slug>-reel.mp4` | 1080×1920, H.264, 30fps, silent |
 | `lottie/<slug>-reel.json` (+ `-scene-N.json`) | Text converted to vector shapes, so no fonts are needed |
 | `reels/cover.png` | A settled frame from scene 1 |
-| `output/<slug>-reel-dark.mp4` (+ `-dark-voice.mp4`) | Night version (`--theme dark`). Produce it whenever the user asks for الوضع الليلي / النظام الليلي |
+| `output/<slug>-reel-light.mp4` (+ `-light-voice.mp4`) | Day version (`--theme light`). Only when the user asks for النهاري / الفاتح |
 | `reels/voiceover-script.md` | Table: time · scene · on-screen text · suggested VO (≈2 words/s) |
 | `reels/captions.srt` | Captions of the suggested VO, timed to the scenes |
 | `reels/post-caption.txt` | Post text + hashtags |
@@ -59,10 +59,12 @@ Then edit `motion-graphics/<slug>/index.html`:
 - **All scene times come from `T`.** Write every tween as `a + offset`, where `a = T.sN`. Never use absolute seconds; that is what makes voice sync a one-line change.
 - **Signature visual** (`#visual`): design the post's key graphic from the file (hidden-sins used a heart with the sin names floating inside, drawn by a stroke and then beating). Use SVG with `path.draw` for drawn strokes and `.u` / `.w` for text, so it exports to Lottie.
 
-### Night theme (النظام الليلي)
+### Default look: night, no grid (ليلي بدون مربعات)
+**New reels default to the night theme on a plain background (no grid). This is the user's chosen house default.**
+The template's `DEFAULTS = { theme: 'dark', grid: 'off' }` sets it; `?theme=light` and `?grid=on` override it.
 - The template ships with two palettes:
   - `:root` (day);
-  - `:root[data-theme="dark"]` (night, activated by `index.html?theme=dark`).
+  - `:root[data-theme="dark"]` (night: the default).
 - **Every colour on the page must come from a CSS variable.** When you add an element (a signature visual, an icon), give it a token in **both** palettes. Never hard-code a hex/rgba in a rule or SVG attribute: use `fill="var(--x)"`.
 - GSAP cannot tween `var()`. For animated colours (text glow), read the value with `tok('--accent-glow')`.
 - When you change the day palette to match a user's file, derive the night one from it:
@@ -74,11 +76,14 @@ Then edit `motion-graphics/<slug>/index.html`:
   - glows dimmer.
 - Export:
   ```bash
-  node $S/render.js <dir> --theme dark [--audio …]         # -> <slug>-reel-dark(-voice).mp4
-  node $S/bake.js <dir> --theme dark && python3 $S/build_lottie.py <dir> --theme dark [--scenes]
+  node $S/render.js <dir> [--audio …]                      # default: night, no grid -> <slug>-reel(-voice).mp4
+  node $S/render.js <dir> --theme light [--audio …]        # day version -> <slug>-reel-light(-voice).mp4
+  node $S/bake.js <dir> && python3 $S/build_lottie.py <dir> [--scenes]   # default look
+  node $S/bake.js <dir> --theme light && python3 $S/build_lottie.py <dir> --theme light   # day Lottie
   ```
-- QA the night stills too: `--theme dark --stills … --sheet`.
-- Plain background without the grid (the user may ask: أزل المربعات): add `--no-grid` (`?grid=off`). This works with either theme, and the output gets a `-nogrid` suffix.
+- QA the default stills; if you also deliver the day version, QA it with `--theme light --stills … --sheet`.
+- The grid is off by default. To show it (the user may ask: أظهر المربعات), use `--grid on` (`?grid=on`); the output gets a `-grid` suffix.
+- Older projects (`hidden-sins`, `quran-hifz`) predate this default: they are day + grid unless you pass `--theme dark` / `--no-grid`.
 
 ### 4. House style: layout
 - Stage 1080×1920, side padding 100px, text right-aligned (RTL).
@@ -96,7 +101,7 @@ Then edit `motion-graphics/<slug>/index.html`:
   | Handle | 36px at y≈1660 |
 
 - Lines are `white-space: nowrap`. **You must verify that no line overflows** (step 6), and shrink the font or rebreak the line when one does.
-- Background: soft grid of 56px cells, a blue glow top-right, a green glow bottom-left, and a slow drift across the whole reel.
+- Background: plain (night) with a blue glow top-right, a green glow bottom-left, and a slow drift across the whole reel. An optional soft grid of 56px cells can be turned on with `?grid=on`.
 
 ### 5. House style: motion
 | Element | Motion |

@@ -42,7 +42,7 @@
     --glow-b: 205, 232, 150; --glow-b-a: .45;   /* توهج أسفل اليسار */
     --accent-glow: rgba(27, 122, 156, .28);     /* ظل الكلمة الكبيرة */
   }
-  /* ===== النظام الليلي: index.html?theme=dark (أو render.js --theme dark) =====
+  /* ===== النظام الليلي (الافتراضي في القالب؛ ?theme=light للنهاري) =====
      كل لون في الصفحة يجب أن يأتي من هذه المتغيرات حتى تعمل النسختان. */
   :root[data-theme="dark"] {
     --bg: #0e1416;
@@ -231,8 +231,10 @@
 <script>
 (() => {
   const params = new URLSearchParams(location.search);
-  if (params.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
-  if (params.get('grid') === 'off') document.documentElement.dataset.grid = 'off';   // خلفية بلا مربعات
+  /* الافتراضي: ليلي بدون مربعات. للنهاري: ?theme=light — لإظهار المربعات: ?grid=on */
+  const DEFAULTS = { theme: 'dark', grid: 'off' };
+  if ((params.get('theme') || DEFAULTS.theme) === 'dark') document.documentElement.dataset.theme = 'dark';
+  if ((params.get('grid') || DEFAULTS.grid) === 'off') document.documentElement.dataset.grid = 'off';
   /* لون من متغيرات الهوية — استخدمه داخل GSAP (لا يحرّك GSAP قيم var()) */
   const tok = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   /* ================== التوقيت — المكان الوحيد لضبط المشاهد ==================

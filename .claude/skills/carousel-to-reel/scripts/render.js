@@ -4,8 +4,9 @@
 //   node render.js <project-dir> --audio voice.m4a        -> also <name>-reel-voice.mp4 (voice muxed in)
 //   node render.js <project-dir> --stills 2,8.5,14,30     -> <dir>/output/stills/t-<sec>.png
 //   options: --fps 60   --out path.mp4   --sheet  (with --stills: also a contact sheet stills/sheet.png)
-//            --theme dark   (index.html?theme=dark; outputs get a -dark suffix)
-//            --no-grid      (index.html?grid=off: plain background without the grid; outputs get -nogrid)
+//            --theme dark|light   (index.html?theme=…; outputs get a -dark / -light suffix)
+//            --grid on|off        (index.html?grid=…; outputs get -grid / -nogrid)   --no-grid = --grid off
+//   Without these flags the page's own default is used (template default: night, no grid).
 //
 // Needs: playwright (Chromium) and ffmpeg on PATH.
 const { chromium } = require('playwright');
@@ -19,13 +20,13 @@ const flag = k => args.includes('--' + k);
 const dir = path.resolve(args[0] && !args[0].startsWith('--') ? args[0] : '.');
 const name = path.basename(dir);
 const fps = +opt('fps', 30);
-const out = path.resolve(dir, opt('out', `output/${name}-reel${(opt('theme', null) ? '-' + opt('theme', null) : '') + (args.includes('--no-grid') ? '-nogrid' : '')}.mp4`));
 const stills = opt('stills', null);
 const audio = opt('audio', null);
 const theme = opt('theme', null);
-const noGrid = flag('no-grid');
-const query = (theme ? '&theme=' + theme : '') + (noGrid ? '&grid=off' : '');
-const suffix = (theme ? '-' + theme : '') + (noGrid ? '-nogrid' : '');
+const grid = flag('no-grid') ? 'off' : opt('grid', null);
+const query = (theme ? '&theme=' + theme : '') + (grid ? '&grid=' + grid : '');
+const suffix = (theme ? '-' + theme : '') + (grid ? (grid === 'off' ? '-nogrid' : '-grid') : '');
+const out = path.resolve(dir, opt('out', `output/${name}-reel${suffix}.mp4`));
 
 (async () => {
   const browser = await chromium.launch();
