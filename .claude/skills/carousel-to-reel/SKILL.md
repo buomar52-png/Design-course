@@ -49,10 +49,29 @@ The default is **9:16 and ≤ 40 s** unless the user says otherwise. Ask nothing
 - The last scene holds at least 2 s after its final element lands.
 - Each scene's out-transition starts 0.55 s before the next scene, and is handled automatically by `sceneOut`.
 
-### 3. Scaffold
+### 3. Scaffold: the five approved templates (القوالب الخمسة المعتمدة)
 ```bash
-bash .claude/skills/carousel-to-reel/scripts/new_reel.sh <slug> "عنوان الريل"
+bash .claude/skills/carousel-to-reel/scripts/new_reel.sh <slug> "عنوان الريل" --style <style>
 ```
+| # | `--style` | Template | Source |
+|---|---|---|---|
+| ١ | `day-grid` | النهاري بالمربعات | `template/` |
+| ٢ | `night-grid` | الليلي بالمربعات | `template/` |
+| ٣ | `day` | النهاري بدون مربعات | `template/` |
+| ٤ | `night` | **الليلي بدون مربعات (default)** | `template/` |
+| ٥ | `dual` | المزدوج: ليل ونهار بدون مربعات | `template-dual/` |
+
+- If the user names one of these (by number or name), use it. Otherwise use ٤.
+- Styles ١–٤ are one template with the look baked in as the project's `DEFAULTS`. Any of them can still be exported in another look with `--theme` / `--grid`.
+- Style ٥ (`template-dual/`):
+  - scenes alternate `section.scene.night` / `.day`;
+  - an iris wipe opens from the top centre;
+  - karaoke text: `.kline` words appear dimmed and light up. Spoken times go in `data-t`; without it they light up in sequence;
+  - giant outlined numerals, soft blobs, film grain, a glass card, pill chips, and lime `#c6f36b` with the identity teal;
+  - reference: `motion-graphics/quran-hifz-trend/`;
+  - **MP4 only:** `bake.js` / Lottie don't support its karaoke spans or iris clip-path yet.
+- No template has a page counter or a day/night toggle.
+
 Then edit `motion-graphics/<slug>/index.html`:
 - **Tokens** in `:root`: match the file's colours.
 - **Scenes:** replace every `__placeholder__`. Delete, duplicate or reorder scene blocks to fit the pages. Each scene uses the motion library (`wordIn`, `popIn`, `bigIn`, `reveal`, `highlight`, `dotIn`, `fadeUp`, `sceneIn`, `sceneOut`, `spread`).
@@ -164,6 +183,18 @@ python3 $S/voice_sync.py voice.m4a --scenes 4        # prints phrases, pauses an
    node $S/render.js motion-graphics/<slug> --audio voice.m4a   # -> <slug>-reel.mp4 and <slug>-reel-voice.mp4 (loudness normalised)
    ```
 5. Rebuild the Lottie and update the SRT to the real words when the user wants captions.
+
+## Approved audio settings (إعدادات الصوت المعتمدة)
+These are the settings of the voice the user approved («مبدع») on quran-hifz-trend. Keep them as the default for every reel:
+- `clean_voice.py` defaults:
+  - spectral denoise, strength 0.85, profile from the pauses;
+  - pauses: 0.32 s after a sentence end, 0.16 s for a mid-sentence hesitation, pauses under 0.4 s kept;
+  - 12 ms fades at cuts;
+  - high-pass 70 Hz;
+  - **linear** loudnorm to -16 LUFS / -1.5 dBTP;
+  - **no compressor**.
+- `render.js --audio` muxes the voice untouched (AAC 192k, padded with silence to the video's end).
+- Always listen for clipped word tails; fix them with `--protect`.
 
 ## Voice-first reel (the user sends only a recording)
 Reference: `motion-graphics/quran-hifz/`, built from a Bahraini-dialect recording. Typical asks:
