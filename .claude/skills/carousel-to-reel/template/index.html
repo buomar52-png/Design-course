@@ -14,7 +14,6 @@
       .ubox    مستطيل/شكل HTML متحرك، و .card بطاقة، و .dot نقطة خضراء بهالة
       .hl      تظليل خلف النص يُرسم من اليمين
       svg.usvg أيقونة SVG كاملة، path.upath مسار مستقل، path.draw مسار يُرسم بالخط
-      .clipwin نافذة قص (عداد الصفحات)
 -->
 <style>
   @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
@@ -99,8 +98,6 @@
   #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
   #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
   #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: var(--label); }
-  #header .clipwin { position: absolute; left: 0; top: 0; height: 56px; overflow: hidden; font-size: 36px; color: var(--muted); direction: ltr; }
-  #header .clipwin span { display: block; height: 56px; line-height: 56px; }
 
   /* ===== scene 1 — hook ===== */
   #s1 .title { top: 330px; font-weight: 700; font-size: 116px; line-height: 1.24; letter-spacing: -1px; }
@@ -164,7 +161,6 @@
     <div id="header">
       <span class="bar ubox"></span>
       <span class="name u">__اسم السلسلة__</span>
-      <span class="clipwin"><div id="count-roll"><span class="u">٢ / ٤</span><span class="u">٣ / ٤</span><span class="u">٤ / ٤</span></div></span>
     </div>
 
     <!-- ========== SCENE 2 — الآية / الاقتباس ========== -->
@@ -287,7 +283,6 @@
   const sceneIn = (sel, at) => tl.set(sel, { autoAlpha: 1 }, at);
   const sceneOut = (sel, nextStart) =>
     tl.to(sel, { y: -60, opacity: 0, filter: 'blur(12px)', duration: 0.55, ease: 'power2.in' }, nextStart - 0.55);
-  const counterTo = (page, at) => tl.to('#count-roll', { y: -56 * page, duration: 0.5, ease: 'power3.inOut' }, at - 0.1);
   /* يوزّع عناصر بالتساوي داخل فترة [from, to] — مفيد عند المزامنة مع الصوت */
   const spread = (n, from, to) => Array.from({ length: n }, (_, i) => from + (to - from) * (n > 1 ? i / (n - 1) : 0));
 
@@ -315,8 +310,7 @@
   { const a = T.s2;
     sceneIn(['#s2', '#header'], a);
     tl.fromTo('#header .bar', { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, a)
-      .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7 }, a + 0.15)
-      .fromTo('#header .clipwin', { opacity: 0 }, { opacity: 1, duration: 0.6 }, a + 0.3);
+      .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7 }, a + 0.15);
     wordIn(words('#s2 .say'), a + 0.4, 0.12);
     const lines = $$('#s2 .reveal');
     spread(lines.length, a + 1.2, a + 4.1).forEach((t, i) => reveal(lines[i], t, 1.35));
@@ -327,7 +321,7 @@
 
   /* ---------- SCENE 3 ---------- */
   { const a = T.s3;
-    counterTo(1, a); sceneIn('#s3', a);
+    sceneIn('#s3', a);
     wordIn(words($$('#s3 .head .line')[0]), a + 0.15, 0.14);
     const l2 = words('#s3-l2'), acc = $$('.accent .w', $('#s3-l2'));
     wordIn(l2.filter(w => !acc.includes(w)), a + 1.0, 0.14);
@@ -343,7 +337,7 @@
 
   /* ---------- SCENE 4 ---------- */
   { const a = T.s4;
-    counterTo(2, a); sceneIn('#s4', a);
+    sceneIn('#s4', a);
     const ls = $$('#s4 .lines .split');
     spread(ls.length, a + 0.2, a + 2.8).forEach((t, i) => wordIn(words(ls[i]), t, 0.09));
     bigIn(words('#s4 .sirr'), a + 3.5);

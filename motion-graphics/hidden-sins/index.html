@@ -84,8 +84,6 @@
   #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
   #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
   #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: #545b5e; }
-  #header .count { position: absolute; left: 0; top: 0; height: 56px; overflow: hidden; font-size: 36px; color: var(--muted); direction: ltr; }
-  #header .count span { display: block; height: 56px; line-height: 56px; }
 
   /* ---------- scene 2 ---------- */
   #s2 .say { top: 610px; font-size: 80px; font-weight: 400; }
@@ -186,7 +184,6 @@
     <div id="header">
       <span class="bar"></span>
       <span class="name">المعاصي الخفية</span>
-      <span class="count"><div id="count-roll"><span>٢ / ٤</span><span>٣ / ٤</span><span>٤ / ٤</span></div></span>
     </div>
 
     <!-- ============ SCENE 2 — الآية ============ -->
@@ -339,8 +336,7 @@
   tl.set('#s2', { autoAlpha: 1 }, 9)
     .set('#header', { autoAlpha: 1 }, 9)
     .fromTo('#header .bar', { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, 9)
-    .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7 }, 9.15)
-    .fromTo('#header .count', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 9.3);
+    .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7 }, 9.15);
   wordIn(words($('#s2 .say')), 9.4, 0.12);
   const ayah = $$('#s2 .reveal');
   reveal(ayah[0], 10.2, 1.4);
@@ -353,7 +349,6 @@
   sceneOut('#s2', 18.45);
 
   /* ---------- SCENE 3 (19 – 31s) ---------- */
-  tl.to('#count-roll', { y: -56, duration: 0.5, ease: 'power3.inOut' }, 18.9);
   tl.set('#s3', { autoAlpha: 1 }, 19);
   wordIn(words($('#s3 .head .line'))  , 19.15, 0.14);
   const l2 = words($('#s3-l2'));
@@ -370,7 +365,6 @@
   sceneOut('#s3', 30.45);
 
   /* ---------- SCENE 4 (31 – 40s) ---------- */
-  tl.to('#count-roll', { y: -112, duration: 0.5, ease: 'power3.inOut' }, 30.9);
   tl.set('#s4', { autoAlpha: 1 }, 31);
   const s4l = $$('#s4 .lines .split');
   wordIn(words(s4l[0]), 31.2, 0.09);

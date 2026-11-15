@@ -40,8 +40,8 @@ The default is **9:16 and ≤ 40 s** unless the user says otherwise. Ask nothing
 - Note the identity:
   - colours (sample pixels with PIL from a rendered page);
   - font (the template uses IBM Plex Sans Arabic);
-  - the signature elements (dots, highlight marker, card, header bar, page counter, handle, icons).
-- Carousel-only UI such as «اسحب ←» is dropped in video. The page counter `٢ / ٤` is kept: it rolls in the header.
+  - the signature elements (dots, highlight marker, card, header bar, handle, icons).
+- Carousel-only UI is dropped in video: «اسحب ←» and **the page counter (`٢ / ٤`)**. The user's rule: no page numbering at the top of a reel, and no day/night toggle icon.
 
 ### 2. Plan scenes and timing
 - Usually **one page = one scene**. Budget the time by reading load: about 2.5 words/s for display text, and more for verses and quotes.
@@ -55,7 +55,7 @@ bash .claude/skills/carousel-to-reel/scripts/new_reel.sh <slug> "عنوان ال
 ```
 Then edit `motion-graphics/<slug>/index.html`:
 - **Tokens** in `:root`: match the file's colours.
-- **Scenes:** replace every `__placeholder__`. Delete, duplicate or reorder scene blocks to fit the pages. Each scene uses the motion library (`wordIn`, `popIn`, `bigIn`, `reveal`, `highlight`, `dotIn`, `fadeUp`, `sceneIn`, `sceneOut`, `counterTo`, `spread`).
+- **Scenes:** replace every `__placeholder__`. Delete, duplicate or reorder scene blocks to fit the pages. Each scene uses the motion library (`wordIn`, `popIn`, `bigIn`, `reveal`, `highlight`, `dotIn`, `fadeUp`, `sceneIn`, `sceneOut`, `spread`).
 - **All scene times come from `T`.** Write every tween as `a + offset`, where `a = T.sN`. Never use absolute seconds; that is what makes voice sync a one-line change.
 - **Signature visual** (`#visual`): design the post's key graphic from the file (hidden-sins used a heart with the sin names floating inside, drawn by a stroke and then beating). Use SVG with `path.draw` for drawn strokes and `.u` / `.w` for text, so it exports to Lottie.
 
@@ -112,7 +112,7 @@ The template's `DEFAULTS = { theme: 'dark', grid: 'off' }` sets it; `?theme=ligh
 | Highlight marker | `highlight`, drawn right→left **after** its line has appeared |
 | Card | rises 160px with a slight rotation, expo |
 | Green dot | `dotIn` pop + halo pulses |
-| Header | bar grows, name slides in, counter rolls with `counterTo` |
+| Header | bar grows, name slides in (series name only; no page counter) |
 | Focal visual | stroke draw → fill → items pop in from the centre → heartbeat or float |
 | Scene exit | up 60px + blur + fade, 0.55s |
 
@@ -191,7 +191,7 @@ Reference: `motion-graphics/quran-hifz/`, built from a Bahraini-dialect recordin
    - quoted Quran/hadith get full harakat and their source (e.g. [رواه البخاري]). Only add a source you are certain of, and tell the user you added it;
    - deliver `reels/transcript.md`, a dialect | MSA table.
 4. **Structure:**
-   - find the talk's spine (e.g. "three things to keep in mind"), give the header counter that count (١ / ٣ …), and make the hook scene announce it;
+   - find the talk's spine (e.g. "three things to keep in mind") and let the hook scene announce it (e.g. three dots ١ ٢ ٣ that pop in). Never put a page counter in the header;
    - scene starts = the first word of each idea, minus about 0.25 s.
 5. **Sync to words:**
    - use the `wordsAt(els, [times])` helper, so each word enters at the moment it is spoken (times from `timing.json`, written as `a + offset`);

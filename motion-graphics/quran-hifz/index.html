@@ -64,8 +64,6 @@
   #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
   #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
   #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: var(--label); }
-  #header .clipwin { position: absolute; left: 0; top: 0; height: 56px; overflow: hidden; font-size: 36px; color: var(--muted); direction: ltr; }
-  #header .clipwin span { display: block; height: 56px; line-height: 56px; }
 
   .card { position: absolute; right: 80px; left: 80px; background: var(--card); border-radius: 42px; padding: 48px 52px 46px;
           box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
@@ -159,7 +157,6 @@
     <div id="header">
       <span class="bar ubox"></span>
       <span class="name u">استحضر عند حفظ القرآن</span>
-      <span class="clipwin"><div id="count-roll"><span class="u">١ / ٣</span><span class="u">٢ / ٣</span><span class="u">٣ / ٣</span></div></span>
     </div>
 
     <!-- ========== SCENE 2 — خيركم من تعلم القرآن وعلمه ========== -->
@@ -266,7 +263,6 @@
   const fadeUp = (sel, at) => tl.fromTo(sel, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, at);
   const sceneIn = (sel, at) => tl.set(sel, { autoAlpha: 1 }, at);
   const sceneOut = (sel, nextStart) => tl.to(sel, { y: -60, opacity: 0, filter: 'blur(12px)', duration: 0.5, ease: 'power2.in' }, nextStart - 0.5);
-  const counterTo = (page, at) => tl.to('#count-roll', { y: -56 * page, duration: 0.5, ease: 'power3.inOut' }, at - 0.1);
   const cardIn = (sel, at) => tl.fromTo(sel, { y: 160, opacity: 0, rotation: -1.5 }, { y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, at);
 
   /* ---------- background ---------- */
@@ -298,8 +294,7 @@
   { const a = T.s2;
     sceneIn(['#s2', '#header'], a);
     tl.fromTo('#header .bar', { scaleY: 0 }, { scaleY: 1, duration: 0.45 }, a)
-      .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6 }, a + 0.1)
-      .fromTo('#header .clipwin', { opacity: 0 }, { opacity: 1, duration: 0.5 }, a + 0.25);
+      .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6 }, a + 0.1);
     wordIn(words('#s2 .say'), a + 0.15, 0.3, 0.7);
     const L = $$('#s2 .reveal');
     reveal(L[0], a + 1.8, 1.0);            // خيركم 5.44 · من 5.98 · تعلم 6.32
@@ -312,7 +307,7 @@
 
   /* ---------- SCENE 3 (8.0 – 16.75) «وأيضًا استحضر أن النبي ﷺ كان خلقه القرآن كما قالت أمنا عائشة… وكانت رسالته القرآن» ---------- */
   { const a = T.s3;
-    counterTo(1, a); sceneIn('#s3', a);
+    sceneIn('#s3', a);
     wordsAt(words('#s3-h'), [a + 0.05, a + 1.3, a + 1.5, a + 1.85]);   // واستحضر · أنّ · النبيّ · ﷺ
     cardIn('#card3', a + 2.35);                                         // كان 10.65
     reveal('#s3 .quote .reveal', a + 2.6, 1.1);                         // كان خلقه القرآن
@@ -327,7 +322,7 @@
 
   /* ---------- SCENE 4 (16.75 – end) «ويكفي الإنسان شرفًا أنه يحفظ القرآن، غيره منشغل بأمور أخرى وهو منشغل بحفظ القرآن» ---------- */
   { const a = T.s4;
-    counterTo(2, a); sceneIn('#s4', a);
+    sceneIn('#s4', a);
     wordsAt(words('#s4-l1'), [a + 0.0, a + 0.42]);                      // ويكفي 16.74 · الإنسان 17.19
     bigIn(words('#s4-big'), a + 0.8);                                   // شرفًا 17.65
     tl.fromTo('#s4 .big', { textShadow: '0 0 0 rgba(27,122,156,0)' }, { textShadow: '0 10px 50px ' + getComputedStyle(document.documentElement).getPropertyValue('--accent-glow').trim(), duration: 1 }, a + 1.4);

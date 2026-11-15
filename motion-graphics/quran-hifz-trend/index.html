@@ -44,14 +44,10 @@
   .num { position: absolute; left: -60px; top: 330px; font-size: 1150px; font-weight: 700; line-height: 1; color: transparent;
          -webkit-text-stroke: 5px var(--stroke); pointer-events: none; }
 
-  /* header: toggle (left) + title chip (right) */
+  /* header: centred title chip */
   .hdr { position: absolute; top: 236px; left: var(--pad); right: var(--pad); height: 72px; }
-  .toggle { position: absolute; left: 0; top: 0; width: 136px; height: 72px; border-radius: 36px; background: var(--chip); border: 2px solid var(--chip-line); }
-  .knob { position: absolute; top: 8px; left: 8px; width: 52px; height: 52px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; }
-  .knob svg { width: 30px; height: 30px; }
-  .title-chip { position: absolute; right: 0; top: 6px; height: 60px; padding: 0 26px; border-radius: 30px; background: var(--chip); border: 2px solid var(--chip-line);
+  .title-chip { position: absolute; left: 50%; transform: translateX(-50%); top: 6px; height: 60px; padding: 0 26px; border-radius: 30px; background: var(--chip); border: 2px solid var(--chip-line);
                 font-size: 32px; font-weight: 500; line-height: 56px; white-space: nowrap; }
-  .title-chip b { color: var(--accent); font-weight: 700; margin-right: 14px; }
 
   .c { position: absolute; left: 0; right: 0; text-align: center; }
   .line { display: block; white-space: nowrap; }
@@ -117,7 +113,6 @@
     <section class="scene night" id="s1">
       <div class="blob a"></div><div class="blob b"></div>
       <div class="hdr">
-        <div class="toggle"><div class="knob" style="left: 76px;"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="var(--bg)"/></svg></div></div>
         <div class="title-chip">استحضر عند حفظ القرآن</div>
       </div>
       <div class="c l1"><span class="line kline" data-t="0.32,0.58,0.86,0.94">إذا أردتَ أن تحفظ</span></div>
@@ -135,8 +130,7 @@
       <div class="blob a"></div><div class="blob b"></div>
       <div class="num">١</div>
       <div class="hdr">
-        <div class="toggle"><div class="knob"><svg viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="var(--bg)"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></div></div>
-        <div class="title-chip">استحضر عند حفظ القرآن<b>١ / ٣</b></div>
+        <div class="title-chip">استحضر عند حفظ القرآن</div>
       </div>
       <div class="c say"><span class="chip solid">قال النبيُّ ﷺ</span></div>
       <div class="c hadith">
@@ -152,8 +146,7 @@
       <div class="blob a"></div><div class="blob b"></div>
       <div class="num">٢</div>
       <div class="hdr">
-        <div class="toggle"><div class="knob" style="left: 76px;"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="var(--bg)"/></svg></div></div>
-        <div class="title-chip">استحضر عند حفظ القرآن<b>٢ / ٣</b></div>
+        <div class="title-chip">استحضر عند حفظ القرآن</div>
       </div>
       <div class="c head"><span class="line kline" data-t="9.21,10.02,10.16,10.54">واستحضر أنَّ النبيَّ ﷺ</span></div>
       <div class="glass">
@@ -170,8 +163,7 @@
       <div class="blob a"></div><div class="blob b"></div>
       <div class="num">٣</div>
       <div class="hdr">
-        <div class="toggle"><div class="knob"><svg viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="var(--bg)"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></div></div>
-        <div class="title-chip">استحضر عند حفظ القرآن<b>٣ / ٣</b></div>
+        <div class="title-chip">استحضر عند حفظ القرآن</div>
       </div>
       <div class="c l1"><span class="line kline" data-t="17.41,17.86">ويكفي الإنسانَ</span></div>
       <div class="c big"><span class="line kline acc" data-t="18.32">شرفًا</span></div>
@@ -233,7 +225,7 @@
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
   const scenes = ['#s1', '#s2', '#s3', '#s4'];
   const starts = [T.s1, T.s2, T.s3, T.s4];
-  const KX = 100 + 8 + 26, KY = 236 + 8 + 26;                 // knob centre (left side)
+  const KX = 540, KY = 236 + 36;                                // scene changes open from the title chip
   scenes.slice(1).forEach(s => gsap.set(s, { clipPath: `circle(0px at ${KX}px ${KY}px)` }));
 
   /* -------- helpers -------- */
@@ -246,8 +238,6 @@
     tl.to(w, { color, duration: 0.18, ease: 'none' }, t - 0.05)
       .fromTo(w, { scale: 1 }, { scale: 1.08, duration: 0.12, ease: 'power2.out', yoyo: true, repeat: 1 }, t - 0.05);
   });
-  const knobSlide = (scene, fromLeft, toLeft, at) =>
-    tl.fromTo($(scene + ' .knob'), { left: fromLeft, rotation: -90 }, { left: toLeft, rotation: 0, duration: 0.6, ease: 'back.out(1.6)' }, at);
   const iris = (scene, at) => {
     tl.to(scene, { clipPath: `circle(2300px at ${KX}px ${KY}px)`, duration: 0.85, ease: 'power3.inOut' }, at - 0.4);
   };
@@ -261,7 +251,6 @@
   { const a = T.s1, S = $('#s1'), L = linesIn('#s1');
     blobs('#s1', 0, T.s2);
     tl.fromTo('#s1 .hdr', { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, a);
-    knobSlide('#s1', 8, 76, a + 0.1);
     appear(L[0].ws, a + 0.05, 0.08);
     tl.fromTo(L[1].ws, { scale: 1.6, opacity: 0, filter: 'blur(30px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, a + 0.9);
     appear(L[2].ws, a + 1.35, 0.08); appear(L[3].ws, a + 2.2, 0.08);
@@ -273,7 +262,7 @@
 
   /* -------- S2 day -------- */
   { const a = T.s2, S = $('#s2'), L = linesIn('#s2');
-    iris('#s2', a); exitPrev('#s1', a); knobSlide('#s2', 76, 8, a - 0.15); blobs('#s2', a - 0.4, T.s3);
+    iris('#s2', a); exitPrev('#s1', a); blobs('#s2', a - 0.4, T.s3);
     numIn('#s2', a + 0.1);
     tl.fromTo('#s2 .say .chip', { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2)' }, a + 0.2);
     appear(L[0].ws, a + 1.4, 0.1); appear(L[1].ws, a + 1.6, 0.1);
@@ -284,7 +273,7 @@
 
   /* -------- S3 night -------- */
   { const a = T.s3, S = $('#s3'), L = linesIn('#s3');
-    iris('#s3', a); exitPrev('#s2', a); knobSlide('#s3', 8, 76, a - 0.15); blobs('#s3', a - 0.4, T.s4);
+    iris('#s3', a); exitPrev('#s2', a); blobs('#s3', a - 0.4, T.s4);
     numIn('#s3', a + 0.1);
     appear(L[0].ws, a + 0.3, 0.1);
     tl.fromTo('#s3 .glass', { y: 140, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: 'expo.out' }, 10.9);
@@ -298,7 +287,7 @@
 
   /* -------- S4 day -------- */
   { const a = T.s4, S = $('#s4'), L = linesIn('#s4');
-    iris('#s4', a); exitPrev('#s3', a); knobSlide('#s4', 76, 8, a - 0.15); blobs('#s4', a - 0.4, T.end);
+    iris('#s4', a); exitPrev('#s3', a); blobs('#s4', a - 0.4, T.end);
     numIn('#s4', a + 0.1);
     appear(L[0].ws, a + 0.0, 0.12);
     tl.fromTo(L[1].ws, { scale: 1.7, opacity: 0, filter: 'blur(30px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, 18.15);
