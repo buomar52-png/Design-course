@@ -78,6 +78,7 @@ Then edit `motion-graphics/<slug>/index.html`:
   node $S/bake.js <dir> --theme dark && python3 $S/build_lottie.py <dir> --theme dark [--scenes]
   ```
 - QA the night stills too: `--theme dark --stills … --sheet`.
+- Plain background without the grid (the user may ask: أزل المربعات): add `--no-grid` (`?grid=off`). This works with either theme, and the output gets a `-nogrid` suffix.
 
 ### 4. House style: layout
 - Stage 1080×1920, side padding 100px, text right-aligned (RTL).

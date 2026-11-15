@@ -40,6 +40,7 @@
   body.render #controls { display: none; }
 
   .layer { position: absolute; inset: 0; }
+  :root[data-grid="off"] .grid { display: none; }
   .grid { background-image: linear-gradient(var(--grid) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
           background-size: 56px 56px; background-position: -8px -8px; }
   .glow-a { inset: -120px; background: radial-gradient(circle at calc(100% - 120px) 120px, rgba(var(--glow-a), var(--glow-a-a)) 0px, rgba(var(--glow-a), calc(var(--glow-a-a) * .43)) 260px, rgba(var(--glow-a), 0) 620px); }
@@ -220,6 +221,7 @@
 (() => {
   const params = new URLSearchParams(location.search);
   if (params.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+  if (params.get('grid') === 'off') document.documentElement.dataset.grid = 'off';   // خلفية بلا مربعات
   /* ===== التوقيت: مضبوط على audio/voice-clean.m4a (٢٤٫٩ ث) ===== */
   const T = { s1: 0, s2: 4.16, s3: 8.66, s4: 17.42, end: 26.95 };
 

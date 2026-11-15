@@ -8,6 +8,7 @@
 | `output/quran-hifz-reel.mp4` | نفس الفيديو بدون صوت |
 | `output/quran-hifz-reel-dark-voice.mp4` | **النسخة الليلية** مع الصوت (`index.html?theme=dark`) |
 | `output/quran-hifz-reel-dark.mp4` | النسخة الليلية بدون صوت |
+| `output/quran-hifz-reel-dark-nogrid-voice.mp4` | النسخة الليلية **بدون مربعات الخلفية** مع الصوت (`?theme=dark&grid=off`) |
 | `index.html` | المصدر الحي. افتحه في المتصفح، واضغط 🔊 لتشغيله مع الصوت |
 | `lottie/quran-hifz-reel.json` | الريل كاملًا بصيغة Lottie (النصوص أشكال متجهة) |
 | `lottie/quran-hifz-scene-N.json` | كل مشهد في ملف مستقل |
