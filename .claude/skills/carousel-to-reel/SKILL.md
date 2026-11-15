@@ -252,6 +252,17 @@ Reference: `motion-graphics/quran-tadabbur/`, a 126 s recording cut down to 95 s
   - `data-mark`: when the highlight draws.
 
   Then retiming is a data edit.
+- **Camera transition (انتقالة الكاميرا)**, an alternative to the iris wipe. Reference: `motion-graphics/quran-tadabbur/tools/build.py`.
+  - Scenes become 1080×1920 panels inside `#cam > #world`, laid out in a two-column snake from the right with a 160 px gap.
+  - A `cam {x, y, z, r, blur}` proxy is tweened on the timeline and applied in `onUpdate`:
+    - `world.style.transform = translate(540,960) rotate(r) scale(z) translate(-x,-y)`;
+    - corner radius = (1 - z) · 240.
+  - Each move starts 0.55 s before the scene start:
+    - zoom out to 0.78 → fly with power3.inOut over 1.0 s → back.out to 1;
+    - tilt ±2.5°;
+    - directional motion blur via an SVG `feGaussianBlur` on `#cam`. Its stdDeviation is "b b·0.12" for horizontal moves and "b·0.12 b" for vertical ones, peaking at 30.
+  - Opening: push in from z 0.52. Closing scene: slow push to z 1.045.
+  - Don't dim the previous scene: seeing both panels during the fly is the effect.
 - Big display words (≥200 px): drop the tanween (مختلفٌ → مختلف). It collides with the neighbouring lines.
 
 ## Gotchas (learned the hard way)
