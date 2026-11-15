@@ -232,6 +232,28 @@ Reference: `motion-graphics/quran-hifz/`, built from a Bahraini-dialect recordin
 8. Set `T.end` to the audio length + about 2 s, so the last scene holds after the voice ends.
 9. `captions.srt` = the MSA text timed to the real words.
 
+### Editing the speech: retractions, repeats, stumbles, reordering
+Reference: `motion-graphics/quran-tadabbur/`, a 126 s recording cut down to 95 s.
+- Listen for the speaker's own instructions: «قلت هذه فألغيها» means remove that sentence.
+- **Repeated sentence:** keep the take that is better worded and flows into what follows; cut the other.
+- **Stumble or false start** (e.g. «جليس لـ… لا يُمَلّ»): cut the fragment only.
+- **Closing verse requested last:** `--move-to-end a-b`. It keeps the verse's recited pauses, with 0.7 s of silence before it.
+- Find exact boundaries from the 20–40 ms loudness envelope, not from Whisper's word times (they drift by 0.1–0.5 s near pauses). Leave ~0.3 s of pause at each join.
+
+  ```bash
+  python3 $S/clean_voice.py voice.m4a transcript.json <dir>/audio --cut a-b … --move-to-end a-b
+  ```
+- **After cleaning, transcribe `voice-clean.m4a` again.** This finds repeats the first pass merged (e.g. «كلما رددت آياته» twice) and gives the karaoke its exact word times. Where Whisper still misplaces a word, estimate it from the loudness.
+- Word Whisper is unsure of: pick the most plausible MSA word and **tell the user explicitly**.
+- Long reels (more than ~8 scenes): build the HTML from a declarative spec (`motion-graphics/quran-tadabbur/tools/build.py`):
+  - `data-in`: when the element appears;
+  - `data-fx`: up | big | card | pill | chip;
+  - `data-t`: spoken word times;
+  - `data-mark`: when the highlight draws.
+
+  Then retiming is a data edit.
+- Big display words (≥200 px): drop the tanween (مختلفٌ → مختلف). It collides with the neighbouring lines.
+
 ## Gotchas (learned the hard way)
 - **Hiss (الوشّة):** never put a compressor or a dynamic `loudnorm` on a voice-over. They raise the background noise between words; on quran-hifz the hiss was only 15 dB under the voice. `clean_voice.py` now does:
   - spectral denoise (noisereduce, profile learned from the pauses);

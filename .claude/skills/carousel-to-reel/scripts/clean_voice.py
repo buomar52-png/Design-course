@@ -11,6 +11,10 @@
   noise from the pauses (--denoise 0.85 = strength 0..1; --no-denoise to skip; --raw = original quality:
   cuts + plain gain only). Every cut gets a 12 ms fade, then high-pass + LINEAR loudness normalisation
   to -16 LUFS. Never add a compressor or dynamic loudnorm: they lift the hiss between words.
+- --cut a-b (repeatable) removes a retracted sentence, a repeated sentence (keep the better-worded take),
+  a stumble or a filler; --move-to-end a-b plays that passage last (e.g. a closing verse) after
+  --move-gap 0.7 s of silence, keeping its own pauses as recited (--trim-moved to shorten them).
+  Times are original-audio seconds; find them from the transcript + loudness.
 - --reuse-cuts old/timing.json applies the exact cuts of an earlier run (motion stays in sync);
   --name file.m4a sets the output name.
 Writes <out-dir>/voice-clean.m4a and <out-dir>/timing.json (every word re-timed onto the cleaned audio,
@@ -71,14 +75,35 @@ for s, e in pauses:
 if "--reuse-cuts" in a:
     cuts = [tuple(c) for c in json.load(open(a[a.index("--reuse-cuts") + 1]))["cuts"]]
     print("reusing", len(cuts), "cuts from", a[a.index("--reuse-cuts") + 1])
-print(f"threshold {th:.1f} dB · {len(pauses)} pauses · {len(cuts)} cuts")
-for s, e in cuts: print(f"  cut {s:6.2f}-{e:6.2f} ({e - s:.2f}s)  after «{before(s)}»")
-keep, t = [], 0.0
-for s, e in cuts:
-    if s > t: keep.append((t, s))
-    t = e
-if t < dur: keep.append((t, dur))
-total = sum(e - s for s, e in keep)
+# --cut a-b (repeatable): remove a retracted sentence, a repeat or a stumble (ORIGINAL-audio seconds)
+manual = [tuple(map(float, a[k + 1].split("-"))) for k in range(len(a)) if a[k] == "--cut"]
+# --move-to-end a-b: play that passage last (e.g. a closing verse), after --move-gap seconds of silence
+mv = tuple(map(float, a[a.index("--move-to-end") + 1].split("-"))) if "--move-to-end" in a else None
+MOVE_GAP = opt("move-gap", 0.7)
+def overlaps(c, r): return c[0] < r[1] and c[1] > r[0]
+auto = [c for c in cuts if not any(overlaps(c, m) for m in manual)]
+main_cuts = sorted(manual + [c for c in auto if not (mv and overlaps(c, mv))] + ([mv] if mv else []))
+# the moved passage (usually a verse) keeps its recited pauses unless --trim-moved
+moved_cuts = sorted(c for c in auto if mv and mv[0] <= c[0] and c[1] <= mv[1]) if "--trim-moved" in a else []
+auto = [c for c in auto if not (mv and overlaps(c, mv) and "--trim-moved" not in a)]
+cuts = sorted(manual + auto)                     # recorded in timing.json for --reuse-cuts
+
+print(f"threshold {th:.1f} dB · {len(pauses)} pauses · {len(auto)} pause cuts · {len(manual)} manual cuts" + (f" · moving {mv[0]}-{mv[1]} to the end" if mv else ""))
+for s, e in cuts: print(f"  {'cut ' if (s, e) in auto else 'CUT '}{s:6.2f}-{e:6.2f} ({e - s:.2f}s)  after «{before(s)}»")
+def keep_between(cs, a0, a1):
+    out, t = [], a0
+    for s, e in sorted(cs):
+        if e <= a0 or s >= a1: continue
+        if s > t: out.append((t, s))
+        t = max(t, e)
+    if t < a1: out.append((t, a1))
+    return out
+keep = keep_between(main_cuts, 0.0, dur)
+if mv:
+    while keep and keep[-1][1] - keep[-1][0] < 0.02: keep.pop()
+    keep += [("gap", MOVE_GAP)] + keep_between(moved_cuts, *mv)
+seg_len = lambda k: k[1] if k[0] == "gap" else k[1] - k[0]
+total = sum(seg_len(k) for k in keep)
 print(f"{dur:.2f}s -> {total:.2f}s")
 if "--dry" in a: sys.exit()
 
@@ -98,6 +123,7 @@ if not RAW and "--no-denoise" not in a:
 
 fade = int(0.012 * SR); parts = []
 for s, e in keep:
+    if s == "gap": parts.append(np.zeros(int(e * SR), dtype=np.float32)); continue
     seg = x[int(s * SR):int(e * SR)].copy()
     if len(seg) > 2 * fade: seg[:fade] *= np.linspace(0, 1, fade); seg[-fade:] *= np.linspace(1, 0, fade)
     parts.append(seg)
@@ -115,14 +141,15 @@ out_name = opt_s = a[a.index("--name") + 1] if "--name" in a else "voice-clean.m
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", tmp,
                 "-af", pre + ln, "-ar", "48000", "-c:a", "aac", "-b:a", "192k", os.path.join(outdir, out_name)], check=True)
 os.remove(tmp)
-def remap(v):
+def remap(v):                                    # original time -> cleaned time (segments in output order)
     acc = 0.0
     for s, e in keep:
-        if v < s: return acc
-        if v <= e: return acc + (v - s)
-        acc += e - s
-    return acc
-json.dump({"duration": total, "cuts": cuts,
-           "words": [{"w": w["w"].strip(), "s": round(remap(w["s"]), 2), "e": round(remap(w["e"]), 2)} for w in words]},
+        if s != "gap" and s <= v <= e: return acc + (v - s)
+        acc += seg_len((s, e))
+    return None                                  # the word was cut
+
+json.dump({"duration": total, "cuts": cuts, "keep": keep,
+           "words": sorted([{"w": w["w"].strip(), "s": round(remap(w["s"]), 2), "e": round(remap(w["e"]) or remap(w["s"]), 2)}
+                            for w in words if remap(w["s"]) is not None], key=lambda w: w["s"])},
           open(os.path.join(outdir, "timing.json"), "w"), ensure_ascii=False, indent=1)
 print("->", os.path.join(outdir, out_name), "+ timing.json")
