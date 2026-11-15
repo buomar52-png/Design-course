@@ -1,6 +1,6 @@
 ---
 name: carousel-to-reel
-description: Turn a user's carousel / post design (PDF or images, usually Arabic) into a vertical 9:16 motion-graphics reel in the house style — GSAP HTML source, MP4 video, Lottie (whole reel + per scene), and a reels kit (cover, timed voice-over script, SRT, post caption) — and later sync it to the user's recorded voice-over. Use whenever the user sends a design file and asks for a reel, motion, موشن, ريل, فيديو, or sends a voice recording for an existing reel.
+description: Turn a user's carousel / post design (PDF or images, usually Arabic) into a vertical 9:16 motion-graphics reel in the house style — GSAP HTML source, MP4 video, Lottie (whole reel + per scene), and a reels kit (cover, timed voice-over script, SRT, post caption) — and later sync it to the user's recorded voice-over. Also builds a reel from a voice recording alone (any Arabic dialect): transcribes, rewrites the screen text in فصحى, removes pauses/choppiness (التقطيع) and syncs every word. Use whenever the user sends a design file or a voice recording and asks for a reel, motion, موشن, ريل, فيديو, or sends a voice recording for an existing reel.
 ---
 
 # من كاروسيل إلى ريل (Carousel → Reel)
@@ -138,7 +138,45 @@ python3 $S/voice_sync.py voice.m4a --scenes 4        # prints phrases, pauses an
    ```
 5. Rebuild the Lottie and update the SRT to the real words when the user wants captions.
 
+## Voice-first reel (the user sends only a recording)
+Reference: `motion-graphics/quran-hifz/`, built from a Bahraini-dialect recording. Typical asks:
+- the on-screen text in **الفصحى**;
+- the same theme;
+- remove the choppiness (**احذف التقطيع**).
+
+1. **Transcribe:**
+   ```bash
+   python3 $S/transcribe.py voice.m4a <scratch>/transcript.json
+   ```
+   - Whisper large-v3 normalises dialect toward MSA, which makes a good draft.
+   - Run it again with `--literal` to expose fillers and repeated words.
+   - Fix mishearings from context: «أم نعاش» was «أمُّنا عائشة».
+2. **Clean the voice:**
+   ```bash
+   python3 $S/clean_voice.py voice.m4a transcript.json motion-graphics/<slug>/audio --dry
+   ```
+   - Review the plan, then run it without `--dry`.
+   - Pauses after a sentence end keep 0.32 s; mid-sentence hesitations keep 0.16 s.
+   - Output: `audio/voice-clean.m4a` + `audio/timing.json` (every word re-timed onto the cleaned audio).
+   - Keep the original as `audio/voice-original.m4a`.
+3. **Screen text = the speech rewritten in correct MSA:**
+   - keep the meaning, drop the dialect words (تبي → تريد/أردتَ, هذي → هذه, ثانية → أخرى);
+   - quoted Quran/hadith get full harakat and their source (e.g. [رواه البخاري]). Only add a source you are certain of, and tell the user you added it;
+   - deliver `reels/transcript.md`, a dialect | MSA table.
+4. **Structure:**
+   - find the talk's spine (e.g. "three things to keep in mind"), give the header counter that count (١ / ٣ …), and make the hook scene announce it;
+   - scene starts = the first word of each idea, minus about 0.25 s.
+5. **Sync to words:**
+   - use the `wordsAt(els, [times])` helper, so each word enters at the moment it is spoken (times from `timing.json`, written as `a + offset`);
+   - text may lead the voice by up to about 0.4 s, never trail it;
+   - a word that appears must stay on screen for at least about 0.8 s before its scene exits.
+6. Add a 🔊 button and `<audio src="audio/voice-clean.m4a">` to the player (see quran-hifz/index.html).
+7. Render with `--audio audio/voice-clean.m4a`. The deliverable is `output/<slug>-reel-voice.mp4`.
+8. Set `T.end` to the audio length + about 2 s, so the last scene holds after the voice ends.
+9. `captions.srt` = the MSA text timed to the real words.
+
 ## Gotchas (learned the hard way)
+- A text run made only of neutral characters (e.g. a lone «, » inside a span such as `.orn`) must be shaped RTL so the glyph mirrors the way the browser mirrors it. `build_lottie.py` now does this; check the quotation marks in the Lottie frames anyway.
 - `window.__seek` must **return nothing** (`t => { tl.seek(t, false); }`). If it returns the timeline, Playwright tries to serialise it and hangs.
 - GSAP overrides a CSS `transform: translate(...)` on any element it animates, and parses it before the fonts load, which shifts it. Use `gsap.set(el, { xPercent, yPercent })`. For the Lottie bake, also put `data-xpercent` / `data-ypercent` on such elements, so the layout pass can re-apply them.
 - A fully revealed `clip-path: inset(-40% 0% -40% 0%)` serialises in short form (`inset(-40% 0%)`). `bake.js` handles this; keep the `-40%` vertical overscan so diacritics are never cut.

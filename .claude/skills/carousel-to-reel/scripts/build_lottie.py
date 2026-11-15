@@ -75,6 +75,8 @@ def text_shapes(run):
     """Shape one text run and return Lottie 'sh' items placed in the run's local rect."""
     f = font(run["weight"]); size = run["size"]; s = size / f.upem
     buf = hb.Buffer(); buf.add_str(run["text"]); buf.guess_segment_properties()
+    if buf.direction == "ltr" and not re.search(r"[A-Za-z0-9]", run["text"]):
+        buf.direction = "rtl"   # neutral-only runs («, », ؛ …) sit in RTL context: mirror like the browser does
     hb.shape(f.hbfont, buf, {})
     infos, pos = buf.glyph_infos, buf.glyph_positions       # visual order (left -> right)
     width = sum(p.x_advance for p in pos) * s
