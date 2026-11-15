@@ -1,8 +1,10 @@
 """Remove the choppiness (التقطيع) from a voice-over: shorten long pauses and hesitations.
 
-  python3 clean_voice.py voice.m4a transcript.json <out-dir> [--gap 0.32] [--mid 0.16] [--min 0.4] [--dry]
+  python3 clean_voice.py voice.m4a transcript.json <out-dir> [--gap 0.32] [--mid 0.16] [--min 0.4] [--protect 3.4-4.2 ...] [--dry]
 
 - Finds pauses from the loudness envelope (threshold = midpoint of the 10th/90th dB percentiles).
+  Soft word endings (ـة/ـه breaths) can sit below that threshold and get clipped: always listen to the
+  result, and rerun with --protect <from>-<to> (original-audio seconds) around any clipped tail.
 - A pause that follows a sentence end (word ending in . ؟ ! ، : in the transcript) keeps --gap seconds;
   a pause in the middle of a sentence (hesitation) keeps --mid seconds; pauses shorter than --min stay.
 - Every cut gets a 12 ms fade, then: high-pass, light FFT denoise, gentle compression, loudnorm -14 LUFS.
@@ -42,8 +44,17 @@ def before(t):
     prev = [w for w in words if w["e"] <= t + 0.45]
     return prev[-1]["w"].strip() if prev else ""
 
+# --protect a-b (repeatable): never cut inside [a, b] of the ORIGINAL audio (e.g. a soft word ending)
+protect = [tuple(map(float, a[k + 1].split("-"))) for k in range(len(a)) if a[k] == "--protect"]
+def unprotect(s, e):
+    for pa, pb in protect:
+        if pa < e and pb > s:          # overlap -> keep the part after the protected range
+            s = max(s, pb)
+    return s, e
+
 cuts = []
 for s, e in pauses:
+    s, e = unprotect(s, e)
     if e >= dur - 0.1: cuts.append((s + 0.35, dur)); continue
     if s < 0.05: cuts.append((0, max(0, e - 0.12))); continue
     if e - s < MIN: continue
