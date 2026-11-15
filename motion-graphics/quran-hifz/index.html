@@ -61,9 +61,6 @@
   .hl { font-weight: 700; padding: 0 6px; background-image: linear-gradient(var(--hl), var(--hl));
         background-repeat: no-repeat; background-position: 100% 82%; background-size: 0% 40%; }
 
-  #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
-  #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
-  #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: var(--label); }
 
   .card { position: absolute; right: 80px; left: 80px; background: var(--card); border-radius: 42px; padding: 48px 52px 46px;
           box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
@@ -153,11 +150,6 @@
       </div>
     </section>
 
-    <!-- ========== HEADER ========== -->
-    <div id="header">
-      <span class="bar ubox"></span>
-      <span class="name u">استحضر عند حفظ القرآن</span>
-    </div>
 
     <!-- ========== SCENE 2 — خيركم من تعلم القرآن وعلمه ========== -->
     <section class="scene" id="s2">
@@ -240,7 +232,7 @@
   });
   $$('path.draw').forEach(p => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
 
-  gsap.set(['#s2', '#s3', '#s4', '#header'], { autoAlpha: 0 });
+  gsap.set(['#s2', '#s3', '#s4'], { autoAlpha: 0 });
   gsap.set('#bg-grid, #bg-a, #bg-b, #handle', { opacity: 0 });
   gsap.set('.reveal', { clipPath: 'inset(-40% 0% -40% 100%)' });
 
@@ -292,9 +284,7 @@
 
   /* ---------- SCENE 2 (3.5 – 8.0) «قول النبي ﷺ: خيركم من تعلم القرآن وعلمه» ---------- */
   { const a = T.s2;
-    sceneIn(['#s2', '#header'], a);
-    tl.fromTo('#header .bar', { scaleY: 0 }, { scaleY: 1, duration: 0.45 }, a)
-      .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6 }, a + 0.1);
+    sceneIn('#s2', a);
     wordIn(words('#s2 .say'), a + 0.15, 0.3, 0.7);
     const L = $$('#s2 .reveal');
     reveal(L[0], a + 1.8, 1.0);            // خيركم 5.44 · من 5.98 · تعلم 6.32

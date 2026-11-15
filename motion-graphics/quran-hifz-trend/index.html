@@ -44,10 +44,6 @@
   .num { position: absolute; left: -60px; top: 330px; font-size: 1150px; font-weight: 700; line-height: 1; color: transparent;
          -webkit-text-stroke: 5px var(--stroke); pointer-events: none; }
 
-  /* header: centred title chip */
-  .hdr { position: absolute; top: 236px; left: var(--pad); right: var(--pad); height: 72px; }
-  .title-chip { position: absolute; left: 50%; transform: translateX(-50%); top: 6px; height: 60px; padding: 0 26px; border-radius: 30px; background: var(--chip); border: 2px solid var(--chip-line);
-                font-size: 32px; font-weight: 500; line-height: 56px; white-space: nowrap; }
 
   .c { position: absolute; left: 0; right: 0; text-align: center; }
   .line { display: block; white-space: nowrap; }
@@ -112,9 +108,6 @@
     <!-- ===================== S1 — ليل ===================== -->
     <section class="scene night" id="s1">
       <div class="blob a"></div><div class="blob b"></div>
-      <div class="hdr">
-        <div class="title-chip">استحضر عند حفظ القرآن</div>
-      </div>
       <div class="c l1"><span class="line kline" data-t="0.32,0.58,0.86,0.94">إذا أردتَ أن تحفظ</span></div>
       <div class="c l2"><span class="line kline acc" data-t="1.18">القرآن</span></div>
       <div class="c l3">
@@ -129,9 +122,6 @@
     <section class="scene day" id="s2">
       <div class="blob a"></div><div class="blob b"></div>
       <div class="num">١</div>
-      <div class="hdr">
-        <div class="title-chip">استحضر عند حفظ القرآن</div>
-      </div>
       <div class="c say"><span class="chip solid">قال النبيُّ ﷺ</span></div>
       <div class="c hadith">
         <span class="line kline" data-t="6.10,6.64,6.98">«<span class="mark" id="m1">خَيْرُكُمْ</span> مَنْ تَعَلَّمَ</span>
@@ -145,9 +135,6 @@
     <section class="scene night" id="s3">
       <div class="blob a"></div><div class="blob b"></div>
       <div class="num">٢</div>
-      <div class="hdr">
-        <div class="title-chip">استحضر عند حفظ القرآن</div>
-      </div>
       <div class="c head"><span class="line kline" data-t="9.21,10.02,10.16,10.54">واستحضر أنَّ النبيَّ ﷺ</span></div>
       <div class="glass">
         <div class="who">قالت أمُّنا عائشة رضي الله عنها</div>
@@ -162,9 +149,6 @@
     <section class="scene day" id="s4">
       <div class="blob a"></div><div class="blob b"></div>
       <div class="num">٣</div>
-      <div class="hdr">
-        <div class="title-chip">استحضر عند حفظ القرآن</div>
-      </div>
       <div class="c l1"><span class="line kline" data-t="17.41,17.86">ويكفي الإنسانَ</span></div>
       <div class="c big"><span class="line kline acc" data-t="18.32">شرفًا</span></div>
       <div class="c l2"><span class="line kline" data-t="18.78,19.26,19.82">أنه يحفظ القرآن..</span></div>
@@ -225,7 +209,7 @@
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
   const scenes = ['#s1', '#s2', '#s3', '#s4'];
   const starts = [T.s1, T.s2, T.s3, T.s4];
-  const KX = 540, KY = 236 + 36;                                // scene changes open from the title chip
+  const KX = 540, KY = 272;                                     // scene changes open from the top centre
   scenes.slice(1).forEach(s => gsap.set(s, { clipPath: `circle(0px at ${KX}px ${KY}px)` }));
 
   /* -------- helpers -------- */
@@ -250,7 +234,6 @@
   /* -------- S1 night -------- */
   { const a = T.s1, S = $('#s1'), L = linesIn('#s1');
     blobs('#s1', 0, T.s2);
-    tl.fromTo('#s1 .hdr', { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, a);
     appear(L[0].ws, a + 0.05, 0.08);
     tl.fromTo(L[1].ws, { scale: 1.6, opacity: 0, filter: 'blur(30px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, a + 0.9);
     appear(L[2].ws, a + 1.35, 0.08); appear(L[3].ws, a + 2.2, 0.08);
