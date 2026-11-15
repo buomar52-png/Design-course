@@ -1,7 +1,7 @@
 // Render a reel project (index.html built from the template) to MP4 or stills.
 //
 //   node render.js <project-dir>                          -> <dir>/output/<name>-reel.mp4  (30fps)
-//   node render.js <project-dir> --audio voice.m4a        -> also <name>-reel-voice.mp4 (voice muxed in)
+//   node render.js <project-dir> --audio voice.m4a        -> also <name>-reel-voice.mp4 (voice muxed in as-is: prepare it with clean_voice.py)
 //   node render.js <project-dir> --stills 2,8.5,14,30     -> <dir>/output/stills/t-<sec>.png
 //   options: --fps 60   --out path.mp4   --sheet  (with --stills: also a contact sheet stills/sheet.png)
 //            --theme dark|light   (index.html?theme=…; outputs get a -dark / -light suffix)
@@ -78,7 +78,7 @@ const out = path.resolve(dir, opt('out', `output/${name}-reel${suffix}.mp4`));
     const withVoice = out.replace(/\.mp4$/, '-voice.mp4');
     const r = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', out, '-i', path.resolve(audio),
       '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k',
-      '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11,apad', '-shortest', withVoice], { stdio: 'inherit' });
+      '-af', 'apad', '-shortest', withVoice], { stdio: 'inherit' });
     console.log(r.status === 0 ? 'video + voice -> ' + withVoice : 'audio mux failed');
   }
 })();

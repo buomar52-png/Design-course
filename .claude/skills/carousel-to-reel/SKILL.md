@@ -203,6 +203,11 @@ Reference: `motion-graphics/quran-hifz/`, built from a Bahraini-dialect recordin
 9. `captions.srt` = the MSA text timed to the real words.
 
 ## Gotchas (learned the hard way)
+- **Hiss (الوشّة):** never put a compressor or a dynamic `loudnorm` on a voice-over. They raise the background noise between words; on quran-hifz the hiss was only 15 dB under the voice. `clean_voice.py` now does:
+  - spectral denoise (noisereduce, profile learned from the pauses);
+  - linear loudness at -16 LUFS;
+
+  `render.js` muxes the voice untouched. To re-clean without changing the sync, use `--reuse-cuts <old timing.json>`. If the user prefers the untouched sound, use `--raw`.
 - A text run made only of neutral characters (e.g. a lone «, » inside a span such as `.orn`) must be shaped RTL so the glyph mirrors the way the browser mirrors it. `build_lottie.py` now does this; check the quotation marks in the Lottie frames anyway.
 - `window.__seek` must **return nothing** (`t => { tl.seek(t, false); }`). If it returns the timeline, Playwright tries to serialise it and hangs.
 - GSAP overrides a CSS `transform: translate(...)` on any element it animates, and parses it before the fonts load, which shifts it. Use `gsap.set(el, { xPercent, yPercent })`. For the Lottie bake, also put `data-xpercent` / `data-ypercent` on such elements, so the layout pass can re-apply them.
