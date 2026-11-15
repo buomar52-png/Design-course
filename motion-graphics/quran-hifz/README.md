@@ -6,6 +6,8 @@
 |---|---|
 | `output/quran-hifz-reel-voice.mp4` | **الفيديو النهائي مع الصوت**، جاهز للنشر |
 | `output/quran-hifz-reel.mp4` | نفس الفيديو بدون صوت |
+| `output/quran-hifz-reel-dark-voice.mp4` | **النسخة الليلية** مع الصوت (`index.html?theme=dark`) |
+| `output/quran-hifz-reel-dark.mp4` | النسخة الليلية بدون صوت |
 | `index.html` | المصدر الحي. افتحه في المتصفح، واضغط 🔊 لتشغيله مع الصوت |
 | `lottie/quran-hifz-reel.json` | الريل كاملًا بصيغة Lottie (النصوص أشكال متجهة) |
 | `lottie/quran-hifz-scene-N.json` | كل مشهد في ملف مستقل |
@@ -26,5 +28,6 @@
 ```bash
 S=../../.claude/skills/carousel-to-reel/scripts
 node $S/render.js . --audio audio/voice-clean.m4a
+node $S/render.js . --audio audio/voice-clean.m4a --theme dark   # النسخة الليلية
 node $S/bake.js . && python3 $S/build_lottie.py . --scenes
 ```

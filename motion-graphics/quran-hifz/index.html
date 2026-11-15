@@ -14,6 +14,19 @@
   :root {
     --bg: #f3f5f4; --ink: #151718; --muted: #7b8386; --teal: #1b7a9c; --teal-line: #4a93b0;
     --green: #b5dc55; --hl: #d2ee94; --grid: rgba(40, 80, 95, .075); --pad: 100px;
+    --soft: #4c5457; --label: #545b5e; --handle: #9aa1a4; --card: #fff;
+    --card-edge: rgba(215, 225, 228, .9); --card-shadow: rgba(30, 60, 70, .08);
+    --glow-a: 140, 196, 220; --glow-b: 205, 232, 150; --glow-a-a: .42; --glow-b-a: .45;
+    --book-fill: rgba(200, 222, 232, .38); --book-base: #9fc3d2; --book-lines: #a9c9d6; --accent-glow: rgba(27,122,156,.28);
+  }
+  /* ===== النظام الليلي (?theme=dark) ===== */
+  :root[data-theme="dark"] {
+    --bg: #0e1416; --ink: #eef3f4; --muted: #8a979c; --teal: #4cb3d6; --teal-line: #5aaccb;
+    --green: #b5dc55; --hl: rgba(181, 220, 85, .38); --grid: rgba(170, 215, 230, .055);
+    --soft: #b4c0c4; --label: #aebabe; --handle: #66737a; --card: #172024;
+    --card-edge: rgba(0, 0, 0, .45); --card-shadow: rgba(0, 0, 0, .35);
+    --glow-a: 40, 130, 170; --glow-b: 120, 170, 50; --glow-a-a: .40; --glow-b-a: .26;
+    --book-fill: rgba(76, 179, 214, .12); --book-base: #3d6f82; --book-lines: #3f7387; --accent-glow: rgba(76,179,214,.35);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -29,8 +42,8 @@
   .layer { position: absolute; inset: 0; }
   .grid { background-image: linear-gradient(var(--grid) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
           background-size: 56px 56px; background-position: -8px -8px; }
-  .glow-a { inset: -120px; background: radial-gradient(circle at calc(100% - 120px) 120px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 260px, rgba(140, 196, 220, 0) 620px); }
-  .glow-b { inset: -120px; background: radial-gradient(circle at 120px calc(100% - 120px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 260px, rgba(205, 232, 150, 0) 640px); }
+  .glow-a { inset: -120px; background: radial-gradient(circle at calc(100% - 120px) 120px, rgba(var(--glow-a), var(--glow-a-a)) 0px, rgba(var(--glow-a), calc(var(--glow-a-a) * .43)) 260px, rgba(var(--glow-a), 0) 620px); }
+  .glow-b { inset: -120px; background: radial-gradient(circle at 120px calc(100% - 120px), rgba(var(--glow-b), var(--glow-b-a)) 0px, rgba(var(--glow-b), calc(var(--glow-b-a) * .44)) 260px, rgba(var(--glow-b), 0) 640px); }
 
   .scene { position: absolute; inset: 0; }
   .rtl-block { position: absolute; right: var(--pad); left: var(--pad); text-align: right; }
@@ -49,19 +62,19 @@
 
   #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
   #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
-  #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: #545b5e; }
+  #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: var(--label); }
   #header .clipwin { position: absolute; left: 0; top: 0; height: 56px; overflow: hidden; font-size: 36px; color: var(--muted); direction: ltr; }
   #header .clipwin span { display: block; height: 56px; line-height: 56px; }
 
-  .card { position: absolute; right: 80px; left: 80px; background: #fff; border-radius: 42px; padding: 48px 52px 46px;
-          box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px rgba(215, 225, 228, .9), 0 30px 60px rgba(30, 60, 70, .08); }
+  .card { position: absolute; right: 80px; left: 80px; background: var(--card); border-radius: 42px; padding: 48px 52px 46px;
+          box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
   .who { font-size: 40px; color: var(--teal); font-weight: 500; position: relative; padding-right: 40px; }
   .who::before { content: ""; position: absolute; right: 2px; top: 50%; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--green); }
 
   /* ===== scene 1 — hook ===== */
   #s1 .title { top: 330px; font-weight: 700; font-size: 116px; line-height: 1.24; letter-spacing: -1px; }
   #s1 .big { color: var(--teal); font-size: 164px; line-height: 1.2; letter-spacing: -1.5px; }
-  #s1 .sub { top: 720px; font-size: 54px; font-weight: 500; color: #4c5457; }
+  #s1 .sub { top: 720px; font-size: 54px; font-weight: 500; color: var(--soft); }
   #visual { position: absolute; left: 50%; top: 940px; width: 620px; height: 440px; margin-left: -310px; }
   #visual svg { position: absolute; inset: 0; overflow: visible; }
 
@@ -87,7 +100,7 @@
   #s4 .row.other { color: var(--muted); }
   #send { position: absolute; left: 110px; top: 1440px; width: 96px; height: 96px; }
 
-  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: #9aa1a4; letter-spacing: .5px; }
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: var(--handle); letter-spacing: .5px; }
 
   #safe { display: none; pointer-events: none; } #safe.on { display: block; }
   #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
@@ -115,22 +128,22 @@
 
       <div id="visual">
         <svg viewBox="0 0 620 440" aria-hidden="true">
-          <path class="upath" id="book-fill" fill="rgba(200, 222, 232, .38)" stroke="none"
+          <path class="upath" id="book-fill" fill="var(--book-fill)" stroke="none"
                 d="M310 120 C 250 88 150 80 60 98 L 60 378 C 150 360 250 368 310 400 C 370 368 470 360 560 378 L 560 98 C 470 80 370 88 310 120 Z"/>
           <g fill="none" stroke="var(--teal-line)" stroke-linecap="round" stroke-linejoin="round">
             <path class="draw" stroke-width="7" d="M310 120 C 250 88 150 80 60 98 L 60 378 C 150 360 250 368 310 400"/>
             <path class="draw" stroke-width="7" d="M310 120 C 370 88 470 80 560 98 L 560 378 C 470 360 370 368 310 400"/>
             <path class="draw" stroke-width="5" d="M310 120 L310 400"/>
-            <path class="draw" stroke-width="4" stroke="#9fc3d2" d="M36 386 L36 404 C 150 386 250 394 310 424 C 370 394 470 386 584 404 L584 386"/>
+            <path class="draw" stroke-width="4" stroke="var(--book-base)" d="M36 386 L36 404 C 150 386 250 394 310 424 C 370 394 470 386 584 404 L584 386"/>
             <!-- page lines -->
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M265 168 C 215 150 160 146 108 154"/>
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M265 212 C 215 194 160 190 108 198"/>
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M265 256 C 215 238 160 234 108 242"/>
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M265 300 C 225 285 185 281 150 284"/>
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M355 168 C 405 150 460 146 512 154"/>
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M355 212 C 405 194 460 190 512 198"/>
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M355 256 C 405 238 460 234 512 242"/>
-            <path class="draw ln" stroke-width="5" stroke="#a9c9d6" d="M355 300 C 395 285 435 281 470 284"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M265 168 C 215 150 160 146 108 154"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M265 212 C 215 194 160 190 108 198"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M265 256 C 215 238 160 234 108 242"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M265 300 C 225 285 185 281 150 284"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M355 168 C 405 150 460 146 512 154"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M355 212 C 405 194 460 190 512 198"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M355 256 C 405 238 460 234 512 242"/>
+            <path class="draw ln" stroke-width="5" stroke="var(--book-lines)" d="M355 300 C 395 285 435 281 470 284"/>
             <!-- light rays -->
             <path class="draw ray" stroke-width="6" stroke="var(--teal)" d="M310 78 L310 40"/>
             <path class="draw ray" stroke-width="6" stroke="var(--teal)" d="M262 86 L242 56"/>
@@ -205,6 +218,8 @@
 <script src="gsap.min.js"></script>
 <script>
 (() => {
+  const params = new URLSearchParams(location.search);
+  if (params.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
   /* ===== التوقيت: مضبوط على audio/voice-clean.m4a (٢٤٫٩ ث) ===== */
   const T = { s1: 0, s2: 4.16, s3: 8.66, s4: 17.42, end: 26.95 };
 
@@ -313,7 +328,7 @@
     counterTo(2, a); sceneIn('#s4', a);
     wordsAt(words('#s4-l1'), [a + 0.0, a + 0.42]);                      // ويكفي 16.74 · الإنسان 17.19
     bigIn(words('#s4-big'), a + 0.8);                                   // شرفًا 17.65
-    tl.fromTo('#s4 .big', { textShadow: '0 0 0 rgba(27,122,156,0)' }, { textShadow: '0 10px 50px rgba(27,122,156,.28)', duration: 1 }, a + 1.4);
+    tl.fromTo('#s4 .big', { textShadow: '0 0 0 rgba(27,122,156,0)' }, { textShadow: '0 10px 50px ' + getComputedStyle(document.documentElement).getPropertyValue('--accent-glow').trim(), duration: 1 }, a + 1.4);
     wordsAt(words('#s4-l2'), [a + 1.3, a + 1.8, a + 2.35]);             // أنه 18.11 · يحفظ 18.59 · القرآن 19.15
     cardIn('#card4', a + 2.75);
     wordsAt(words('#row-a'), [a + 2.95, a + 3.45, a + 4.15, a + 4.75]); // غيره 19.73 · منشغل · بأمور · أخرى
@@ -329,7 +344,6 @@
   /* ---------- player / render API ---------- */
   const stage = $('#stage'), vp = $('#viewport'), voice = $('#voice');
   const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
-  const params = new URLSearchParams(location.search);
   if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
   window.__duration = T.end;
   window.__scenes = T;

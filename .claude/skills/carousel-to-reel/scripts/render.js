@@ -4,6 +4,7 @@
 //   node render.js <project-dir> --audio voice.m4a        -> also <name>-reel-voice.mp4 (voice muxed in)
 //   node render.js <project-dir> --stills 2,8.5,14,30     -> <dir>/output/stills/t-<sec>.png
 //   options: --fps 60   --out path.mp4   --sheet  (with --stills: also a contact sheet stills/sheet.png)
+//            --theme dark   (index.html?theme=dark; outputs get a -dark suffix)
 //
 // Needs: playwright (Chromium) and ffmpeg on PATH.
 const { chromium } = require('playwright');
@@ -17,15 +18,16 @@ const flag = k => args.includes('--' + k);
 const dir = path.resolve(args[0] && !args[0].startsWith('--') ? args[0] : '.');
 const name = path.basename(dir);
 const fps = +opt('fps', 30);
-const out = path.resolve(dir, opt('out', `output/${name}-reel.mp4`));
+const out = path.resolve(dir, opt('out', `output/${name}-reel${opt('theme', null) ? '-' + opt('theme', null) : ''}.mp4`));
 const stills = opt('stills', null);
 const audio = opt('audio', null);
+const theme = opt('theme', null);
 
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
   page.on('pageerror', e => { console.error('page error:', e.message); process.exitCode = 1; });
-  await page.goto('file://' + path.join(dir, 'index.html') + '?render');
+  await page.goto('file://' + path.join(dir, 'index.html') + '?render' + (theme ? '&theme=' + theme : ''));
   await page.evaluate(() => window.__ready);
   await page.waitForTimeout(300);
   const duration = await page.evaluate(() => window.__duration);
@@ -36,7 +38,7 @@ const audio = opt('audio', null);
     const files = [];
     for (const t of stills.split(',').map(Number)) {
       await page.evaluate(t => window.__seek(t), t);
-      const f = path.join(sdir, `t-${t.toFixed(2).padStart(6, '0')}.png`);
+      const f = path.join(sdir, `t-${t.toFixed(2).padStart(6, '0')}${theme ? '-' + theme : ''}.png`);
       await page.screenshot({ path: f }); files.push(f);
     }
     await browser.close();
