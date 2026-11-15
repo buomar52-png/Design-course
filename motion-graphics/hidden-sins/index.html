@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المعاصي الخفية — موشن</title>
+<style>
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-500.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-600.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-700.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --bg: #f3f5f4;
+    --ink: #151718;
+    --muted: #7b8386;
+    --teal: #1b7a9c;
+    --teal-line: #4a93b0;
+    --green: #b5dc55;
+    --hl: #d2ee94;
+    --grid: rgba(40, 80, 95, .075);
+    --W: 1080px;
+    --H: 1920px;
+    --pad: 100px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #1d2124;
+    font-family: "Plex Ar", system-ui, sans-serif;
+    color: var(--ink);
+    overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+
+  /* ---------- stage ---------- */
+  #viewport { position: relative; flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  #stage {
+    position: absolute; left: 50%; top: 50%;
+    width: var(--W); height: var(--H);
+    transform-origin: 50% 50%;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  body.render { background: var(--bg); display: block; }
+  body.render #viewport { position: fixed; inset: 0; }
+  body.render #stage { left: 0; top: 0; transform: none !important; }
+  body.render #controls { display: none; }
+
+  .layer { position: absolute; inset: 0; }
+  .grid {
+    background-image:
+      linear-gradient(var(--grid) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
+    background-size: 56px 56px;
+    background-position: -8px -8px;
+  }
+  .glow-a { inset: -120px; background: radial-gradient(circle at calc(100% - 120px) 120px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 260px, rgba(140, 196, 220, 0) 620px); }
+  .glow-b { inset: -120px; background: radial-gradient(circle at 120px calc(100% - 120px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 260px, rgba(205, 232, 150, 0) 640px); }
+
+  .scene { position: absolute; inset: 0; }
+  .rtl-block { position: absolute; right: var(--pad); left: var(--pad); text-align: right; }
+  .line { display: block; white-space: nowrap; }
+  .w { display: inline-block; will-change: transform, opacity, filter; }
+
+  /* dots */
+  .dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .dot i, .dot b { position: absolute; inset: 0; border-radius: 50%; }
+  .dot b { background: rgba(181, 220, 85, .35); }
+  .dot i { inset: 7px; background: var(--green); }
+
+  /* ---------- scene 1 ---------- */
+  #s1 .title { top: 330px; font-weight: 700; font-size: 116px; line-height: 1.24; letter-spacing: -1px; }
+  #s1 .big { color: var(--teal); font-size: 220px; line-height: 1.12; margin-top: 6px; letter-spacing: -2px; }
+  #heart-wrap { position: absolute; left: 50%; top: 1010px; width: 620px; height: 566px; margin-left: -310px; }
+  #heart-wrap svg { position: absolute; inset: 0; overflow: visible; }
+  .hw { position: absolute; white-space: nowrap; color: var(--ink); }
+  .hw.s { font-size: 30px; color: #7f8789; font-weight: 400; }
+  .hw.m { font-size: 46px; font-weight: 600; color: #2b2f31; }
+  .hw.l { font-size: 74px; font-weight: 700; }
+  #heart-dot { left: 245px; top: 112px; }
+
+  /* ---------- header (scenes 2-4) ---------- */
+  #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
+  #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
+  #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: #545b5e; }
+  #header .count { position: absolute; left: 0; top: 0; height: 56px; overflow: hidden; font-size: 36px; color: var(--muted); direction: ltr; }
+  #header .count span { display: block; height: 56px; line-height: 56px; }
+
+  /* ---------- scene 2 ---------- */
+  #s2 .say { top: 610px; font-size: 80px; font-weight: 400; }
+  #s2 .ayah { position: absolute; left: 0; right: 0; top: 790px; text-align: center; font-size: 84px; font-weight: 500; line-height: 1.62; }
+  #s2 .ayah .line { padding: 0 20px; }
+  .orn { color: var(--teal); font-weight: 400; }
+  #s2 .ref { position: absolute; left: 0; right: 0; top: 1240px; text-align: center; font-size: 40px; color: var(--muted); }
+
+  /* ---------- scene 3 ---------- */
+  #s3 .head { top: 470px; font-size: 92px; font-weight: 400; line-height: 1.45; }
+  #s3 .head .accent { color: var(--teal); font-weight: 700; }
+  #card {
+    position: absolute; right: 80px; left: 80px; top: 820px;
+    background: #fff; border-radius: 42px; padding: 52px 48px 50px;
+    box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px rgba(215, 225, 228, .9), 0 30px 60px rgba(30, 60, 70, .08);
+  }
+  #card .who { font-size: 40px; color: var(--teal); font-weight: 500; position: relative; padding-right: 40px; }
+  #card .who::before { content: ""; position: absolute; right: 2px; top: 50%; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--green); }
+  #card .quote { margin-top: 22px; font-size: 45px; line-height: 1.86; font-weight: 400; }
+  #card .src { margin-top: 18px; font-size: 32px; color: var(--muted); }
+  .hl {
+    font-weight: 700; padding: 0 6px;
+    background-image: linear-gradient(var(--hl), var(--hl));
+    background-repeat: no-repeat; background-position: 100% 82%; background-size: 0% 40%;
+  }
+
+  /* ---------- scene 4 ---------- */
+  #s4 .lines { top: 500px; font-size: 64px; font-weight: 400; line-height: 1.5; }
+  #s4 .lines .gap { height: 34px; }
+  #s4 .sirr { top: 930px; font-size: 232px; font-weight: 700; color: var(--teal); line-height: 1.15; letter-spacing: -2px; }
+  #s4 .tail { top: 1250px; font-size: 70px; font-weight: 400; }
+  #send { position: absolute; left: 110px; top: 1460px; width: 96px; height: 96px; }
+
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: #9aa1a4; letter-spacing: .5px; }
+
+  /* safe-zone guide (preview only) */
+  #safe { display: none; pointer-events: none; }
+  #safe.on { display: block; }
+  #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
+
+  /* ---------- controls ---------- */
+  #controls {
+    width: min(720px, 100%); padding: 12px 16px 16px; display: flex; gap: 12px; align-items: center;
+    color: #e8ecee; font-size: 15px; direction: ltr;
+  }
+  #controls button {
+    font: inherit; color: inherit; background: #2f3539; border: 1px solid #454c51; border-radius: 8px;
+    padding: 7px 12px; cursor: pointer; white-space: nowrap;
+  }
+  #controls button:hover { background: #3a4146; }
+  #controls input[type=range] { flex: 1; accent-color: var(--green); min-width: 60px; }
+  #time { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="layer grid" id="bg-grid"></div>
+    <div class="layer glow-a" id="bg-a"></div>
+    <div class="layer glow-b" id="bg-b"></div>
+
+    <!-- ============ SCENE 1 — الغلاف ============ -->
+    <section class="scene" id="s1">
+      <div class="dot" id="s1-dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
+      <div class="rtl-block title">
+        <span class="line split" id="t1">ذنوبٌ لا يراها الناس</span>
+        <span class="line split" id="t2">وقد لا يشعر بها</span>
+        <span class="line big" id="t3"><span class="w">"صاحبها"</span></span>
+      </div>
+
+      <div id="heart-wrap">
+        <svg viewBox="0 0 620 566" aria-hidden="true">
+          <g id="heart-dashed">
+            <path d="M310 552 C 190 452 22 352 22 196 C 22 102 92 30 182 30 C 236 30 282 58 310 104 C 338 58 384 30 438 30 C 528 30 598 102 598 196 C 598 352 430 452 310 552 Z"
+                  fill="none" stroke="#b9d2dc" stroke-width="3" stroke-dasharray="12 12" stroke-linecap="round"/>
+          </g>
+          <path id="heart-fill" d="M310 516 C 204 428 56 340 56 202 C 56 122 116 62 192 62 C 240 62 282 88 310 130 C 338 88 380 62 428 62 C 504 62 564 122 564 202 C 564 340 416 428 310 516 Z"
+                fill="rgba(200, 222, 232, .38)"/>
+          <path id="heart-line" d="M310 516 C 204 428 56 340 56 202 C 56 122 116 62 192 62 C 240 62 282 88 310 130 C 338 88 380 62 428 62 C 504 62 564 122 564 202 C 564 340 416 428 310 516 Z"
+                fill="none" stroke="var(--teal-line)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <div class="dot" id="heart-dot" style="left: 310px; top: 130px;"><b></b><i></i></div>
+        <span class="hw s" style="right: 220px; top: 160px;">غرور</span>
+        <span class="hw m" style="right: 210px; top: 222px;">عُجب</span>
+        <span class="hw m" style="right: 430px; top: 232px;">رياء</span>
+        <span class="hw s" style="right: 118px; top: 292px;">حقد</span>
+        <span class="hw l" style="right: 320px; top: 300px;">شرك</span>
+        <span class="hw s" style="right: 492px; top: 300px;">غِل</span>
+        <span class="hw m" style="right: 182px; top: 362px;">نفاق</span>
+        <span class="hw m" style="right: 422px; top: 370px;">كِبر</span>
+        <span class="hw s" style="right: 320px; top: 398px;">تعلّق بالدنيا</span>
+        <span class="hw s" style="right: 232px; top: 442px;">بُخل</span>
+        <span class="hw m" style="right: 330px; top: 448px;">حسد</span>
+      </div>
+    </section>
+
+    <!-- ============ HEADER ============ -->
+    <div id="header">
+      <span class="bar"></span>
+      <span class="name">المعاصي الخفية</span>
+      <span class="count"><div id="count-roll"><span>٢ / ٤</span><span>٣ / ٤</span><span>٤ / ٤</span></div></span>
+    </div>
+
+    <!-- ============ SCENE 2 — الآية ============ -->
+    <section class="scene" id="s2">
+      <div class="rtl-block say"><span class="line split">قال الله تعالى:</span></div>
+      <div class="ayah">
+        <span class="line reveal"><span class="orn">﴿</span>وَذَرُوا ظَاهِرَ الْإِثْمِ وَبَاطِنَهُ</span>
+        <span class="line reveal">إِنَّ الَّذِينَ يَكْسِبُونَ الْإِثْمَ</span>
+        <span class="line reveal">سَيُجْزَوْنَ بِمَا كَانُوا يَقْتَرِفُونَ<span class="orn">﴾</span></span>
+      </div>
+      <div class="ref">[سورة الأنعام: ١٢٠]</div>
+    </section>
+
+    <!-- ============ SCENE 3 — الخطر الحقيقي ============ -->
+    <section class="scene" id="s3">
+      <div class="rtl-block head">
+        <span class="line split">الخطر الحقيقي..</span>
+        <span class="line split" id="s3-l2">أن تعصي <span class="accent">وأنت لا تشعر!</span></span>
+      </div>
+      <div id="card">
+        <div class="who">قال السعدي رحمه الله</div>
+        <div class="quote">
+          <span class="line reveal">«وكثيرٌ من الناس تخفى عليه كثيرٌ من المعاصي،</span>
+          <span class="line reveal">خصوصًا <span class="hl" id="hl1">معاصي القلب</span>؛ كالكبر والعُجب</span>
+          <span class="line reveal">والرياء.. ونحو ذلك، حتى إنه يكون به كثيرٌ منها</span>
+          <span class="line reveal">وهو لا يُحسّ به ولا يشعر»</span>
+        </div>
+        <div class="src">من كتاب: تيسير الكريم الرحمن في تفسير كلام المنان</div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 4 — طاعة السر ============ -->
+    <section class="scene" id="s4">
+      <div class="rtl-block lines">
+        <span class="line split">وكما نهانا الله عن معصية السر والعلن..</span>
+        <span class="line gap"></span>
+        <span class="line split">فلنحرص على طاعته في السر والعلن،</span>
+        <span class="line split">وخصوصًا:</span>
+      </div>
+      <div class="rtl-block sirr"><span class="line split">طاعة السر</span></div>
+      <div class="rtl-block tail"><span class="line"><span class="w" id="tail-a">فهي</span> <span class="w hl" id="hl2">سرُّ صلاح الظاهر</span><span class="w" id="tail-c">.</span></span></div>
+      <svg id="send" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/>
+      </svg>
+    </section>
+
+    <div id="handle">@abdulla_7amdan</div>
+
+    <div class="layer" id="safe">
+      <div style="left:0;right:0;top:0;height:220px"></div>
+      <div style="left:0;right:0;bottom:0;height:380px"></div>
+      <div style="right:0;width:140px;top:1040px;bottom:380px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ تشغيل</button>
+  <input type="range" id="scrub" min="0" max="40" step="0.01" value="0">
+  <span id="time">0.00 / 40.0</span>
+  <button id="safeBtn" title="مناطق واجهة ريلز">Safe zone</button>
+</div>
+
+<script src="gsap.min.js"></script>
+<script>
+(() => {
+  const DURATION = 40;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  // Split ".split" lines into word spans (keeps Arabic shaping intact inside each word).
+  $$('.split').forEach(el => {
+    const walk = node => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            const s = document.createElement('span'); s.className = 'w'; s.textContent = part; frag.appendChild(s);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && !n.classList.contains('w')) walk(n);
+      });
+    };
+    walk(el);
+  });
+
+  const words = el => $$('.w', el);
+  const heartLine = $('#heart-line');
+  const L = heartLine.getTotalLength();
+  gsap.set(heartLine, { strokeDasharray: L, strokeDashoffset: L });
+  gsap.set('.hw', { xPercent: 50, yPercent: -50 });
+  gsap.set('#heart-dashed', { svgOrigin: '310 290' });
+
+  // Initial states
+  gsap.set(['#s2', '#s3', '#s4', '#header'], { autoAlpha: 0 });
+  gsap.set('#bg-grid, #bg-a, #bg-b, #handle', { opacity: 0 });
+  gsap.set('.reveal', { clipPath: 'inset(-40% 0% -40% 100%)' });
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const wordIn = (targets, at, stagger = 0.1, dur = 0.8) =>
+    tl.fromTo(targets, { y: 70, opacity: 0, filter: 'blur(14px)' },
+      { y: 0, opacity: 1, filter: 'blur(0px)', duration: dur, stagger }, at);
+  const reveal = (el, at, dur = 1.15) =>
+    tl.to(el, { clipPath: 'inset(-40% 0% -40% 0%)', duration: dur, ease: 'power2.inOut' }, at);
+  const pulse = (dot, at, repeat) =>
+    tl.fromTo(dot + ' b', { scale: 1, opacity: 1 }, { scale: 2.4, opacity: 0, duration: 1.4, ease: 'sine.out', repeat }, at);
+  const sceneOut = (sel, at) =>
+    tl.to(sel, { y: -60, opacity: 0, filter: 'blur(12px)', duration: 0.55, ease: 'power2.in' }, at);
+
+  /* ---------- background ---------- */
+  tl.to('#bg-grid', { opacity: 1, duration: 0.8 }, 0)
+    .fromTo('#bg-a', { opacity: 0 }, { opacity: 1, duration: 1.6 }, 0)
+    .fromTo('#bg-b', { opacity: 0 }, { opacity: 1, duration: 1.6 }, 0.2)
+    .to('#handle', { opacity: 1, duration: 0.8 }, 0.8);
+  // slow ambient drift across the whole piece
+  tl.to('#bg-a', { x: -40, y: 30, duration: DURATION - 1.6, ease: 'sine.inOut' }, 1.6)
+    .to('#bg-b', { x: 40, y: -30, duration: DURATION - 1.8, ease: 'sine.inOut' }, 1.8);
+
+  /* ---------- SCENE 1 (0 – 9s) ---------- */
+  tl.fromTo('#s1-dot', { scale: 0 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' }, 0.3);
+  pulse('#s1-dot', 0.9, 4);
+  wordIn(words($('#t1')), 0.5, 0.13);
+  wordIn(words($('#t2')), 1.35, 0.13);
+  tl.fromTo('#t3 .w', { scale: 1.35, opacity: 0, filter: 'blur(24px)', transformOrigin: '100% 60%' },
+    { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out' }, 2.2);
+
+  tl.fromTo('#heart-wrap', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 2.9)
+    .to(heartLine, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' }, 2.9)
+    .fromTo('#heart-fill', { opacity: 0 }, { opacity: 1, duration: 1.2 }, 3.6)
+    .fromTo('#heart-dashed', { opacity: 0, scale: 0.9, rotation: -6 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.4 }, 3.3)
+    .fromTo('#heart-dot', { scale: 0 }, { scale: 1, duration: 0.5, ease: 'back.out(3)' }, 3.9);
+  pulse('#heart-dot', 4.3, 2);
+  tl.fromTo('.hw', { opacity: 0, scale: 0.4, filter: 'blur(8px)' },
+    { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.6, ease: 'back.out(2)',
+      stagger: { each: 0.12, from: 'center' } }, 3.9);
+  // heartbeat
+  [5.7, 6.9].forEach(t => {
+    tl.to('#heart-wrap', { scale: 1.045, duration: 0.16, ease: 'power2.out' }, t)
+      .to('#heart-wrap', { scale: 1, duration: 0.3, ease: 'power2.in' }, t + 0.16)
+      .to('#heart-wrap', { scale: 1.025, duration: 0.14, ease: 'power2.out' }, t + 0.46)
+      .to('#heart-wrap', { scale: 1, duration: 0.34, ease: 'power2.in' }, t + 0.6);
+  });
+  tl.to('#heart-dashed', { rotation: 3, duration: 4.6, ease: 'sine.inOut' }, 4.7);
+  $$('.hw').forEach((w, i) => tl.to(w, { y: (i % 2 ? -1 : 1) * 8, x: (i % 3 - 1) * 5, duration: 3.6, ease: 'sine.inOut' }, 4.8));
+  sceneOut('#s1', 8.45);
+
+  /* ---------- SCENE 2 (9 – 19s) ---------- */
+  tl.set('#s2', { autoAlpha: 1 }, 9)
+    .set('#header', { autoAlpha: 1 }, 9)
+    .fromTo('#header .bar', { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, 9)
+    .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7 }, 9.15)
+    .fromTo('#header .count', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 9.3);
+  wordIn(words($('#s2 .say')), 9.4, 0.12);
+  const ayah = $$('#s2 .reveal');
+  reveal(ayah[0], 10.2, 1.4);
+  reveal(ayah[1], 11.7, 1.3);
+  reveal(ayah[2], 13.1, 1.4);
+  tl.fromTo('#s2 .orn', { textShadow: '0 0 0 rgba(27,122,156,0)' },
+    { textShadow: '0 0 22px rgba(27,122,156,.55)', duration: 0.6, yoyo: true, repeat: 1 }, 14.5);
+  tl.fromTo('#s2 .ref', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 14.7);
+  tl.fromTo('#s2 .ayah', { scale: 1 }, { scale: 1.03, duration: 3.6, ease: 'sine.inOut' }, 14.8);
+  sceneOut('#s2', 18.45);
+
+  /* ---------- SCENE 3 (19 – 31s) ---------- */
+  tl.to('#count-roll', { y: -56, duration: 0.5, ease: 'power3.inOut' }, 18.9);
+  tl.set('#s3', { autoAlpha: 1 }, 19);
+  wordIn(words($('#s3 .head .line'))  , 19.15, 0.14);
+  const l2 = words($('#s3-l2'));
+  wordIn(l2.slice(0, 2), 20.0, 0.14);
+  tl.fromTo(l2.slice(2), { scale: 1.6, opacity: 0, filter: 'blur(16px)' },
+    { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.12, ease: 'back.out(2)' }, 20.45);
+  tl.fromTo('#card', { y: 160, opacity: 0, rotation: -1.5 }, { y: 0, opacity: 1, rotation: 0, duration: 1, ease: 'expo.out' }, 21.5)
+    .fromTo('#card .who', { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6 }, 22.0);
+  const q = $$('#card .reveal');
+  q.forEach((ln, i) => reveal(ln, 22.4 + i * 1.15, 1.1));
+  tl.to('#hl1', { backgroundSize: '100% 40%', duration: 0.7, ease: 'power2.inOut' }, 24.1);
+  tl.fromTo('#card .src', { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 27.2);
+  tl.to('#card', { y: -10, duration: 2.6, ease: 'sine.inOut' }, 27.6);
+  sceneOut('#s3', 30.45);
+
+  /* ---------- SCENE 4 (31 – 40s) ---------- */
+  tl.to('#count-roll', { y: -112, duration: 0.5, ease: 'power3.inOut' }, 30.9);
+  tl.set('#s4', { autoAlpha: 1 }, 31);
+  const s4l = $$('#s4 .lines .split');
+  wordIn(words(s4l[0]), 31.2, 0.09);
+  wordIn(words(s4l[1]), 32.6, 0.09);
+  wordIn(words(s4l[2]), 33.8, 0.1);
+  tl.fromTo(words($('#s4 .sirr')), { y: 90, opacity: 0, scale: 0.85, filter: 'blur(26px)' },
+    { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.1, stagger: 0.18, ease: 'expo.out' }, 34.5);
+  tl.fromTo('#s4 .sirr', { textShadow: '0 0 0 rgba(27,122,156,0)' },
+    { textShadow: '0 10px 50px rgba(27,122,156,.28)', duration: 1.2 }, 35.2);
+  wordIn(['#tail-a', '#hl2', '#tail-c'], 35.9, 0.12);
+  tl.to('#hl2', { backgroundSize: '100% 40%', duration: 0.8, ease: 'power2.inOut' }, 36.6);
+  tl.fromTo('#send', { x: -140, y: 140, opacity: 0, rotation: -25 },
+    { x: 0, y: 0, opacity: 1, rotation: 0, duration: 1, ease: 'expo.out' }, 37.3)
+    .to('#send', { x: 10, y: -10, duration: 0.5, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 38.3);
+
+  tl.to({}, { duration: 0.001 }, DURATION - 0.001); // pin total length to 40s
+
+  /* ---------- player / render API ---------- */
+  const stage = $('#stage'), vp = $('#viewport');
+  const fit = () => {
+    const s = Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920);
+    stage.style.transform = `translate(-50%, -50%) scale(${s})`;
+  };
+  const params = new URLSearchParams(location.search);
+  if (params.has('render')) document.body.classList.add('render');
+  else { addEventListener('resize', fit); fit(); }
+
+  window.__duration = DURATION;
+  window.__seek = t => { tl.seek(t, false); };
+  window.__ready = document.fonts.ready.then(() => true);
+
+  const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
+  const sync = () => { scrub.value = tl.time(); time.textContent = `${tl.time().toFixed(2)} / ${DURATION.toFixed(1)}`; };
+  tl.eventCallback('onUpdate', sync);
+  tl.eventCallback('onComplete', () => { playBtn.textContent = '↺ إعادة'; });
+  playBtn.onclick = () => {
+    if (tl.progress() >= 1) tl.restart();
+    else if (tl.paused()) tl.play(); else tl.pause();
+    playBtn.textContent = tl.paused() ? '▶ تشغيل' : '❚❚ إيقاف';
+  };
+  scrub.oninput = () => { tl.pause(); tl.seek(+scrub.value); playBtn.textContent = '▶ تشغيل'; sync(); };
+  $('#safeBtn').onclick = () => $('#safe').classList.toggle('on');
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+  if (params.has('t')) tl.seek(+params.get('t'));
+  if (!params.has('render') && !params.has('t')) window.__ready.then(() => { tl.play(); playBtn.textContent = '❚❚ إيقاف'; });
+})();
+</script>
+</body>
+</html>
