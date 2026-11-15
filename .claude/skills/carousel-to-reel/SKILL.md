@@ -18,6 +18,7 @@ All files go in `motion-graphics/<slug>/`:
 | `output/<slug>-reel.mp4` | 1080×1920, H.264, 30fps, silent |
 | `lottie/<slug>-reel.json` (+ `-scene-N.json`) | Text converted to vector shapes, so no fonts are needed |
 | `reels/cover.png` | A settled frame from scene 1 |
+| `output/<slug>-reel-dark.mp4` (+ `-dark-voice.mp4`) | Night version (`--theme dark`). Produce it whenever the user asks for الوضع الليلي / النظام الليلي |
 | `reels/voiceover-script.md` | Table: time · scene · on-screen text · suggested VO (≈2 words/s) |
 | `reels/captions.srt` | Captions of the suggested VO, timed to the scenes |
 | `reels/post-caption.txt` | Post text + hashtags |
@@ -57,6 +58,26 @@ Then edit `motion-graphics/<slug>/index.html`:
 - **Scenes:** replace every `__placeholder__`. Delete, duplicate or reorder scene blocks to fit the pages. Each scene uses the motion library (`wordIn`, `popIn`, `bigIn`, `reveal`, `highlight`, `dotIn`, `fadeUp`, `sceneIn`, `sceneOut`, `counterTo`, `spread`).
 - **All scene times come from `T`.** Write every tween as `a + offset`, where `a = T.sN`. Never use absolute seconds; that is what makes voice sync a one-line change.
 - **Signature visual** (`#visual`): design the post's key graphic from the file (hidden-sins used a heart with the sin names floating inside, drawn by a stroke and then beating). Use SVG with `path.draw` for drawn strokes and `.u` / `.w` for text, so it exports to Lottie.
+
+### Night theme (النظام الليلي)
+- The template ships with two palettes:
+  - `:root` (day);
+  - `:root[data-theme="dark"]` (night, activated by `index.html?theme=dark`).
+- **Every colour on the page must come from a CSS variable.** When you add an element (a signature visual, an icon), give it a token in **both** palettes. Never hard-code a hex/rgba in a rule or SVG attribute: use `fill="var(--x)"`.
+- GSAP cannot tween `var()`. For animated colours (text glow), read the value with `tok('--accent-glow')`.
+- When you change the day palette to match a user's file, derive the night one from it:
+  - background very dark, tinted with the accent hue;
+  - text near-white;
+  - accent lifted about 25% in lightness for contrast;
+  - highlight becomes a translucent tint (alpha about .38) so light text stays readable;
+  - card one step lighter than the background;
+  - glows dimmer.
+- Export:
+  ```bash
+  node $S/render.js <dir> --theme dark [--audio …]         # -> <slug>-reel-dark(-voice).mp4
+  node $S/bake.js <dir> --theme dark && python3 $S/build_lottie.py <dir> --theme dark [--scenes]
+  ```
+- QA the night stills too: `--theme dark --stills … --sheet`.
 
 ### 4. House style: layout
 - Stage 1080×1920, side padding 100px, text right-aligned (RTL).

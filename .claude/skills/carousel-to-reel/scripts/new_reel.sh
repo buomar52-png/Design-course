@@ -15,5 +15,5 @@ python3 - "$dest/index.html" "$title" <<'PY'
 import sys; p, t = sys.argv[1], sys.argv[2]
 s = open(p, encoding="utf-8").read().replace("__TITLE__", t, 1); open(p, "w", encoding="utf-8").write(s)
 PY
-printf 'output/bake.json\noutput/stills/\n' > "$dest/.gitignore"
+printf 'output/bake*.json\noutput/stills/\n' > "$dest/.gitignore"
 echo "created $dest"

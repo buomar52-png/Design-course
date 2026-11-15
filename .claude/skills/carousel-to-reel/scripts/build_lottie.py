@@ -1,6 +1,6 @@
 """Build Lottie from <project>/output/bake.json (made by bake.js).
 
-  python3 build_lottie.py <project-dir> [--scenes]
+  python3 build_lottie.py <project-dir> [--scenes] [--theme dark]
 
 Outputs (in <project>/lottie/):
   <name>-reel.json        the whole reel, 1080x1920, every text converted to vector shapes
@@ -216,7 +216,7 @@ def unit_shapes(u, frames_u, fps):
             size = animated([[hw * p, bar_h] for p in pct], [0.5, 0.5])
             posn = animated([[right - hw * p / 2, bar_y + bar_h / 2] for p in pct], [0.25, 0.25])
             shapes.append(group([{"ty": "rc", "d": 1, "s": size, "p": posn, "r": static(0)},
-                                 fill([0.824, 0.933, 0.58, 1])], "highlight"))
+                                 fill(TOK.get("hl", [0.824, 0.933, 0.58, 1]))], "highlight"))
         if any("clip" in fr for fr in frames_u):          # right-to-left reveal (clip-path inset)
             x, y, w, h = u["rect"]
             samples = [[w * (fr.get("clip") or 0) / 100] for fr in frames_u]
@@ -241,23 +241,25 @@ def unit_shapes(u, frames_u, fps):
     elif k == "box":
         x, y, w, h = u["rect"]
         if u["id"] == "bg-grid":
-            col = [40 / 255, 80 / 255, 95 / 255, 0.075]; items = []
+            col = TOK.get("grid", [40 / 255, 80 / 255, 95 / 255, 0.075]); items = []
             for gx in range(-8, 1081, 56): items.append(rect(gx, 0, 1.5, 1920))
             for gy in range(-8, 1921, 56): items.append(rect(0, gy, 1080, 1.5))
             shapes.append(group(items + [fill(col)], "grid"))
         elif u["id"] in ("bg-a", "bg-b"):
-            if u["id"] == "bg-a": cx, cy, R, rgb, stops = w - 120, 120, 620, (140, 196, 220), [(0, .42), (260 / 620, .18), (1, 0)]
-            else:                 cx, cy, R, rgb, stops = 120, h - 120, 640, (205, 232, 150), [(0, .45), (260 / 640, .20), (1, 0)]
+            ga, gb = TOK.get("glow-a", ((140, 196, 220), .42)), TOK.get("glow-b", ((205, 232, 150), .45))
+            if u["id"] == "bg-a": cx, cy, R, rgb, stops = w - 120, 120, 620, ga[0], [(0, ga[1]), (260 / 620, ga[1] * .43), (1, 0)]
+            else:                 cx, cy, R, rgb, stops = 120, h - 120, 640, gb[0], [(0, gb[1]), (260 / 640, gb[1] * .44), (1, 0)]
             c = [v / 255 for v in rgb]
             g = [x for p, _ in stops for x in [R2(p)] + [R2(v) for v in c]] + [x for p, a in stops for x in (R2(p), a)]
             shapes.append(group([rect(0, 0, w, h), {"ty": "gf", "o": static(100), "r": 1, "t": 2,
                 "s": static([R2(cx), R2(cy)]), "e": static([R2(cx + R), R2(cy)]),
                 "g": {"p": len(stops), "k": static(g)}, "h": static(0), "a": static(0)}], u["id"]))
         elif u.get("isCard"):
-            shapes.append(group([rect(0, 0, w, h, u["radius"]), fill([1, 1, 1, 1])], "card"))
-            shapes.append(group([rect(4, 18, w - 8, h - 8, u["radius"] - 4), fill([215 / 255, 225 / 255, 228 / 255, .9])], "edge"))
+            dark = TOK.get("bg", [1, 1, 1, 1])[:3] < [0.3, 0.3, 0.3]
+            shapes.append(group([rect(0, 0, w, h, u["radius"]), fill(u.get("bg") or [1, 1, 1, 1])], "card"))
+            shapes.append(group([rect(4, 18, w - 8, h - 8, u["radius"] - 4), fill(TOK.get("card-edge", [215 / 255, 225 / 255, 228 / 255, .9]))], "edge"))
             for k2, a in ((30, .035), (18, .03)):
-                shapes.append(group([rect(-6, k2, w + 12, h, u["radius"] + 6), fill([30 / 255, 60 / 255, 70 / 255, a])], "shadow"))
+                shapes.append(group([rect(-6, k2, w + 12, h, u["radius"] + 6), fill([0, 0, 0, a * 5] if dark else [30 / 255, 60 / 255, 70 / 255, a])], "shadow"))
         elif u["radiusIsCircle"]:
             shapes.append(group([ellipse(0, 0, w, h), fill(u["bg"])], "dot"))
         else:
@@ -287,7 +289,30 @@ def name_of(u):
 def stage_bg(op, w=1080, h=1920):
     return shape_layer(9999, "background", {"a": static([0, 0, 0]), "p": static([0, 0, 0]), "r": static(0),
                        "s": static([100, 100, 100]), "o": static(100)},
-                       [group([rect(0, 0, w, h), fill([243 / 255, 245 / 255, 244 / 255, 1])], "bg")], op)
+                       [group([rect(0, 0, w, h), fill(TOK.get("bg", [243 / 255, 245 / 255, 244 / 255, 1]))], "bg")], op)
+
+# ---------------------------------------------------------------- theme tokens (from bake.js)
+TOK = {}
+def parse_color(v):
+    v = v.strip()
+    if v.startswith("#"):
+        h = v[1:]; h = "".join(c * 2 for c in h) if len(h) == 3 else h
+        return [int(h[k:k + 2], 16) / 255 for k in (0, 2, 4)] + [1]
+    n = [float(x) for x in re.findall(r"[\d.]+", v)]
+    return [n[0] / 255, n[1] / 255, n[2] / 255, n[3] if len(n) > 3 else 1]
+def parse_tokens(t):
+    out = {}
+    try:
+        if t.get("--bg"): out["bg"] = parse_color(t["--bg"])
+        if t.get("--grid"): out["grid"] = parse_color(t["--grid"])
+        if t.get("--hl"): out["hl"] = parse_color(t["--hl"])
+        if t.get("--card-edge"): out["card-edge"] = parse_color(t["--card-edge"])
+        for k in ("a", "b"):
+            if t.get(f"--glow-{k}"):
+                out[f"glow-{k}"] = (tuple(float(x) for x in t[f"--glow-{k}"].split(",")), float(t[f"--glow-{k}-a"]))
+    except (ValueError, IndexError, KeyError):
+        pass      # older projects without tokens: keep the light defaults
+    return out
 
 # ---------------------------------------------------------------- builds
 def build_reel(bake, f0=0, f1=None, title="reel", markers=True):
@@ -313,9 +338,11 @@ def build_reel(bake, f0=0, f1=None, title="reel", markers=True):
             "ddd": 0, "assets": [], "markers": mk, "layers": layers}
 
 if __name__ == "__main__":
-    bake = json.load(open(ROOT / "output" / "bake.json"))
+    theme = sys.argv[sys.argv.index("--theme") + 1] if "--theme" in sys.argv else None
+    bake = json.load(open(ROOT / "output" / f"bake{'-' + theme if theme else ''}.json"))
+    TOK.update(parse_tokens(bake.get("tokens") or {}))
     OUT.mkdir(exist_ok=True)
-    name = ROOT.name
+    name = ROOT.name + (f"-{theme}" if theme else "")
     outs = [(f"{name}-reel.json", build_reel(bake, title=name))]
     if "--scenes" in sys.argv and bake.get("scenes"):
         sc, fps = bake["scenes"], bake["fps"]

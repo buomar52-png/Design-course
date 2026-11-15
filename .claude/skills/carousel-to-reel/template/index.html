@@ -33,6 +33,34 @@
     --hl: #d2ee94;          /* التظليل */
     --grid: rgba(40, 80, 95, .075);
     --pad: 100px;
+    --label: #545b5e;       /* اسم السلسلة */
+    --handle: #9aa1a4;
+    --card: #fff;
+    --card-edge: rgba(215, 225, 228, .9);
+    --card-shadow: rgba(30, 60, 70, .08);
+    --glow-a: 140, 196, 220; --glow-a-a: .42;   /* توهج أعلى اليمين (RGB, alpha) */
+    --glow-b: 205, 232, 150; --glow-b-a: .45;   /* توهج أسفل اليسار */
+    --accent-glow: rgba(27, 122, 156, .28);     /* ظل الكلمة الكبيرة */
+  }
+  /* ===== النظام الليلي: index.html?theme=dark (أو render.js --theme dark) =====
+     كل لون في الصفحة يجب أن يأتي من هذه المتغيرات حتى تعمل النسختان. */
+  :root[data-theme="dark"] {
+    --bg: #0e1416;
+    --ink: #eef3f4;
+    --muted: #8a979c;
+    --teal: #4cb3d6;
+    --teal-line: #5aaccb;
+    --green: #b5dc55;
+    --hl: rgba(181, 220, 85, .38);
+    --grid: rgba(170, 215, 230, .055);
+    --label: #aebabe;
+    --handle: #66737a;
+    --card: #172024;
+    --card-edge: rgba(0, 0, 0, .45);
+    --card-shadow: rgba(0, 0, 0, .35);
+    --glow-a: 40, 130, 170; --glow-a-a: .40;
+    --glow-b: 120, 170, 50; --glow-b-a: .26;
+    --accent-glow: rgba(76, 179, 214, .35);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -48,8 +76,8 @@
   .layer { position: absolute; inset: 0; }
   .grid { background-image: linear-gradient(var(--grid) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
           background-size: 56px 56px; background-position: -8px -8px; }
-  .glow-a { inset: -120px; background: radial-gradient(circle at calc(100% - 120px) 120px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 260px, rgba(140, 196, 220, 0) 620px); }
-  .glow-b { inset: -120px; background: radial-gradient(circle at 120px calc(100% - 120px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 260px, rgba(205, 232, 150, 0) 640px); }
+  .glow-a { inset: -120px; background: radial-gradient(circle at calc(100% - 120px) 120px, rgba(var(--glow-a), var(--glow-a-a)) 0px, rgba(var(--glow-a), calc(var(--glow-a-a) * .43)) 260px, rgba(var(--glow-a), 0) 620px); }
+  .glow-b { inset: -120px; background: radial-gradient(circle at 120px calc(100% - 120px), rgba(var(--glow-b), var(--glow-b-a)) 0px, rgba(var(--glow-b), calc(var(--glow-b-a) * .44)) 260px, rgba(var(--glow-b), 0) 640px); }
 
   .scene { position: absolute; inset: 0; }
   .rtl-block { position: absolute; right: var(--pad); left: var(--pad); text-align: right; }
@@ -69,7 +97,7 @@
   /* header */
   #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
   #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
-  #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: #545b5e; }
+  #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: var(--label); }
   #header .clipwin { position: absolute; left: 0; top: 0; height: 56px; overflow: hidden; font-size: 36px; color: var(--muted); direction: ltr; }
   #header .clipwin span { display: block; height: 56px; line-height: 56px; }
 
@@ -87,8 +115,8 @@
 
   /* ===== scene 3 — statement + card ===== */
   #s3 .head { top: 470px; font-size: 92px; font-weight: 400; line-height: 1.45; }
-  .card { position: absolute; right: 80px; left: 80px; top: 820px; background: #fff; border-radius: 42px; padding: 52px 48px 50px;
-          box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px rgba(215, 225, 228, .9), 0 30px 60px rgba(30, 60, 70, .08); }
+  .card { position: absolute; right: 80px; left: 80px; top: 820px; background: var(--card); border-radius: 42px; padding: 52px 48px 50px;
+          box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
   .card .who { font-size: 40px; color: var(--teal); font-weight: 500; position: relative; padding-right: 40px; }
   .card .who::before { content: ""; position: absolute; right: 2px; top: 50%; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--green); }
   .card .quote { margin-top: 22px; font-size: 45px; line-height: 1.86; font-weight: 400; }
@@ -101,7 +129,7 @@
   #s4 .tail { top: 1250px; font-size: 70px; font-weight: 400; }
   #send { position: absolute; left: 110px; top: 1460px; width: 96px; height: 96px; }
 
-  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: #9aa1a4; letter-spacing: .5px; }
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: var(--handle); letter-spacing: .5px; }
 
   #safe { display: none; pointer-events: none; } #safe.on { display: block; }
   #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
@@ -201,6 +229,10 @@
 <script src="gsap.min.js"></script>
 <script>
 (() => {
+  const params = new URLSearchParams(location.search);
+  if (params.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+  /* لون من متغيرات الهوية — استخدمه داخل GSAP (لا يحرّك GSAP قيم var()) */
+  const tok = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   /* ================== التوقيت — المكان الوحيد لضبط المشاهد ==================
      كل مشهد يبدأ عند T.sN وينتهي قبل بداية التالي. لمزامنة التعليق الصوتي
      ضع هنا بداية كل جملة (من scripts/voice_sync.py) وطول التسجيل في end. */
@@ -311,6 +343,7 @@
     const ls = $$('#s4 .lines .split');
     spread(ls.length, a + 0.2, a + 2.8).forEach((t, i) => wordIn(words(ls[i]), t, 0.09));
     bigIn(words('#s4 .sirr'), a + 3.5);
+    tl.fromTo('#s4 .sirr', { textShadow: '0 0 0 rgba(0,0,0,0)' }, { textShadow: '0 10px 50px ' + tok('--accent-glow'), duration: 1.2 }, a + 4.2);
     wordIn(['#tail-a', '#hl2', '#tail-c'], a + 4.9, 0.12);
     highlight('#hl2', a + 5.6);
     tl.fromTo('#send', { x: -140, y: 140, opacity: 0, rotation: -25 }, { x: 0, y: 0, opacity: 1, rotation: 0, duration: 1, ease: 'expo.out' }, a + 6.3)
@@ -322,7 +355,6 @@
   /* ---------- player / render API (used by scripts/render.js and bake.js) ---------- */
   const stage = $('#stage'), vp = $('#viewport');
   const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
-  const params = new URLSearchParams(location.search);
   if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
   window.__duration = T.end;
   window.__scenes = T;

@@ -1,5 +1,6 @@
 // Sample a reel project's GSAP timeline into per-element channels for Lottie export.
-//   node bake.js <project-dir> [--fps 30]   -> <dir>/output/bake.json  (then: python3 build_lottie.py <dir>)
+//   node bake.js <project-dir> [--fps 30] [--theme dark]   -> <dir>/output/bake[-dark].json
+//   then: python3 build_lottie.py <dir> [--theme dark]
 //
 // Units follow the template conventions:
 //   text : .w  .reveal  .u            box : #bg-grid #bg-a #bg-b  .dot b  .dot i  .card  .ubox
@@ -13,6 +14,9 @@ const args = process.argv.slice(2);
 const dir = path.resolve(args[0] && !args[0].startsWith('--') ? args[0] : '.');
 const fpsArg = args.indexOf('--fps');
 const FPS = fpsArg >= 0 ? +args[fpsArg + 1] : 30;
+const themeArg = args.indexOf('--theme');
+const THEME = themeArg >= 0 ? args[themeArg + 1] : null;
+const BAKE = `bake${THEME ? '-' + THEME : ''}.json`;
 
 const setup = () => {
   const TEXT = '.w, .reveal, .u', BOX = '#bg-grid, #bg-a, #bg-b, .dot b, .dot i, .card, .ubox', SVG = 'svg.usvg, path.upath, path.draw';
@@ -41,7 +45,7 @@ const setup = () => {
   const open = async () => {
     const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
     page.on('pageerror', e => console.error('page error:', e.message));
-    await page.goto('file://' + path.join(dir, 'index.html') + '?render');
+    await page.goto('file://' + path.join(dir, 'index.html') + '?render' + (THEME ? '&theme=' + THEME : ''));
     await page.evaluate(() => window.__ready);
     await page.waitForTimeout(300);
     await page.evaluate(setup);
@@ -132,7 +136,13 @@ const setup = () => {
   }
   fs.mkdirSync(path.join(dir, 'output'), { recursive: true });
   const scenes = await page.evaluate(() => window.__scenes || null);
-  fs.writeFileSync(path.join(dir, 'output', 'bake.json'), JSON.stringify({ fps: FPS, duration, scenes, units: statics, frames }));
+  // theme colours for the parts build_lottie.py draws itself (stage, grid, glows)
+  const tokens = await page.evaluate(() => {
+    const cs = getComputedStyle(document.documentElement);
+    return Object.fromEntries(['--bg', '--grid', '--hl', '--card-edge', '--glow-a', '--glow-a-a', '--glow-b', '--glow-b-a']
+      .map(k => [k, cs.getPropertyValue(k).trim()]));
+  });
+  fs.writeFileSync(path.join(dir, 'output', BAKE), JSON.stringify({ fps: FPS, duration, scenes, theme: THEME, tokens, units: statics, frames }));
   await browser.close();
-  console.log(`\nbaked ${statics.length} units x ${frames.length} frames -> output/bake.json`);
+  console.log(`\nbaked ${statics.length} units x ${frames.length} frames -> output/${BAKE}`);
 })();
