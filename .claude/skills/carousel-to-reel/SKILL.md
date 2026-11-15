@@ -267,6 +267,12 @@ Reference: `motion-graphics/quran-tadabbur/`, a 126 s recording cut down to 95 s
   - Protect a word whose soft ending gets clipped (e.g. «نقي») with `--protect` around it.
   - **Abandoned takes:** «بأن الله سبحانه و…» → «بأن الله سيجعل…», or «فتتيقن بأنك…» → «فتتيقن بأن من…». Cut from the start of the first take to the start of the second. Confirm by transcribing each piece of the original on its own: Whisper merges takes when given a longer clip.
   - **Illustrate concrete examples with animated line icons** that tell the turn of the idea. For example: a rain cloud → the sun rises on «فتستبشر»; a wallet shakes → coins pop out on «عوّضه»; a fork with «؟» → the right path glows on «مخرجًا». Use stroke-draw (`path.draw` + `data-draw`), `data-pop`, `data-shake` and `data-glow`. See `quran-tadabbur/tools/build.py`.
+- **Pacing preference (latest, overrides the "breathing holds" above): continuous flow.** The user wants transitions to ride the speech, without long stops between scenes.
+  - Keep the default short pauses and add no `--hold`.
+  - Start the light tide 0.18 s before the next idea's first word, and let it **descend from the top** (0.95 s) so the new scene's first line is revealed as it is spoken.
+  - Use holds only if the user asks for a scene to linger.
+- **If the speaker misnames a source** (e.g. «الشافعي» for the الشاطبية lines), write the correct name on screen and tell the user. Offer to splice in a re-recorded word; never change the audio silently.
+- `--protect` ranges must start exactly at the onset of the protected speech. A protected range that overlaps a pause used to swallow the whole pause; this is fixed in `clean_voice.py` (the pause is now trimmed up to the protection).
 - Big display words (≥200 px): drop the tanween (مختلفٌ → مختلف). It collides with the neighbouring lines.
 
 ## Gotchas (learned the hard way)

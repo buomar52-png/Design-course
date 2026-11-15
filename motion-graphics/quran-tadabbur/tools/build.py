@@ -1,5 +1,5 @@
 # Builds motion-graphics/quran-tadabbur/index.html — القالب الليلي بدون مربعات (template ٤) — v3: icons, holds, no «جزء من آية» scene
-# Transition: «مدّ ضوئي» — a feathered light tide rises through the frame: the outgoing scene dissolves
+# Transition: «مدّ ضوئي» (v4: descends from the top, starts on the next idea's first word) — a feathered light tide: the outgoing scene dissolves
 # upward behind a soft glowing band while the next scene is revealed beneath it. One continuous background.
 # Declarative spec: data-t = spoken time of each word (audio/voice-clean.m4a), data-in = when a card/pill/ref
 # appears, data-fx = big|up|card|pill|chip, data-mark = when a highlight draws.
@@ -19,146 +19,135 @@ def scene(i, theme, start, body, num=None):          # theme / num kept for spec
     return f'    <!-- ===== S{i} ({start}s) ===== -->\n    <section class="scene" id="s{i}" data-start="{start}">\n{body}    </section>\n\n'
 
 import json as _json
-# Spec times are written on the previous cleaned timeline; SHIFT adds the breathing pauses inserted since then.
-def SHIFT(t):
-    t = float(t)
-    return round(t + 0.3 * (t >= 7.0) + 0.4 * (t >= 49.6) + 0.4 * (t >= 55.5) + 0.9 * (t >= 61.4), 2)
-def T(s):   # "1.2,3.4" -> shifted string
-    return ",".join(str(SHIFT(x)) for x in str(s).split(","))
-_kl, _c, _pill, _ref, _scene = kl, c, pill, ref, scene
-def kl(text, t, cls=""): return _kl(text, T(t), cls)
-def c(top, fs, w, inner, at, fx="up", lh=None, extra_style=""): return _c(top, fs, w, inner, SHIFT(at), fx, lh, extra_style)
-def pill(top, fs, text, t, at, kind="dash", kcls=""): return _pill(top, fs, text, T(t), SHIFT(at), kind, kcls)
-def ref(top, text, at): return _ref(top, text, SHIFT(at))
-def scene(i, theme, start, body, num=None): return _scene(i, theme, SHIFT(start), body, num)
-def mark(text, at, cls=""): return f'<span class="mark {cls}" data-mark="{SHIFT(at)}">{text}</span>'
+# v4 — new recording (voice-original-v2.m4a), continuous speech. Times are on audio/voice-clean.m4a directly.
+def mark(text, at, cls=""): return f'<span class="mark {cls}" data-mark="{at}">{text}</span>'
 def card(top, at, inner, style=""):
-    return f'      <div class="glass" style="top:{top}px;{style}" data-in="{SHIFT(at)}" data-fx="card">{inner}</div>\n'
+    return f'      <div class="glass" style="top:{top}px;{style}" data-in="{at}" data-fx="card">{inner}</div>\n'
 def icon(top, size, svg):
     return f'      <div class="icon" style="top:{top}px;width:{size}px;height:{size}px;margin-left:-{size // 2}px">{svg}</div>\n'
-A = lambda t: SHIFT(t)   # times inside icon markup
 
-# ---------------------------------------------------------------- icons (stroke drawings, animated by the engine)
-ICON_SAD = lambda: f'''<svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <g class="sun" data-pop="{A(13.9)}">
+ICON_SAD = lambda: '''<svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g class="sun" data-pop="11.5">
           <circle cx="138" cy="70" r="24" fill="#b5dc55" stroke="none"/>
           <g stroke="#b5dc55" stroke-width="6"><path d="M138 30v-12M138 122v-12M98 70H86M190 70h-12M110 42l-8-8M174 106l-8-8M110 98l-8 8M174 34l-8 8"/></g>
         </g>
-        <path class="draw cloud" data-draw="{A(12.75)}" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
+        <path class="draw cloud" data-draw="10.55" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
               d="M55 128 H150 C168 128 178 113 172 98 C167 85 152 81 142 87 C138 67 120 55 100 57 C80 59 66 75 66 93 C52 91 40 101 41 113 C42 123 48 128 55 128 Z"/>
-        <g class="rain" data-rain="{A(13.3)}" data-hide="{A(13.95)}" stroke="var(--teal-line)" stroke-width="6">
+        <g class="rain" data-rain="10.9" data-hide="11.55" stroke="var(--teal-line)" stroke-width="6">
           <path d="M72 145v14"/><path d="M98 150v14"/><path d="M124 145v14"/><path d="M150 150v14"/>
         </g>
       </svg>'''
-ICON_WALLET = lambda: f'''<svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+ICON_WALLET = lambda: '''<svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <g class="coins">
-          <g data-pop="{A(24.45)}"><circle cx="70" cy="44" r="17" fill="#b5dc55"/><path d="M70 36v16" stroke="#0e1416" stroke-width="4"/></g>
-          <g data-pop="{A(24.65)}"><circle cx="104" cy="28" r="19" fill="#b5dc55"/><path d="M104 19v18" stroke="#0e1416" stroke-width="4"/></g>
-          <g data-pop="{A(24.85)}"><circle cx="140" cy="44" r="16" fill="#b5dc55"/><path d="M140 37v14" stroke="#0e1416" stroke-width="4"/></g>
+          <g data-pop="18.5"><circle cx="70" cy="44" r="17" fill="#b5dc55"/><path d="M70 36v16" stroke="#0e1416" stroke-width="4"/></g>
+          <g data-pop="18.7"><circle cx="104" cy="28" r="19" fill="#b5dc55"/><path d="M104 19v18" stroke="#0e1416" stroke-width="4"/></g>
+          <g data-pop="18.9"><circle cx="140" cy="44" r="16" fill="#b5dc55"/><path d="M140 37v14" stroke="#0e1416" stroke-width="4"/></g>
         </g>
-        <g class="wallet" data-shake="{A(20.75)}">
-          <path class="draw" data-draw="{A(19.1)}" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
+        <g class="wallet" data-shake="15.2">
+          <path class="draw" data-draw="14.3" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
                 d="M36 78 H156 Q170 78 170 92 V156 Q170 170 156 170 H44 Q30 170 30 156 V84 Q30 78 36 78 Z"/>
-          <path class="draw" data-draw="{A(19.3)}" stroke="var(--teal)" stroke-width="7" d="M34 80 Q34 64 52 62 L136 52 Q150 51 150 64 V78"/>
-          <path class="draw" data-draw="{A(19.5)}" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M170 106 H142 Q132 106 132 116 V122 Q132 132 142 132 H170 Z"/>
-          <circle cx="148" cy="119" r="5" fill="var(--teal)" data-pop="{A(19.7)}"/>
+          <path class="draw" data-draw="14.5" stroke="var(--teal)" stroke-width="7" d="M34 80 Q34 64 52 62 L136 52 Q150 51 150 64 V78"/>
+          <path class="draw" data-draw="14.7" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M170 106 H142 Q132 106 132 116 V122 Q132 132 142 132 H170 Z"/>
+          <circle cx="148" cy="119" r="5" fill="var(--teal)" data-pop="14.9"/>
         </g>
       </svg>'''
-ICON_FORK = lambda: f'''<svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path class="draw" data-draw="{A(28.4)}" stroke="var(--teal)" stroke-width="8" d="M100 188 V118"/>
-        <g class="path-a" data-fade="{A(37.8)}">
-          <path class="draw" data-draw="{A(28.75)}" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 72 70 46 50"/>
-          <path class="draw" data-draw="{A(29.15)}" stroke="var(--teal)" stroke-width="8" d="M44 74 L42 46 L70 44"/>
+ICON_FORK = lambda: '''<svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="23.15" stroke="var(--teal)" stroke-width="8" d="M100 188 V118"/>
+        <g class="path-a" data-fade="29.45">
+          <path class="draw" data-draw="23.5" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 72 70 46 50"/>
+          <path class="draw" data-draw="23.9" stroke="var(--teal)" stroke-width="8" d="M44 74 L42 46 L70 44"/>
         </g>
-        <g class="path-b" data-glow="{A(37.8)}">
-          <path class="draw" data-draw="{A(28.75)}" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 128 70 154 50"/>
-          <path class="draw" data-draw="{A(29.15)}" stroke="var(--teal)" stroke-width="8" d="M156 74 L158 46 L130 44"/>
+        <g class="path-b" data-glow="29.45">
+          <path class="draw" data-draw="23.5" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 128 70 154 50"/>
+          <path class="draw" data-draw="23.9" stroke="var(--teal)" stroke-width="8" d="M156 74 L158 46 L130 44"/>
         </g>
         <text x="100" y="78" text-anchor="middle" font-size="58" font-weight="700" fill="#b5dc55" stroke="none"
-              data-pop="{A(29.6)}" data-fade="{A(37.8)}" font-family="Plex Ar">؟</text>
+              data-pop="24.25" data-fade="29.45" font-family="Plex Ar">؟</text>
       </svg>'''
 
 S = []
 # 1 — كتاب الله مختلف
 S.append(scene(1, "night", 0,
-  c(430, 96, 700, kl("كتابُ اللهِ عزَّ وجلّ", "0,0.36,0.54,0.76"), 0.05) +
-  c(600, 250, 700, kl("مختلف", "1.08", "acc"), 0.85, "big", 1.15) +
-  c(920, 76, 500, kl("عن جميعِ الكتب", "1.54,1.72,2.06"), 1.3) +
-  c(1050, 64, 500, kl("مهما حوت من مواعظَ وحِكَم،", "2.56,2.96,3.30,3.52,4.14"), 2.3) +
-  c(1150, 64, 500, kl('إلا أنّ كتابَ الله عزّ وجلّ <span class="acc">مختلف</span>', "4.70,5.00,5.16,5.60,5.76,6.00,6.36"), 4.45)))
-# 2 — ومن يتق الله يجعل له مخرجا  (now holds on «مخرجًا» before the transition)
-S.append(scene(2, "night", 7.67,
-  c(470, 80, 500, kl("أنت تقرأ على سبيل المثال:", "7.70,7.95,8.24,8.40,8.90"), 7.7) +
-  card(640, 9.2, '<div class="quote" style="font-size:104px;font-weight:600;line-height:1.5">'
-       + kl("﴿وَمَن يَتَّقِ اللَّهَ", "9.44,9.68,10.04", "gl")
-       + kl('يَجْعَل لَّهُ ' + mark("مَخْرَجًا﴾", 11.25), "10.26,10.82,11.00", "gl") + '</div>') +
-  ref(1020, "[الطلاق: ٢]", 11.35)))
-# 3 — حزين → فتستبشر  (icon: rain cloud → sun)
-S.append(scene(3, "night", 12.70,
+  c(430, 96, 700, kl("كتابُ اللهِ عزَّ وجلّ", "0.10,0.26,0.42,0.60"), 0.05) +
+  c(600, 250, 700, kl("مختلف", "0.92", "acc"), 0.7, "big", 1.15) +
+  c(920, 76, 500, kl("عن جميعِ الكتب", "1.38,1.58,1.90"), 1.2) +
+  c(1050, 64, 500, kl("مهما حوت من مواعظَ وحِكَم،", "2.42,2.84,3.12,3.34,3.84"), 2.2) +
+  c(1150, 64, 500, kl('إلا أنّ كتابَ الله عزّ وجلّ <span class="acc">مختلف</span>', "4.34,4.64,4.74,5.06,5.22,5.42,5.74"), 4.1)))
+# 2 — ومن يتق الله يجعل له مخرجا
+S.append(scene(2, "night", 6.54,
+  c(470, 80, 500, kl("أنت تقرأ على سبيل المثال:", "6.54,6.66,6.92,7.02,7.40"), 6.5) +
+  card(640, 7.55, '<div class="quote" style="font-size:104px;font-weight:600;line-height:1.5">'
+       + kl("﴿وَمَن يَتَّقِ اللَّهَ", "7.92,8.26,8.72", "gl")
+       + kl('يَجْعَل لَّهُ ' + mark("مَخْرَجًا﴾", 10.15), "8.92,9.72,9.92", "gl") + '</div>') +
+  ref(1020, "[الطلاق: ٢]", 10.2)))
+# 3 — حزين → فتستبشر
+S.append(scene(3, "night", 10.58,
   icon(250, 290, ICON_SAD()) +
-  c(590, 84, 500, kl("تقرؤها وأنت حزين", "12.73,13.10,13.48"), 12.7) +
-  c(710, 220, 700, kl("فتستبشر", "13.96", "acc"), 13.75, "big", 1.15) +
-  c(1010, 76, 500, kl('بأنّ اللهَ سيجعلُ لك <span class="acc">مخرجًا</span>', "14.64,15.02,15.32,15.88,16.12"), 14.4)))
-# 4 — ضائقة مالية → فتتيقن  (icon: wallet → coins)
-S.append(scene(4, "night", 18.99,
+  c(590, 84, 500, kl("تقرؤها وأنت حزين", "10.58,10.94,11.14"), 10.55) +
+  c(710, 220, 700, kl("فتستبشر", "11.58", "acc"), 11.4, "big", 1.15) +
+  c(1010, 76, 500, kl('بأنّ اللهَ سيجعلُ لك <span class="acc">مخرجًا</span>', "12.38,12.70,12.88,13.26,13.44"), 12.2)))
+# 4 — ضائقة مالية → فتتيقن … فلن تلجأ إلى الحرام
+S.append(scene(4, "night", 14.26,
   icon(240, 270, ICON_WALLET()) +
-  c(560, 72, 500, kl("تقرؤها وأنت تشعر بضائقةٍ ماليّة", "19.02,19.46,19.96,20.72,21.38"), 19.0) +
-  c(690, 220, 700, kl("فتتيقّن", "21.84", "acc"), 21.6, "big", 1.15) +
-  c(960, 72, 500, kl("بأنّ مَن ترك شيئًا لله", "22.82,23.08,23.30,23.56,24.00"), 22.6) +
-  c(1060, 72, 600, kl("عوّضه اللهُ خيرًا منه", "24.40,24.92,25.14,25.72"), 24.15) +
-  pill(1195, 60, "فسيجعلُ لك مخرجًا", "26.02,26.54,26.74", 25.8, "solid")))
-# 5 — التباس → ومن يتق الله  (icon: fork with a question → the right path lights up)
-S.append(scene(5, "night", 28.30,
+  c(560, 72, 500, kl("تقرؤها وأنت تشعر بضائقةٍ ماليّة", "14.26,14.58,14.76,15.16,15.62"), 14.25) +
+  c(690, 220, 700, kl("فتتيقّن", "16.14", "acc"), 15.95, "big", 1.15) +
+  c(960, 72, 500, kl("بأنّ مَن ترك شيئًا لله", "16.64,16.96,17.22,17.56,18.12"), 16.45) +
+  c(1060, 72, 600, kl("عوّضه اللهُ خيرًا منه", "18.52,19.00,19.18,19.78"), 18.3) +
+  pill(1195, 60, "فسيجعلُ لك مخرجًا", "20.16,20.64,20.82", 19.95, "solid") +
+  c(1335, 64, 600, kl('فلن تلجأ إلى <span class="acc">الحرام</span>', "21.36,21.80,22.32,22.60"), 21.15)))
+# 5 — التباس → ومن يتق الله
+S.append(scene(5, "night", 23.12,
   icon(235, 260, ICON_FORK()) +
-  c(540, 72, 500, kl("تقرؤها وأنت تشعر بالتباسٍ", "28.33,28.68,29.00,29.58"), 28.3) +
-  c(640, 96, 700, kl('بين <span class="acc">الحقّ</span> والباطل', "30.24,30.46,30.98"), 30.0) +
-  c(795, 64, 500, kl("وبسهولةِ وقوعِ الشبهةِ على قلبك", "31.86,33.40,33.76,34.24,34.42"), 31.65) +
-  card(930, 34.9, '<div class="quote" style="font-size:92px;font-weight:600;line-height:1.5">'
-       + kl("﴿وَمَن يَتَّقِ اللَّهَ", "35.18,36.60,36.96", "gl")
-       + kl('يَجْعَل لَّهُ ' + mark("مَخْرَجًا﴾", 38.0), "37.10,37.56,37.74", "gl") + '</div>')))
-# 6 — فتتيقن ... الحق واضحا جليا
-S.append(scene(6, "night", 39.79,
-  c(430, 220, 700, kl("فتتيقّن", "39.85", "acc"), 39.65, "big", 1.15) +
-  c(720, 72, 500, kl("بأنّ اللهَ عزّ وجلّ سيبيّنُ لك", "40.68,41.28,41.56,41.78,42.20,43.24"), 40.45) +
-  c(830, 104, 700, kl("الحقَّ واضحًا جليًّا", "43.48,44.00,44.80", "acc"), 43.25) +
-  pill(1040, 50, "ويُيسّرُ لك الانقيادَ له والعملَ به", "45.56,46.60,46.90,47.44,47.72,48.80", 45.3, "solid")))
-# 7 — يا أيها الذين آمنوا
-S.append(scene(7, "night", 50.04,
-  c(520, 104, 600, kl("﴿يَا أَيُّهَا الَّذِينَ آمَنُوا", "50.07,50.40,50.72,50.98"), 50.05, lh=1.55) +
-  c(690, 104, 600, kl("إِن تَتَّقُوا اللَّهَ", "51.52,52.10,52.70"), 51.3, lh=1.55) +
-  c(860, 104, 600, kl('يَجْعَل لَّكُمْ ' + mark("فُرْقَانًا﴾", 54.6), "52.96,53.84,54.34"), 52.75, lh=1.55) +
-  ref(1090, "[الأنفال: ٢٩]", 51.6)))
-# 8 — كلما رددت آياته ازدادت جمالا رونقا
-S.append(scene(8, "night", 55.81,
-  c(430, 84, 500, kl("كتابُ اللهِ عزّ وجلّ", "55.84,56.40,56.54,56.76"), 55.8) +
-  c(540, 84, 500, kl("كلما رددتَ آياتِه", "57.22,57.76,58.22"), 57.0) +
-  c(700, 72, 500, kl("ازدادت", "58.90"), 58.7) +
-  c(790, 200, 700, kl("جمالًا", "59.94", "acc"), 59.7, "big", 1.15) +
-  c(1050, 72, 500, kl("ازدادت", "60.40"), 60.2) +
-  c(1140, 200, 700, kl("رونقًا", "61.08", "acc"), 60.85, "big", 1.15)))
-# 9 — الشاطبي (audio kept complete)
-S.append(scene(9, "night", 61.52,
-  c(450, 64, 600, kl('كما يقول <span class="acc">الإمام الشاطبي:</span>', "61.55,62.00,62.30,62.62"), 61.55) +
-  card(600, 63.0, '<div class="quote poem">'
-       + kl("وَإِنَّ كِتَابَ اللهِ أَوْثَقُ شَافِعٍ", "63.80,64.00,64.44,64.68,65.32", "gl")
-       + kl("وَأَغْنَى غَنَاءٍ وَاهِبًا مُتَفَضِّلَا", "65.84,66.54,66.94,67.64", "gl")
-       + kl('وَخَيْرُ جَلِيسٍ لَا يُمَلُّ ' + mark("حَدِيثُهُ", 70.9), "68.42,69.28,69.70,69.94,70.36", "gl")
-       + kl("وَتَرْدَادُهُ يَزْدَادُ فِيهِ تَجَمُّلَا", "71.02,72.50,73.58,74.04", "gl") + '</div>',
+  c(540, 72, 500, kl("تقرؤها وأنت تشعر بالتباسٍ", "23.12,23.54,23.70,24.26"), 23.1) +
+  c(640, 96, 700, kl('بين <span class="acc">الحقّ</span> والباطل', "24.84,25.08,25.50"), 24.6) +
+  c(795, 64, 500, kl("وبسهولةِ وقوعِ الشبهةِ على قلبك", "26.10,26.68,27.02,27.40,27.52"), 25.9) +
+  card(930, 27.75, '<div class="quote" style="font-size:92px;font-weight:600;line-height:1.5">'
+       + kl("﴿وَمَن يَتَّقِ اللَّهَ", "28.08,28.24,28.62", "gl")
+       + kl('يَجْعَل لَّهُ ' + mark("مَخْرَجًا﴾", 29.7), "29.04,29.28,29.42", "gl") + '</div>')))
+# 6 — فتتيقن … الحق واضحا جليا
+S.append(scene(6, "night", 30.39,
+  c(430, 220, 700, kl("فتتيقّن", "30.39", "acc"), 30.25, "big", 1.15) +
+  c(720, 72, 500, kl("بأنّ اللهَ عزّ وجلّ سيبيّنُ لك", "30.96,31.28,31.60,32.02,32.38,32.84"), 30.75) +
+  c(830, 104, 700, kl("الحقَّ واضحًا جليًّا", "33.14,33.50,34.18", "acc"), 32.95) +
+  pill(1040, 50, "ويُيسّرُ لك الانقيادَ له والعملَ به", "34.78,35.36,35.50,35.98,36.22,36.74", 34.55, "solid")))
+# 7 — كما قال تعالى: يا أيها الذين آمنوا
+S.append(scene(7, "night", 36.94,
+  c(430, 64, 600, kl('كما قال <span class="acc">تعالى:</span>', "36.94,37.12,37.32"), 36.9) +
+  c(560, 104, 600, kl("﴿يَا أَيُّهَا الَّذِينَ آمَنُوا", "37.72,37.88,38.10,38.44"), 37.5, lh=1.55) +
+  c(730, 104, 600, kl("إِن تَتَّقُوا اللَّهَ", "39.02,39.18,39.78"), 38.8, lh=1.55) +
+  c(900, 104, 600, kl('يَجْعَل لَّكُمْ ' + mark("فُرْقَانًا﴾", 41.0), "40.00,40.46,40.80"), 39.8, lh=1.55) +
+  ref(1130, "[الأنفال: ٢٩]", 39.2)))
+# 8 — كلما رددت آياته تزداد جمالا رونقا
+S.append(scene(8, "night", 41.48,
+  c(430, 84, 500, kl("كتابُ اللهِ عزّ وجلّ", "41.48,41.76,41.88,42.06"), 41.45) +
+  c(540, 84, 500, kl("كلما رددتَ آياتِه", "42.36,42.78,43.24"), 42.15) +
+  c(700, 72, 500, kl("تزداد", "43.92"), 43.7) +
+  c(790, 200, 700, kl("جمالًا", "44.72", "acc"), 44.5, "big", 1.15) +
+  c(1050, 72, 500, kl("تزداد", "45.30"), 45.1) +
+  c(1140, 200, 700, kl("رونقًا", "45.72", "acc"), 45.5, "big", 1.15)))
+# 9 — الشاطبي (on screen: the correct name; the lines are from الشاطبية)
+S.append(scene(9, "night", 46.26,
+  c(450, 64, 600, kl('كما يقول <span class="acc">الإمام الشاطبي:</span>', "46.26,46.66,46.90,47.16"), 46.25) +
+  card(600, 47.3, '<div class="quote poem">'
+       + kl("وَإِنَّ كِتَابَ اللهِ أَوْثَقُ شَافِعٍ", "47.70,48.04,48.48,48.72,49.24", "gl")
+       + kl("وَأَغْنَى غَنَاءٍ وَاهِبًا مُتَفَضِّلَا", "49.76,50.68,51.00,51.46", "gl")
+       + kl('وَخَيْرُ جَلِيسٍ لَا يُمَلُّ ' + mark("حَدِيثُهُ", 54.0), "52.16,52.66,53.06,53.26,53.58", "gl")
+       + kl("وَتَرْدَادُهُ يَزْدَادُ فِيهِ تَجَمُّلَا", "54.26,55.44,56.00,56.22", "gl") + '</div>',
        "padding:40px 30px 44px")))
-# 10 — قلب طاهر نقي
-S.append(scene(10, "night", 75.65,
-  c(440, 76, 500, kl("قراءةُ القرآنِ والإقبالُ عليه", "75.68,75.92,76.32,76.86"), 75.65) +
-  c(560, 76, 500, kl("لا يحتاج إلى كثيرِ علم", "77.08,77.28,77.78,77.96,78.76"), 76.85) +
-  c(720, 76, 500, kl("ولكن يحتاج إلى", "79.22,79.58,80.04"), 79.0) +
-  c(820, 260, 700, kl("قلب", "80.18", "acc"), 79.95, "big", 1.15) +
-  c(1210, 88, 600, kl("طاهرٍ نقيّ", "80.60,81.00"), 80.4)))
-# 11 — الآية الختامية (the former «جزء من آية» scene is removed)
-S.append(scene(11, "night", 82.56,
-  c(450, 100, 600, kl("﴿إِنَّ فِي ذَٰلِكَ لَذِكْرَىٰ", "82.59,83.14,83.44,84.20"), 82.6, lh=1.6) +
-  c(610, 100, 600, kl('لِمَن كَانَ لَهُ ' + mark("قَلْبٌ", 86.1), "84.86,85.10,85.38,85.82"), 84.6, lh=1.6) +
-  c(770, 100, 600, kl("أَوْ أَلْقَى السَّمْعَ", "86.36,86.62,87.00"), 86.1, lh=1.6) +
-  c(930, 100, 600, kl("وَهُوَ شَهِيدٌ﴾", "87.22,88.14"), 87.0, lh=1.6) +
-  ref(1160, "[ق: ٣٧]", 88.6)))
+# 10 — قلب طاهر ونقي
+S.append(scene(10, "night", 57.02,
+  c(440, 76, 500, kl("قراءةُ القرآنِ والإقبالُ عليه", "57.02,57.22,57.60,58.08"), 56.95) +
+  c(560, 76, 500, kl("لا يحتاج إلى كثيرِ علم", "58.22,58.52,59.02,59.10,59.52"), 58.0) +
+  c(720, 76, 500, kl("بقدر ما يحتاج إلى", "59.94,60.48,60.58,61.00"), 59.75) +
+  c(820, 260, 700, kl("قلب", "61.18", "acc"), 60.95, "big", 1.15) +
+  c(1210, 88, 600, kl("طاهرٍ ونقيّ", "61.82,62.46"), 61.6)))
+# 11 — الآية الختامية
+S.append(scene(11, "night", 63.27,
+  c(450, 100, 600, kl("﴿إِنَّ فِي ذَٰلِكَ لَذِكْرَىٰ", "63.27,63.40,63.55,63.80"), 63.2, lh=1.6) +
+  c(610, 100, 600, kl('لِمَن كَانَ لَهُ ' + mark("قَلْبٌ", 65.3), "64.34,64.58,64.82,65.06"), 64.1, lh=1.6) +
+  c(770, 100, 600, kl("أَوْ أَلْقَى السَّمْعَ", "66.22,66.40,66.66"), 66.0, lh=1.6) +
+  c(930, 100, 600, kl("وَهُوَ شَهِيدٌ﴾", "67.04,67.38"), 66.8, lh=1.6) +
+  ref(1160, "[ق: ٣٧]", 67.8)))
 
 END = round(_json.load(open(f"{ROOT}/motion-graphics/quran-tadabbur/audio/timing.json"))["duration"] + 2.4, 2)
 
@@ -199,10 +188,10 @@ HTML = r'''<!doctype html>
 
   /* scenes are transparent layers; the transition masks them with a feathered edge driven by --p */
   .scene { position: absolute; inset: 0; --p: 0%;
-           -webkit-mask-image: linear-gradient(to top, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
-                   mask-image: linear-gradient(to top, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
-  .scene.out { -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
-                       mask-image: linear-gradient(to top, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
+           -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
+                   mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
+  .scene.out { -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
+                       mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
   .scene.live { -webkit-mask-image: none; mask-image: none; }
   #tide { position: absolute; left: -10%; right: -10%; height: 520px; top: 0; pointer-events: none; opacity: 0; mix-blend-mode: screen;
           background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(76, 179, 214, .55), rgba(76, 179, 214, .16) 45%, transparent 72%),
@@ -308,14 +297,14 @@ __SCENES__
   };
 
   /* ---- «مدّ ضوئي»: the light tide ---- */
-  const TIDE = 1.15;
+  const TIDE = 0.95;
   const tide = (prev, next, a) => {
-    const t0 = a - 0.62;
+    const t0 = a - 0.18;               // continuous: the tide rides on the first word of the next idea
     tl.set(prev, { className: 'scene out', '--p': '0%' }, t0)
       .set(next, { className: 'scene', '--p': '0%' }, t0)
       .to([prev, next], { '--p': '130%', duration: TIDE, ease: 'power2.inOut' }, t0)
-      .to($$(':scope > *', prev), { y: -46, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
-      .fromTo('#tide', { y: 1920, opacity: 0 }, { y: -520, duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to($$(':scope > *', prev), { y: 40, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
+      .fromTo('#tide', { y: -520, opacity: 0 }, { y: 1920, duration: TIDE, ease: 'power2.inOut' }, t0)
       .to('#tide', { opacity: 1, duration: TIDE * 0.35, ease: 'sine.out' }, t0)
       .to('#tide', { opacity: 0, duration: TIDE * 0.4, ease: 'sine.in' }, t0 + TIDE * 0.6)
       .set(next, { className: 'scene live' }, t0 + TIDE)
@@ -375,7 +364,7 @@ __SCENES__
     const big = L.el.closest('[data-fx="big"]');
     L.ws.forEach((w, i) => {
       const t = L.times[Math.min(i, L.times.length - 1)] + Math.max(0, i - L.times.length + 1) * 0.12;
-      big ? bigIn(w, t - 0.22) : wordIn(w, t - 0.14, 0.65);
+      big ? bigIn(w, t - 0.12) : wordIn(w, t - 0.06, 0.6);
     });
   });
 

@@ -34,10 +34,10 @@
 
   /* scenes are transparent layers; the transition masks them with a feathered edge driven by --p */
   .scene { position: absolute; inset: 0; --p: 0%;
-           -webkit-mask-image: linear-gradient(to top, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
-                   mask-image: linear-gradient(to top, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
-  .scene.out { -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
-                       mask-image: linear-gradient(to top, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
+           -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
+                   mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
+  .scene.out { -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
+                       mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
   .scene.live { -webkit-mask-image: none; mask-image: none; }
   #tide { position: absolute; left: -10%; right: -10%; height: 520px; top: 0; pointer-events: none; opacity: 0; mix-blend-mode: screen;
           background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(76, 179, 214, .55), rgba(76, 179, 214, .16) 45%, transparent 72%),
@@ -83,132 +83,134 @@
     <div class="glow" id="glow-b"></div>
     <div class="dot" id="dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
 
-    <!-- ===== S1 (0.0s) ===== -->
-    <section class="scene" id="s1" data-start="0.0">
-      <div class="c" style="top:430px;font-size:96px;font-weight:700;" data-in="0.05" data-fx="up"><span class="line kline " data-t="0.0,0.36,0.54,0.76">كتابُ اللهِ عزَّ وجلّ</span></div>
-      <div class="c" style="top:600px;font-size:250px;font-weight:700;line-height:1.15;" data-in="0.85" data-fx="big"><span class="line kline acc" data-t="1.08">مختلف</span></div>
-      <div class="c" style="top:920px;font-size:76px;font-weight:500;" data-in="1.3" data-fx="up"><span class="line kline " data-t="1.54,1.72,2.06">عن جميعِ الكتب</span></div>
-      <div class="c" style="top:1050px;font-size:64px;font-weight:500;" data-in="2.3" data-fx="up"><span class="line kline " data-t="2.56,2.96,3.3,3.52,4.14">مهما حوت من مواعظَ وحِكَم،</span></div>
-      <div class="c" style="top:1150px;font-size:64px;font-weight:500;" data-in="4.45" data-fx="up"><span class="line kline " data-t="4.7,5.0,5.16,5.6,5.76,6.0,6.36">إلا أنّ كتابَ الله عزّ وجلّ <span class="acc">مختلف</span></span></div>
+    <!-- ===== S1 (0s) ===== -->
+    <section class="scene" id="s1" data-start="0">
+      <div class="c" style="top:430px;font-size:96px;font-weight:700;" data-in="0.05" data-fx="up"><span class="line kline " data-t="0.10,0.26,0.42,0.60">كتابُ اللهِ عزَّ وجلّ</span></div>
+      <div class="c" style="top:600px;font-size:250px;font-weight:700;line-height:1.15;" data-in="0.7" data-fx="big"><span class="line kline acc" data-t="0.92">مختلف</span></div>
+      <div class="c" style="top:920px;font-size:76px;font-weight:500;" data-in="1.2" data-fx="up"><span class="line kline " data-t="1.38,1.58,1.90">عن جميعِ الكتب</span></div>
+      <div class="c" style="top:1050px;font-size:64px;font-weight:500;" data-in="2.2" data-fx="up"><span class="line kline " data-t="2.42,2.84,3.12,3.34,3.84">مهما حوت من مواعظَ وحِكَم،</span></div>
+      <div class="c" style="top:1150px;font-size:64px;font-weight:500;" data-in="4.1" data-fx="up"><span class="line kline " data-t="4.34,4.64,4.74,5.06,5.22,5.42,5.74">إلا أنّ كتابَ الله عزّ وجلّ <span class="acc">مختلف</span></span></div>
     </section>
 
-    <!-- ===== S2 (7.97s) ===== -->
-    <section class="scene" id="s2" data-start="7.97">
-      <div class="c" style="top:470px;font-size:80px;font-weight:500;" data-in="8.0" data-fx="up"><span class="line kline " data-t="8.0,8.25,8.54,8.7,9.2">أنت تقرأ على سبيل المثال:</span></div>
-      <div class="glass" style="top:640px;" data-in="9.5" data-fx="card"><div class="quote" style="font-size:104px;font-weight:600;line-height:1.5"><span class="line kline gl" data-t="9.74,9.98,10.34">﴿وَمَن يَتَّقِ اللَّهَ</span><span class="line kline gl" data-t="10.56,11.12,11.3">يَجْعَل لَّهُ <span class="mark " data-mark="11.55">مَخْرَجًا﴾</span></span></div></div>
-      <div class="refchip" style="top:1020px" data-in="11.65" data-fx="chip"><span>[الطلاق: ٢]</span></div>
+    <!-- ===== S2 (6.54s) ===== -->
+    <section class="scene" id="s2" data-start="6.54">
+      <div class="c" style="top:470px;font-size:80px;font-weight:500;" data-in="6.5" data-fx="up"><span class="line kline " data-t="6.54,6.66,6.92,7.02,7.40">أنت تقرأ على سبيل المثال:</span></div>
+      <div class="glass" style="top:640px;" data-in="7.55" data-fx="card"><div class="quote" style="font-size:104px;font-weight:600;line-height:1.5"><span class="line kline gl" data-t="7.92,8.26,8.72">﴿وَمَن يَتَّقِ اللَّهَ</span><span class="line kline gl" data-t="8.92,9.72,9.92">يَجْعَل لَّهُ <span class="mark " data-mark="10.15">مَخْرَجًا﴾</span></span></div></div>
+      <div class="refchip" style="top:1020px" data-in="10.2" data-fx="chip"><span>[الطلاق: ٢]</span></div>
     </section>
 
-    <!-- ===== S3 (13.0s) ===== -->
-    <section class="scene" id="s3" data-start="13.0">
+    <!-- ===== S3 (10.58s) ===== -->
+    <section class="scene" id="s3" data-start="10.58">
       <div class="icon" style="top:250px;width:290px;height:290px;margin-left:-145px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <g class="sun" data-pop="14.2">
+        <g class="sun" data-pop="11.5">
           <circle cx="138" cy="70" r="24" fill="#b5dc55" stroke="none"/>
           <g stroke="#b5dc55" stroke-width="6"><path d="M138 30v-12M138 122v-12M98 70H86M190 70h-12M110 42l-8-8M174 106l-8-8M110 98l-8 8M174 34l-8 8"/></g>
         </g>
-        <path class="draw cloud" data-draw="13.05" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
+        <path class="draw cloud" data-draw="10.55" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
               d="M55 128 H150 C168 128 178 113 172 98 C167 85 152 81 142 87 C138 67 120 55 100 57 C80 59 66 75 66 93 C52 91 40 101 41 113 C42 123 48 128 55 128 Z"/>
-        <g class="rain" data-rain="13.6" data-hide="14.25" stroke="var(--teal-line)" stroke-width="6">
+        <g class="rain" data-rain="10.9" data-hide="11.55" stroke="var(--teal-line)" stroke-width="6">
           <path d="M72 145v14"/><path d="M98 150v14"/><path d="M124 145v14"/><path d="M150 150v14"/>
         </g>
       </svg></div>
-      <div class="c" style="top:590px;font-size:84px;font-weight:500;" data-in="13.0" data-fx="up"><span class="line kline " data-t="13.03,13.4,13.78">تقرؤها وأنت حزين</span></div>
-      <div class="c" style="top:710px;font-size:220px;font-weight:700;line-height:1.15;" data-in="14.05" data-fx="big"><span class="line kline acc" data-t="14.26">فتستبشر</span></div>
-      <div class="c" style="top:1010px;font-size:76px;font-weight:500;" data-in="14.7" data-fx="up"><span class="line kline " data-t="14.94,15.32,15.62,16.18,16.42">بأنّ اللهَ سيجعلُ لك <span class="acc">مخرجًا</span></span></div>
+      <div class="c" style="top:590px;font-size:84px;font-weight:500;" data-in="10.55" data-fx="up"><span class="line kline " data-t="10.58,10.94,11.14">تقرؤها وأنت حزين</span></div>
+      <div class="c" style="top:710px;font-size:220px;font-weight:700;line-height:1.15;" data-in="11.4" data-fx="big"><span class="line kline acc" data-t="11.58">فتستبشر</span></div>
+      <div class="c" style="top:1010px;font-size:76px;font-weight:500;" data-in="12.2" data-fx="up"><span class="line kline " data-t="12.38,12.70,12.88,13.26,13.44">بأنّ اللهَ سيجعلُ لك <span class="acc">مخرجًا</span></span></div>
     </section>
 
-    <!-- ===== S4 (19.29s) ===== -->
-    <section class="scene" id="s4" data-start="19.29">
+    <!-- ===== S4 (14.26s) ===== -->
+    <section class="scene" id="s4" data-start="14.26">
       <div class="icon" style="top:240px;width:270px;height:270px;margin-left:-135px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <g class="coins">
-          <g data-pop="24.75"><circle cx="70" cy="44" r="17" fill="#b5dc55"/><path d="M70 36v16" stroke="#0e1416" stroke-width="4"/></g>
-          <g data-pop="24.95"><circle cx="104" cy="28" r="19" fill="#b5dc55"/><path d="M104 19v18" stroke="#0e1416" stroke-width="4"/></g>
-          <g data-pop="25.15"><circle cx="140" cy="44" r="16" fill="#b5dc55"/><path d="M140 37v14" stroke="#0e1416" stroke-width="4"/></g>
+          <g data-pop="18.5"><circle cx="70" cy="44" r="17" fill="#b5dc55"/><path d="M70 36v16" stroke="#0e1416" stroke-width="4"/></g>
+          <g data-pop="18.7"><circle cx="104" cy="28" r="19" fill="#b5dc55"/><path d="M104 19v18" stroke="#0e1416" stroke-width="4"/></g>
+          <g data-pop="18.9"><circle cx="140" cy="44" r="16" fill="#b5dc55"/><path d="M140 37v14" stroke="#0e1416" stroke-width="4"/></g>
         </g>
-        <g class="wallet" data-shake="21.05">
-          <path class="draw" data-draw="19.4" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
+        <g class="wallet" data-shake="15.2">
+          <path class="draw" data-draw="14.3" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"
                 d="M36 78 H156 Q170 78 170 92 V156 Q170 170 156 170 H44 Q30 170 30 156 V84 Q30 78 36 78 Z"/>
-          <path class="draw" data-draw="19.6" stroke="var(--teal)" stroke-width="7" d="M34 80 Q34 64 52 62 L136 52 Q150 51 150 64 V78"/>
-          <path class="draw" data-draw="19.8" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M170 106 H142 Q132 106 132 116 V122 Q132 132 142 132 H170 Z"/>
-          <circle cx="148" cy="119" r="5" fill="var(--teal)" data-pop="20.0"/>
+          <path class="draw" data-draw="14.5" stroke="var(--teal)" stroke-width="7" d="M34 80 Q34 64 52 62 L136 52 Q150 51 150 64 V78"/>
+          <path class="draw" data-draw="14.7" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M170 106 H142 Q132 106 132 116 V122 Q132 132 142 132 H170 Z"/>
+          <circle cx="148" cy="119" r="5" fill="var(--teal)" data-pop="14.9"/>
         </g>
       </svg></div>
-      <div class="c" style="top:560px;font-size:72px;font-weight:500;" data-in="19.3" data-fx="up"><span class="line kline " data-t="19.32,19.76,20.26,21.02,21.68">تقرؤها وأنت تشعر بضائقةٍ ماليّة</span></div>
-      <div class="c" style="top:690px;font-size:220px;font-weight:700;line-height:1.15;" data-in="21.9" data-fx="big"><span class="line kline acc" data-t="22.14">فتتيقّن</span></div>
-      <div class="c" style="top:960px;font-size:72px;font-weight:500;" data-in="22.9" data-fx="up"><span class="line kline " data-t="23.12,23.38,23.6,23.86,24.3">بأنّ مَن ترك شيئًا لله</span></div>
-      <div class="c" style="top:1060px;font-size:72px;font-weight:600;" data-in="24.45" data-fx="up"><span class="line kline " data-t="24.7,25.22,25.44,26.02">عوّضه اللهُ خيرًا منه</span></div>
-      <div class="pillrow" style="top:1195px;font-size:60px" data-in="26.1" data-fx="pill"><span class="pill solid"><span class="kline " data-t="26.32,26.84,27.04">فسيجعلُ لك مخرجًا</span></span></div>
+      <div class="c" style="top:560px;font-size:72px;font-weight:500;" data-in="14.25" data-fx="up"><span class="line kline " data-t="14.26,14.58,14.76,15.16,15.62">تقرؤها وأنت تشعر بضائقةٍ ماليّة</span></div>
+      <div class="c" style="top:690px;font-size:220px;font-weight:700;line-height:1.15;" data-in="15.95" data-fx="big"><span class="line kline acc" data-t="16.14">فتتيقّن</span></div>
+      <div class="c" style="top:960px;font-size:72px;font-weight:500;" data-in="16.45" data-fx="up"><span class="line kline " data-t="16.64,16.96,17.22,17.56,18.12">بأنّ مَن ترك شيئًا لله</span></div>
+      <div class="c" style="top:1060px;font-size:72px;font-weight:600;" data-in="18.3" data-fx="up"><span class="line kline " data-t="18.52,19.00,19.18,19.78">عوّضه اللهُ خيرًا منه</span></div>
+      <div class="pillrow" style="top:1195px;font-size:60px" data-in="19.95" data-fx="pill"><span class="pill solid"><span class="kline " data-t="20.16,20.64,20.82">فسيجعلُ لك مخرجًا</span></span></div>
+      <div class="c" style="top:1335px;font-size:64px;font-weight:600;" data-in="21.15" data-fx="up"><span class="line kline " data-t="21.36,21.80,22.32,22.60">فلن تلجأ إلى <span class="acc">الحرام</span></span></div>
     </section>
 
-    <!-- ===== S5 (28.6s) ===== -->
-    <section class="scene" id="s5" data-start="28.6">
+    <!-- ===== S5 (23.12s) ===== -->
+    <section class="scene" id="s5" data-start="23.12">
       <div class="icon" style="top:235px;width:260px;height:260px;margin-left:-130px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path class="draw" data-draw="28.7" stroke="var(--teal)" stroke-width="8" d="M100 188 V118"/>
-        <g class="path-a" data-fade="38.1">
-          <path class="draw" data-draw="29.05" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 72 70 46 50"/>
-          <path class="draw" data-draw="29.45" stroke="var(--teal)" stroke-width="8" d="M44 74 L42 46 L70 44"/>
+        <path class="draw" data-draw="23.15" stroke="var(--teal)" stroke-width="8" d="M100 188 V118"/>
+        <g class="path-a" data-fade="29.45">
+          <path class="draw" data-draw="23.5" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 72 70 46 50"/>
+          <path class="draw" data-draw="23.9" stroke="var(--teal)" stroke-width="8" d="M44 74 L42 46 L70 44"/>
         </g>
-        <g class="path-b" data-glow="38.1">
-          <path class="draw" data-draw="29.05" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 128 70 154 50"/>
-          <path class="draw" data-draw="29.45" stroke="var(--teal)" stroke-width="8" d="M156 74 L158 46 L130 44"/>
+        <g class="path-b" data-glow="29.45">
+          <path class="draw" data-draw="23.5" stroke="var(--teal)" stroke-width="8" d="M100 118 C100 86 128 70 154 50"/>
+          <path class="draw" data-draw="23.9" stroke="var(--teal)" stroke-width="8" d="M156 74 L158 46 L130 44"/>
         </g>
         <text x="100" y="78" text-anchor="middle" font-size="58" font-weight="700" fill="#b5dc55" stroke="none"
-              data-pop="29.9" data-fade="38.1" font-family="Plex Ar">؟</text>
+              data-pop="24.25" data-fade="29.45" font-family="Plex Ar">؟</text>
       </svg></div>
-      <div class="c" style="top:540px;font-size:72px;font-weight:500;" data-in="28.6" data-fx="up"><span class="line kline " data-t="28.63,28.98,29.3,29.88">تقرؤها وأنت تشعر بالتباسٍ</span></div>
-      <div class="c" style="top:640px;font-size:96px;font-weight:700;" data-in="30.3" data-fx="up"><span class="line kline " data-t="30.54,30.76,31.28">بين <span class="acc">الحقّ</span> والباطل</span></div>
-      <div class="c" style="top:795px;font-size:64px;font-weight:500;" data-in="31.95" data-fx="up"><span class="line kline " data-t="32.16,33.7,34.06,34.54,34.72">وبسهولةِ وقوعِ الشبهةِ على قلبك</span></div>
-      <div class="glass" style="top:930px;" data-in="35.2" data-fx="card"><div class="quote" style="font-size:92px;font-weight:600;line-height:1.5"><span class="line kline gl" data-t="35.48,36.9,37.26">﴿وَمَن يَتَّقِ اللَّهَ</span><span class="line kline gl" data-t="37.4,37.86,38.04">يَجْعَل لَّهُ <span class="mark " data-mark="38.3">مَخْرَجًا﴾</span></span></div></div>
+      <div class="c" style="top:540px;font-size:72px;font-weight:500;" data-in="23.1" data-fx="up"><span class="line kline " data-t="23.12,23.54,23.70,24.26">تقرؤها وأنت تشعر بالتباسٍ</span></div>
+      <div class="c" style="top:640px;font-size:96px;font-weight:700;" data-in="24.6" data-fx="up"><span class="line kline " data-t="24.84,25.08,25.50">بين <span class="acc">الحقّ</span> والباطل</span></div>
+      <div class="c" style="top:795px;font-size:64px;font-weight:500;" data-in="25.9" data-fx="up"><span class="line kline " data-t="26.10,26.68,27.02,27.40,27.52">وبسهولةِ وقوعِ الشبهةِ على قلبك</span></div>
+      <div class="glass" style="top:930px;" data-in="27.75" data-fx="card"><div class="quote" style="font-size:92px;font-weight:600;line-height:1.5"><span class="line kline gl" data-t="28.08,28.24,28.62">﴿وَمَن يَتَّقِ اللَّهَ</span><span class="line kline gl" data-t="29.04,29.28,29.42">يَجْعَل لَّهُ <span class="mark " data-mark="29.7">مَخْرَجًا﴾</span></span></div></div>
     </section>
 
-    <!-- ===== S6 (40.09s) ===== -->
-    <section class="scene" id="s6" data-start="40.09">
-      <div class="c" style="top:430px;font-size:220px;font-weight:700;line-height:1.15;" data-in="39.95" data-fx="big"><span class="line kline acc" data-t="40.15">فتتيقّن</span></div>
-      <div class="c" style="top:720px;font-size:72px;font-weight:500;" data-in="40.75" data-fx="up"><span class="line kline " data-t="40.98,41.58,41.86,42.08,42.5,43.54">بأنّ اللهَ عزّ وجلّ سيبيّنُ لك</span></div>
-      <div class="c" style="top:830px;font-size:104px;font-weight:700;" data-in="43.55" data-fx="up"><span class="line kline acc" data-t="43.78,44.3,45.1">الحقَّ واضحًا جليًّا</span></div>
-      <div class="pillrow" style="top:1040px;font-size:50px" data-in="45.6" data-fx="pill"><span class="pill solid"><span class="kline " data-t="45.86,46.9,47.2,47.74,48.02,49.1">ويُيسّرُ لك الانقيادَ له والعملَ به</span></span></div>
+    <!-- ===== S6 (30.39s) ===== -->
+    <section class="scene" id="s6" data-start="30.39">
+      <div class="c" style="top:430px;font-size:220px;font-weight:700;line-height:1.15;" data-in="30.25" data-fx="big"><span class="line kline acc" data-t="30.39">فتتيقّن</span></div>
+      <div class="c" style="top:720px;font-size:72px;font-weight:500;" data-in="30.75" data-fx="up"><span class="line kline " data-t="30.96,31.28,31.60,32.02,32.38,32.84">بأنّ اللهَ عزّ وجلّ سيبيّنُ لك</span></div>
+      <div class="c" style="top:830px;font-size:104px;font-weight:700;" data-in="32.95" data-fx="up"><span class="line kline acc" data-t="33.14,33.50,34.18">الحقَّ واضحًا جليًّا</span></div>
+      <div class="pillrow" style="top:1040px;font-size:50px" data-in="34.55" data-fx="pill"><span class="pill solid"><span class="kline " data-t="34.78,35.36,35.50,35.98,36.22,36.74">ويُيسّرُ لك الانقيادَ له والعملَ به</span></span></div>
     </section>
 
-    <!-- ===== S7 (50.74s) ===== -->
-    <section class="scene" id="s7" data-start="50.74">
-      <div class="c" style="top:520px;font-size:104px;font-weight:600;line-height:1.55;" data-in="50.75" data-fx="up"><span class="line kline " data-t="50.77,51.1,51.42,51.68">﴿يَا أَيُّهَا الَّذِينَ آمَنُوا</span></div>
-      <div class="c" style="top:690px;font-size:104px;font-weight:600;line-height:1.55;" data-in="52.0" data-fx="up"><span class="line kline " data-t="52.22,52.8,53.4">إِن تَتَّقُوا اللَّهَ</span></div>
-      <div class="c" style="top:860px;font-size:104px;font-weight:600;line-height:1.55;" data-in="53.45" data-fx="up"><span class="line kline " data-t="53.66,54.54,55.04">يَجْعَل لَّكُمْ <span class="mark " data-mark="55.3">فُرْقَانًا﴾</span></span></div>
-      <div class="refchip" style="top:1090px" data-in="52.3" data-fx="chip"><span>[الأنفال: ٢٩]</span></div>
+    <!-- ===== S7 (36.94s) ===== -->
+    <section class="scene" id="s7" data-start="36.94">
+      <div class="c" style="top:430px;font-size:64px;font-weight:600;" data-in="36.9" data-fx="up"><span class="line kline " data-t="36.94,37.12,37.32">كما قال <span class="acc">تعالى:</span></span></div>
+      <div class="c" style="top:560px;font-size:104px;font-weight:600;line-height:1.55;" data-in="37.5" data-fx="up"><span class="line kline " data-t="37.72,37.88,38.10,38.44">﴿يَا أَيُّهَا الَّذِينَ آمَنُوا</span></div>
+      <div class="c" style="top:730px;font-size:104px;font-weight:600;line-height:1.55;" data-in="38.8" data-fx="up"><span class="line kline " data-t="39.02,39.18,39.78">إِن تَتَّقُوا اللَّهَ</span></div>
+      <div class="c" style="top:900px;font-size:104px;font-weight:600;line-height:1.55;" data-in="39.8" data-fx="up"><span class="line kline " data-t="40.00,40.46,40.80">يَجْعَل لَّكُمْ <span class="mark " data-mark="41.0">فُرْقَانًا﴾</span></span></div>
+      <div class="refchip" style="top:1130px" data-in="39.2" data-fx="chip"><span>[الأنفال: ٢٩]</span></div>
     </section>
 
-    <!-- ===== S8 (56.91s) ===== -->
-    <section class="scene" id="s8" data-start="56.91">
-      <div class="c" style="top:430px;font-size:84px;font-weight:500;" data-in="56.9" data-fx="up"><span class="line kline " data-t="56.94,57.5,57.64,57.86">كتابُ اللهِ عزّ وجلّ</span></div>
-      <div class="c" style="top:540px;font-size:84px;font-weight:500;" data-in="58.1" data-fx="up"><span class="line kline " data-t="58.32,58.86,59.32">كلما رددتَ آياتِه</span></div>
-      <div class="c" style="top:700px;font-size:72px;font-weight:500;" data-in="59.8" data-fx="up"><span class="line kline " data-t="60.0">ازدادت</span></div>
-      <div class="c" style="top:790px;font-size:200px;font-weight:700;line-height:1.15;" data-in="60.8" data-fx="big"><span class="line kline acc" data-t="61.04">جمالًا</span></div>
-      <div class="c" style="top:1050px;font-size:72px;font-weight:500;" data-in="61.3" data-fx="up"><span class="line kline " data-t="61.5">ازدادت</span></div>
-      <div class="c" style="top:1140px;font-size:200px;font-weight:700;line-height:1.15;" data-in="61.95" data-fx="big"><span class="line kline acc" data-t="62.18">رونقًا</span></div>
+    <!-- ===== S8 (41.48s) ===== -->
+    <section class="scene" id="s8" data-start="41.48">
+      <div class="c" style="top:430px;font-size:84px;font-weight:500;" data-in="41.45" data-fx="up"><span class="line kline " data-t="41.48,41.76,41.88,42.06">كتابُ اللهِ عزّ وجلّ</span></div>
+      <div class="c" style="top:540px;font-size:84px;font-weight:500;" data-in="42.15" data-fx="up"><span class="line kline " data-t="42.36,42.78,43.24">كلما رددتَ آياتِه</span></div>
+      <div class="c" style="top:700px;font-size:72px;font-weight:500;" data-in="43.7" data-fx="up"><span class="line kline " data-t="43.92">تزداد</span></div>
+      <div class="c" style="top:790px;font-size:200px;font-weight:700;line-height:1.15;" data-in="44.5" data-fx="big"><span class="line kline acc" data-t="44.72">جمالًا</span></div>
+      <div class="c" style="top:1050px;font-size:72px;font-weight:500;" data-in="45.1" data-fx="up"><span class="line kline " data-t="45.30">تزداد</span></div>
+      <div class="c" style="top:1140px;font-size:200px;font-weight:700;line-height:1.15;" data-in="45.5" data-fx="big"><span class="line kline acc" data-t="45.72">رونقًا</span></div>
     </section>
 
-    <!-- ===== S9 (63.52s) ===== -->
-    <section class="scene" id="s9" data-start="63.52">
-      <div class="c" style="top:450px;font-size:64px;font-weight:600;" data-in="63.55" data-fx="up"><span class="line kline " data-t="63.55,64.0,64.3,64.62">كما يقول <span class="acc">الإمام الشاطبي:</span></span></div>
-      <div class="glass" style="top:600px;padding:40px 30px 44px" data-in="65.0" data-fx="card"><div class="quote poem"><span class="line kline gl" data-t="65.8,66.0,66.44,66.68,67.32">وَإِنَّ كِتَابَ اللهِ أَوْثَقُ شَافِعٍ</span><span class="line kline gl" data-t="67.84,68.54,68.94,69.64">وَأَغْنَى غَنَاءٍ وَاهِبًا مُتَفَضِّلَا</span><span class="line kline gl" data-t="70.42,71.28,71.7,71.94,72.36">وَخَيْرُ جَلِيسٍ لَا يُمَلُّ <span class="mark " data-mark="72.9">حَدِيثُهُ</span></span><span class="line kline gl" data-t="73.02,74.5,75.58,76.04">وَتَرْدَادُهُ يَزْدَادُ فِيهِ تَجَمُّلَا</span></div></div>
+    <!-- ===== S9 (46.26s) ===== -->
+    <section class="scene" id="s9" data-start="46.26">
+      <div class="c" style="top:450px;font-size:64px;font-weight:600;" data-in="46.25" data-fx="up"><span class="line kline " data-t="46.26,46.66,46.90,47.16">كما يقول <span class="acc">الإمام الشاطبي:</span></span></div>
+      <div class="glass" style="top:600px;padding:40px 30px 44px" data-in="47.3" data-fx="card"><div class="quote poem"><span class="line kline gl" data-t="47.70,48.04,48.48,48.72,49.24">وَإِنَّ كِتَابَ اللهِ أَوْثَقُ شَافِعٍ</span><span class="line kline gl" data-t="49.76,50.68,51.00,51.46">وَأَغْنَى غَنَاءٍ وَاهِبًا مُتَفَضِّلَا</span><span class="line kline gl" data-t="52.16,52.66,53.06,53.26,53.58">وَخَيْرُ جَلِيسٍ لَا يُمَلُّ <span class="mark " data-mark="54.0">حَدِيثُهُ</span></span><span class="line kline gl" data-t="54.26,55.44,56.00,56.22">وَتَرْدَادُهُ يَزْدَادُ فِيهِ تَجَمُّلَا</span></div></div>
     </section>
 
-    <!-- ===== S10 (77.65s) ===== -->
-    <section class="scene" id="s10" data-start="77.65">
-      <div class="c" style="top:440px;font-size:76px;font-weight:500;" data-in="77.65" data-fx="up"><span class="line kline " data-t="77.68,77.92,78.32,78.86">قراءةُ القرآنِ والإقبالُ عليه</span></div>
-      <div class="c" style="top:560px;font-size:76px;font-weight:500;" data-in="78.85" data-fx="up"><span class="line kline " data-t="79.08,79.28,79.78,79.96,80.76">لا يحتاج إلى كثيرِ علم</span></div>
-      <div class="c" style="top:720px;font-size:76px;font-weight:500;" data-in="81.0" data-fx="up"><span class="line kline " data-t="81.22,81.58,82.04">ولكن يحتاج إلى</span></div>
-      <div class="c" style="top:820px;font-size:260px;font-weight:700;line-height:1.15;" data-in="81.95" data-fx="big"><span class="line kline acc" data-t="82.18">قلب</span></div>
-      <div class="c" style="top:1210px;font-size:88px;font-weight:600;" data-in="82.4" data-fx="up"><span class="line kline " data-t="82.6,83.0">طاهرٍ نقيّ</span></div>
+    <!-- ===== S10 (57.02s) ===== -->
+    <section class="scene" id="s10" data-start="57.02">
+      <div class="c" style="top:440px;font-size:76px;font-weight:500;" data-in="56.95" data-fx="up"><span class="line kline " data-t="57.02,57.22,57.60,58.08">قراءةُ القرآنِ والإقبالُ عليه</span></div>
+      <div class="c" style="top:560px;font-size:76px;font-weight:500;" data-in="58.0" data-fx="up"><span class="line kline " data-t="58.22,58.52,59.02,59.10,59.52">لا يحتاج إلى كثيرِ علم</span></div>
+      <div class="c" style="top:720px;font-size:76px;font-weight:500;" data-in="59.75" data-fx="up"><span class="line kline " data-t="59.94,60.48,60.58,61.00">بقدر ما يحتاج إلى</span></div>
+      <div class="c" style="top:820px;font-size:260px;font-weight:700;line-height:1.15;" data-in="60.95" data-fx="big"><span class="line kline acc" data-t="61.18">قلب</span></div>
+      <div class="c" style="top:1210px;font-size:88px;font-weight:600;" data-in="61.6" data-fx="up"><span class="line kline " data-t="61.82,62.46">طاهرٍ ونقيّ</span></div>
     </section>
 
-    <!-- ===== S11 (84.56s) ===== -->
-    <section class="scene" id="s11" data-start="84.56">
-      <div class="c" style="top:450px;font-size:100px;font-weight:600;line-height:1.6;" data-in="84.6" data-fx="up"><span class="line kline " data-t="84.59,85.14,85.44,86.2">﴿إِنَّ فِي ذَٰلِكَ لَذِكْرَىٰ</span></div>
-      <div class="c" style="top:610px;font-size:100px;font-weight:600;line-height:1.6;" data-in="86.6" data-fx="up"><span class="line kline " data-t="86.86,87.1,87.38,87.82">لِمَن كَانَ لَهُ <span class="mark " data-mark="88.1">قَلْبٌ</span></span></div>
-      <div class="c" style="top:770px;font-size:100px;font-weight:600;line-height:1.6;" data-in="88.1" data-fx="up"><span class="line kline " data-t="88.36,88.62,89.0">أَوْ أَلْقَى السَّمْعَ</span></div>
-      <div class="c" style="top:930px;font-size:100px;font-weight:600;line-height:1.6;" data-in="89.0" data-fx="up"><span class="line kline " data-t="89.22,90.14">وَهُوَ شَهِيدٌ﴾</span></div>
-      <div class="refchip" style="top:1160px" data-in="90.6" data-fx="chip"><span>[ق: ٣٧]</span></div>
+    <!-- ===== S11 (63.27s) ===== -->
+    <section class="scene" id="s11" data-start="63.27">
+      <div class="c" style="top:450px;font-size:100px;font-weight:600;line-height:1.6;" data-in="63.2" data-fx="up"><span class="line kline " data-t="63.27,63.40,63.55,63.80">﴿إِنَّ فِي ذَٰلِكَ لَذِكْرَىٰ</span></div>
+      <div class="c" style="top:610px;font-size:100px;font-weight:600;line-height:1.6;" data-in="64.1" data-fx="up"><span class="line kline " data-t="64.34,64.58,64.82,65.06">لِمَن كَانَ لَهُ <span class="mark " data-mark="65.3">قَلْبٌ</span></span></div>
+      <div class="c" style="top:770px;font-size:100px;font-weight:600;line-height:1.6;" data-in="66.0" data-fx="up"><span class="line kline " data-t="66.22,66.40,66.66">أَوْ أَلْقَى السَّمْعَ</span></div>
+      <div class="c" style="top:930px;font-size:100px;font-weight:600;line-height:1.6;" data-in="66.8" data-fx="up"><span class="line kline " data-t="67.04,67.38">وَهُوَ شَهِيدٌ﴾</span></div>
+      <div class="refchip" style="top:1160px" data-in="67.8" data-fx="chip"><span>[ق: ٣٧]</span></div>
     </section>
 
 
@@ -235,7 +237,7 @@
 <script>
 (() => {
   const params = new URLSearchParams(location.search);
-  const END = 92.97;
+  const END = 70.84;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
@@ -271,14 +273,14 @@
   };
 
   /* ---- «مدّ ضوئي»: the light tide ---- */
-  const TIDE = 1.15;
+  const TIDE = 0.95;
   const tide = (prev, next, a) => {
-    const t0 = a - 0.62;
+    const t0 = a - 0.18;               // continuous: the tide rides on the first word of the next idea
     tl.set(prev, { className: 'scene out', '--p': '0%' }, t0)
       .set(next, { className: 'scene', '--p': '0%' }, t0)
       .to([prev, next], { '--p': '130%', duration: TIDE, ease: 'power2.inOut' }, t0)
-      .to($$(':scope > *', prev), { y: -46, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
-      .fromTo('#tide', { y: 1920, opacity: 0 }, { y: -520, duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to($$(':scope > *', prev), { y: 40, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
+      .fromTo('#tide', { y: -520, opacity: 0 }, { y: 1920, duration: TIDE, ease: 'power2.inOut' }, t0)
       .to('#tide', { opacity: 1, duration: TIDE * 0.35, ease: 'sine.out' }, t0)
       .to('#tide', { opacity: 0, duration: TIDE * 0.4, ease: 'sine.in' }, t0 + TIDE * 0.6)
       .set(next, { className: 'scene live' }, t0 + TIDE)
@@ -338,7 +340,7 @@
     const big = L.el.closest('[data-fx="big"]');
     L.ws.forEach((w, i) => {
       const t = L.times[Math.min(i, L.times.length - 1)] + Math.max(0, i - L.times.length + 1) * 0.12;
-      big ? bigIn(w, t - 0.22) : wordIn(w, t - 0.14, 0.65);
+      big ? bigIn(w, t - 0.12) : wordIn(w, t - 0.06, 0.6);
     });
   });
 

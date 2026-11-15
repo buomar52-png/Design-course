@@ -57,8 +57,9 @@ def before(t):
 protect = [tuple(map(float, a[k + 1].split("-"))) for k in range(len(a)) if a[k] == "--protect"]
 def unprotect(s, e):
     for pa, pb in protect:
-        if pa < e and pb > s:          # overlap -> keep the part after the protected range
-            s = max(s, pb)
+        if pa < e and pb > s:          # overlap: shrink the pause away from the protected range
+            if pa <= s: s = max(s, pb)             # protection covers the pause start -> start after it
+            else:       e = min(e, pa)             # protection begins inside the pause -> end before it
     return s, e
 
 cuts = []
