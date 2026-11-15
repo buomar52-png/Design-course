@@ -32,7 +32,6 @@
     --hl: #d2ee94;          /* التظليل */
     --grid: rgba(40, 80, 95, .075);
     --pad: 100px;
-    --label: #545b5e;       /* اسم السلسلة */
     --handle: #9aa1a4;
     --card: #fff;
     --card-edge: rgba(215, 225, 228, .9);
@@ -52,7 +51,6 @@
     --green: #b5dc55;
     --hl: rgba(181, 220, 85, .38);
     --grid: rgba(170, 215, 230, .055);
-    --label: #aebabe;
     --handle: #66737a;
     --card: #172024;
     --card-edge: rgba(0, 0, 0, .45);
@@ -94,10 +92,6 @@
   .hl { font-weight: 700; padding: 0 6px; background-image: linear-gradient(var(--hl), var(--hl));
         background-repeat: no-repeat; background-position: 100% 82%; background-size: 0% 40%; }
 
-  /* header */
-  #header { position: absolute; top: 250px; right: var(--pad); left: var(--pad); height: 56px; }
-  #header .bar { position: absolute; right: 0; top: 4px; width: 7px; height: 48px; border-radius: 4px; background: var(--teal); transform-origin: 50% 0; }
-  #header .name { position: absolute; right: 30px; top: -2px; font-size: 40px; font-weight: 500; color: var(--label); }
 
   /* ===== scene 1 — hook ===== */
   #s1 .title { top: 330px; font-weight: 700; font-size: 116px; line-height: 1.24; letter-spacing: -1px; }
@@ -157,11 +151,6 @@
       <div id="visual"></div>
     </section>
 
-    <!-- ========== HEADER (من المشهد ٢) ========== -->
-    <div id="header">
-      <span class="bar ubox"></span>
-      <span class="name u">__اسم السلسلة__</span>
-    </div>
 
     <!-- ========== SCENE 2 — الآية / الاقتباس ========== -->
     <section class="scene" id="s2">
@@ -258,7 +247,7 @@
   });
   $$('path.draw').forEach(p => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
 
-  gsap.set(['#s2', '#s3', '#s4', '#header'], { autoAlpha: 0 });
+  gsap.set(['#s2', '#s3', '#s4'], { autoAlpha: 0 });
   gsap.set('#bg-grid, #bg-a, #bg-b, #handle', { opacity: 0 });
   gsap.set('.reveal', { clipPath: 'inset(-40% 0% -40% 100%)' });
 
@@ -308,9 +297,7 @@
 
   /* ---------- SCENE 2 ---------- */
   { const a = T.s2;
-    sceneIn(['#s2', '#header'], a);
-    tl.fromTo('#header .bar', { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, a)
-      .fromTo('#header .name', { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7 }, a + 0.15);
+    sceneIn('#s2', a);
     wordIn(words('#s2 .say'), a + 0.4, 0.12);
     const lines = $$('#s2 .reveal');
     spread(lines.length, a + 1.2, a + 4.1).forEach((t, i) => reveal(lines[i], t, 1.35));

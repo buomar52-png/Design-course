@@ -40,7 +40,7 @@ The default is **9:16 and ≤ 40 s** unless the user says otherwise. Ask nothing
 - Note the identity:
   - colours (sample pixels with PIL from a rendered page);
   - font (the template uses IBM Plex Sans Arabic);
-  - the signature elements (dots, highlight marker, card, header bar, handle, icons).
+  - the signature elements (dots, highlight marker, card, handle, icons).
 - Carousel-only UI is dropped in video: «اسحب ←» and **the page counter (`٢ / ٤`)**. The user's rule: no page numbering at the top of a reel, and no day/night toggle icon.
 
 ### 2. Plan scenes and timing
@@ -70,7 +70,7 @@ bash .claude/skills/carousel-to-reel/scripts/new_reel.sh <slug> "عنوان ال
   - giant outlined numerals, soft blobs, film grain, a glass card, pill chips, and lime `#c6f36b` with the identity teal;
   - reference: `motion-graphics/quran-hifz-trend/`;
   - **MP4 only:** `bake.js` / Lottie don't support its karaoke spans or iris clip-path yet.
-- No template has a page counter or a day/night toggle.
+- **The top of the screen stays empty in every template:** no series name, no page counter, no day/night toggle. Drop the series title from the user's design (e.g. «المعاصي الخفية») in the reel.
 
 Then edit `motion-graphics/<slug>/index.html`:
 - **Tokens** in `:root`: match the file's colours.
@@ -131,7 +131,6 @@ The template's `DEFAULTS = { theme: 'dark', grid: 'off' }` sets it; `?theme=ligh
 | Highlight marker | `highlight`, drawn right→left **after** its line has appeared |
 | Card | rises 160px with a slight rotation, expo |
 | Green dot | `dotIn` pop + halo pulses |
-| Header | bar grows, name slides in (series name only; no page counter) |
 | Focal visual | stroke draw → fill → items pop in from the centre → heartbeat or float |
 | Scene exit | up 60px + blur + fade, 0.55s |
 
