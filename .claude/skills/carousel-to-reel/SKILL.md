@@ -252,17 +252,15 @@ Reference: `motion-graphics/quran-tadabbur/`, a 126 s recording cut down to 95 s
   - `data-mark`: when the highlight draws.
 
   Then retiming is a data edit.
-- **Camera transition (انتقالة الكاميرا)**, an alternative to the iris wipe. Reference: `motion-graphics/quran-tadabbur/tools/build.py`.
-  - Scenes become 1080×1920 panels inside `#cam > #world`, laid out in a two-column snake from the right with a 160 px gap.
-  - A `cam {x, y, z, r, blur}` proxy is tweened on the timeline and applied in `onUpdate`:
-    - `world.style.transform = translate(540,960) rotate(r) scale(z) translate(-x,-y)`;
-    - corner radius = (1 - z) · 240.
-  - Each move starts 0.55 s before the scene start:
-    - zoom out to 0.78 → fly with power3.inOut over 1.0 s → back.out to 1;
-    - tilt ±2.5°;
-    - directional motion blur via an SVG `feGaussianBlur` on `#cam`. Its stdDeviation is "b b·0.12" for horizontal moves and "b·0.12 b" for vertical ones, peaking at 30.
-  - Opening: push in from z 0.52. Closing scene: slow push to z 1.045.
-  - Don't dim the previous scene: seeing both panels during the fly is the effect.
+- **Transitions:** the camera transition was tried and rejected by the user («لم تعجبني»). **Never use it.** Approved options:
+  - the iris wipe (dual template);
+  - **«مدّ ضوئي» (light tide)**, used on quran-tadabbur with the night template. Scenes are transparent layers over one continuous background. Each change:
+    - starts 0.62 s before the scene start and lasts 1.15 s with power2.inOut;
+    - animates `--p` 0→130% on both scenes: a feathered `mask-image` (22% feather) rising from the bottom hides the old scene and reveals the new one;
+    - drifts the old content up 46 px with blur 8;
+    - a soft teal/lime glow band (`#tide`, screen blend, blur 18) rides the edge.
+
+    The last scene gets a slow 1→1.03 push. Reference: `motion-graphics/quran-tadabbur/tools/build.py`.
 - Big display words (≥200 px): drop the tanween (مختلفٌ → مختلف). It collides with the neighbouring lines.
 
 ## Gotchas (learned the hard way)

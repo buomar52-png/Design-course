@@ -1,36 +1,10 @@
-# Builds motion-graphics/quran-tadabbur/index.html from the dual template's CSS + a declarative scene spec.
-import re, sys
+# Builds motion-graphics/quran-tadabbur/index.html — القالب الليلي بدون مربعات (template ٤)
+# Transition: «مدّ ضوئي» — a feathered light tide rises through the frame: the outgoing scene dissolves
+# upward behind a soft glowing band while the next scene is revealed beneath it. One continuous background.
+# Declarative spec: data-t = spoken time of each word (audio/voice-clean.m4a), data-in = when a card/pill/ref
+# appears, data-fx = big|up|card|pill|chip, data-mark = when a highlight draws.
 ROOT = "/home/user/Design-course"
-tpl = open(f"{ROOT}/.claude/skills/carousel-to-reel/template-dual/index.html", encoding="utf-8").read()
-head = tpl[:tpl.index("</style>")]
-head = re.sub(r"<title>.*?</title>", "<title>كتاب الله مختلف — ليل ونهار</title>", head)
-# drop the template's own scene-specific rules (#s1…#s4): this reel positions everything inline
-head = re.sub(r"\n  #s\d[^{]*\{[^}]*\}[^\n]*", "", head)
-head = re.sub(r"\n  /\* ===== S\d[^\n]*\*/", "", head)
-head = re.sub(r"<!-- القالب الخامس.*?-->", "<!-- ريل «كتاب الله مختلف» — القالب المزدوج (يبدأ نهاري). بناء تصريحي: data-in = وقت الظهور، data-fx = نوع الحركة،\n     data-t = لحظة نطق كل كلمة على audio/voice-clean.m4a. أُنشئ من tools/build.py -->", head, flags=re.S)
-extra = """
-  /* ===== quran-tadabbur additions ===== */
-  .pillrow { position: absolute; left: 0; right: 0; text-align: center; }
-  .pill { display: inline-block; padding: 14px 44px 22px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
-  .pill.dash { border: 3px dashed var(--chip-line); }
-  .day .pill.solid { background: var(--ink); }
-  .day .pill.solid .k { color: rgba(243, 239, 230, .25); }
-  .night .pill.solid { background: #c6f36b; }
-  .night .pill.solid .k { color: rgba(10, 14, 19, .28); }
-  .glass .gl { display: block; white-space: nowrap; }
-  .refchip { position: absolute; left: 0; right: 0; text-align: center; }
-  .poem { font-size: 60px; font-weight: 600; line-height: 1.95; }
-
-  /* ===== camera: every scene is a panel on one big board; a virtual camera flies between them ===== */
-  #stage { background: #05080b; }
-  body.render { background: #05080b; }
-  #cam { position: absolute; inset: 0; overflow: hidden;
-         background: radial-gradient(ellipse 120% 80% at 50% 40%, #0e151b 0%, #05080b 70%); }
-  #world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-  #world .scene { inset: auto; width: 1080px; height: 1920px; border-radius: var(--r, 0px);
-                  box-shadow: 0 40px 120px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .04); }
-"""
-H = '      <div class="handle">@abdulla_7amdan</div>\n'
+OUT = f"{ROOT}/motion-graphics/quran-tadabbur/index.html"
 
 def kl(text, t, cls=""):
     return f'<span class="line kline {cls}" data-t="{t}">{text}</span>'
@@ -40,10 +14,9 @@ def c(top, fs, w, inner, at, fx="up", lh=None, extra_style=""):
 def pill(top, fs, text, t, at, kind="dash", kcls=""):
     return f'      <div class="pillrow" style="top:{top}px;font-size:{fs}px" data-in="{at}" data-fx="pill"><span class="pill {kind}"><span class="kline {kcls}" data-t="{t}">{text}</span></span></div>\n'
 def ref(top, text, at):
-    return f'      <div class="refchip" style="top:{top}px" data-in="{at}" data-fx="chip"><span class="chip line">{text}</span></div>\n'
-def scene(i, theme, start, body, num=None):
-    n = f'      <div class="num">{num}</div>\n' if num else ""
-    return f'    <!-- ===== S{i} — {"نهار" if theme == "day" else "ليل"} ({start}s) ===== -->\n    <section class="scene {theme}" id="s{i}" data-start="{start}">\n      <div class="blob a"></div><div class="blob b"></div>\n{n}{body}{H}    </section>\n\n'
+    return f'      <div class="refchip" style="top:{top}px" data-in="{at}" data-fx="chip"><span>{text}</span></div>\n'
+def scene(i, theme, start, body, num=None):          # theme / num kept for spec compatibility (single night look)
+    return f'    <!-- ===== S{i} ({start}s) ===== -->\n    <section class="scene" id="s{i}" data-start="{start}">\n{body}    </section>\n\n'
 
 S = []
 # 1 day — كتاب الله مختلف
@@ -130,11 +103,94 @@ S.append(scene(12, "night", 87.5,
   ref(1160, "[ق: ٣٧]", 95.0)))
 
 END = 97.6
-body = '<body>\n<div id="viewport">\n  <div id="stage">\n  <div id="cam"><div id="world">\n\n' + "".join(S) + '''  </div></div>
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-      <filter id="mb" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur id="mbg" stdDeviation="0 0"/></filter>
-    </svg>
-    <div id="grain"></div>
+
+
+HTML = r'''<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>كتاب الله مختلف — ليلي</title>
+<!-- ريل «كتاب الله مختلف» بالقالب الليلي بدون مربعات. الانتقال: «مدّ ضوئي». يُولَّد من tools/build.py -->
+<style>
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-500.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-600.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-700.ttf") format("truetype"); font-weight: 700; }
+  /* القالب ٤ — الليلي بدون مربعات */
+  :root {
+    --bg: #0e1416; --ink: #eef3f4; --muted: #8a979c; --teal: #4cb3d6; --teal-line: #5aaccb;
+    --green: #b5dc55; --hl: rgba(181, 220, 85, .38); --card: #172024;
+    --card-edge: rgba(0, 0, 0, .45); --card-shadow: rgba(0, 0, 0, .35); --handle: #66737a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #1d2124; font-family: "Plex Ar", system-ui, sans-serif; color: var(--ink); overflow: hidden;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #viewport { position: relative; flex: 1; width: 100%; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 50% 50%; background: var(--bg); overflow: hidden; }
+  body.render { background: var(--bg); display: block; }
+  body.render #viewport { position: fixed; inset: 0; }
+  body.render #stage { left: 0; top: 0; transform: none !important; }
+  body.render #controls { display: none; }
+
+  /* one continuous background for the whole reel */
+  .glow { position: absolute; inset: -160px; pointer-events: none; }
+  #glow-a { background: radial-gradient(circle at calc(100% - 160px) 160px, rgba(40, 130, 170, .40) 0px, rgba(40, 130, 170, .17) 270px, rgba(40, 130, 170, 0) 660px); }
+  #glow-b { background: radial-gradient(circle at 160px calc(100% - 160px), rgba(120, 170, 50, .26) 0px, rgba(120, 170, 50, .11) 270px, rgba(120, 170, 50, 0) 680px); }
+
+  /* scenes are transparent layers; the transition masks them with a feathered edge driven by --p */
+  .scene { position: absolute; inset: 0; --p: 0%;
+           -webkit-mask-image: linear-gradient(to top, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
+                   mask-image: linear-gradient(to top, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
+  .scene.out { -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
+                       mask-image: linear-gradient(to top, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
+  .scene.live { -webkit-mask-image: none; mask-image: none; }
+  #tide { position: absolute; left: -10%; right: -10%; height: 520px; top: 0; pointer-events: none; opacity: 0; mix-blend-mode: screen;
+          background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(76, 179, 214, .55), rgba(76, 179, 214, .16) 45%, transparent 72%),
+                      radial-gradient(ellipse 34% 22% at 50% 50%, rgba(181, 220, 85, .45), transparent 70%); filter: blur(18px); }
+
+  .c { position: absolute; left: 0; right: 0; text-align: center; }
+  .line { display: block; white-space: nowrap; }
+  .k { display: inline-block; }
+  .acc { color: var(--teal); }
+  .c[data-fx="big"] .k { color: var(--teal); }
+  .mark { background-image: linear-gradient(var(--hl), var(--hl)); background-repeat: no-repeat; background-position: 100% 86%; background-size: 0% 38%; padding: 0 8px; }
+
+  .glass { position: absolute; left: 80px; right: 80px; border-radius: 42px; background: var(--card); padding: 44px 46px 48px; text-align: center;
+           box-shadow: 0 2px 0 rgba(0, 0, 0, .2), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
+  .glass .gl { display: block; white-space: nowrap; }
+  .poem { font-size: 60px; font-weight: 600; line-height: 1.95; }
+  .pillrow { position: absolute; left: 0; right: 0; text-align: center; }
+  .pill { display: inline-block; padding: 14px 44px 22px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+  .pill.dash { border: 3px dashed rgba(238, 243, 244, .2); color: var(--muted); }
+  .pill.solid { background: var(--teal); color: #0b1214; }
+  .refchip { position: absolute; left: 0; right: 0; text-align: center; font-size: 40px; color: var(--muted); }
+
+  .dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .dot i, .dot b { position: absolute; inset: 0; border-radius: 50%; }
+  .dot b { background: rgba(181, 220, 85, .35); }
+  .dot i { inset: 7px; background: var(--green); }
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: var(--handle); letter-spacing: .5px; }
+
+  #safe { display: none; pointer-events: none; } #safe.on { display: block; }
+  #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
+  #controls { width: min(760px, 100%); padding: 12px 16px 16px; display: flex; gap: 12px; align-items: center; color: #e8ecee; font-size: 15px; direction: ltr; }
+  #controls button { font: inherit; color: inherit; background: #2f3539; border: 1px solid #454c51; border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+  #controls input[type=range] { flex: 1; accent-color: #b5dc55; min-width: 60px; }
+  #time { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="glow" id="glow-a"></div>
+    <div class="glow" id="glow-b"></div>
+    <div class="dot" id="dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
+
+__SCENES__
+    <div id="tide"></div>
+    <div id="handle">@abdulla_7amdan</div>
     <div id="safe" style="position:absolute;inset:0">
       <div style="left:0;right:0;top:0;height:220px"></div>
       <div style="left:0;right:0;bottom:0;height:380px"></div>
@@ -156,19 +212,18 @@ body = '<body>\n<div id="viewport">\n  <div id="stage">\n  <div id="cam"><div id
 <script>
 (() => {
   const params = new URLSearchParams(location.search);
-  const END = ''' + str(END) + ''';
+  const END = __END__;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const css = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
 
-  /* words: every .kline is split into .k spans; data-t = spoken time of each word */
+  /* split every .kline into word spans; data-t = spoken time of each word */
   const lines = $$('.kline').map(el => {
     const walk = node => [...node.childNodes].forEach(n => {
       if (n.nodeType === 3) {
         const frag = document.createDocumentFragment();
-        n.textContent.split(/(\\s+)/).forEach(p => {
+        n.textContent.split(/(\s+)/).forEach(p => {
           if (!p) return;
-          if (/^\\s+$/.test(p)) return frag.appendChild(document.createTextNode(p));
+          if (/^\s+$/.test(p)) return frag.appendChild(document.createTextNode(p));
           const s = document.createElement('span'); s.className = 'k'; s.textContent = p; frag.appendChild(s);
         });
         n.replaceWith(frag);
@@ -180,78 +235,101 @@ body = '<body>\n<div id="viewport">\n  <div id="stage">\n  <div id="cam"><div id
 
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
   const scenes = $$('.scene'), starts = scenes.map(s => +s.dataset.start);
-  /* ===== camera rig =====
-     Panels snake across the board right-to-left (Arabic reading order), two columns wide. */
-  const PW = 1080, PH = 1920, GAP = 160;
-  const grid = scenes.map((_, i) => { const row = Math.floor(i / 2), k = i % 2; return [row % 2 ? k : 1 - k, row]; });
-  const centre = i => [grid[i][0] * (PW + GAP) + PW / 2, grid[i][1] * (PH + GAP) + PH / 2];
-  scenes.forEach((S, i) => { S.style.left = grid[i][0] * (PW + GAP) + 'px'; S.style.top = grid[i][1] * (PH + GAP) + 'px'; });
-  const cam = { x: centre(0)[0], y: centre(0)[1], z: 1, r: 0, blur: 0, horiz: 1 };
-  const world = $('#world'), camEl = $('#cam'), gauss = $('#mbg');
-  const applyCam = () => {
-    world.style.transform = `translate(${PW / 2}px, ${PH / 2}px) rotate(${cam.r}deg) scale(${cam.z}) translate(${-cam.x}px, ${-cam.y}px)`;
-    world.style.setProperty('--r', Math.max(0, (1 - cam.z) * 240) + 'px');
-    const b = cam.blur, d = cam.horiz > 0.5 ? `${b} ${b * 0.12}` : `${b * 0.12} ${b}`;
-    gauss.setAttribute('stdDeviation', d);
-    camEl.style.filter = b > 0.4 ? 'url(#mb)' : 'none';
-  };
-  // opening: the camera pushes in on the first panel from far out
-  tl.fromTo(cam, { z: 0.52, r: -5 }, { z: 1, r: 0, duration: 1.15, ease: 'expo.out' }, 0);
-  // a whip move between consecutive panels: pull back -> fly (motion blur + tilt) -> push in with a soft bounce
-  const fly = (i, a) => {
-    const [nx, ny] = centre(i), horiz = grid[i][1] === grid[i - 1][1] ? 1 : 0, t0 = a - 0.55;
-    const tilt = horiz ? (grid[i][0] < grid[i - 1][0] ? 2.5 : -2.5) : (i % 4 === 1 ? -2 : 2);
-    tl.set(cam, { horiz }, t0)
-      .to(cam, { x: nx, y: ny, duration: 1.0, ease: 'power3.inOut' }, t0)
-      .to(cam, { z: 0.78, duration: 0.42, ease: 'power2.out' }, t0)
-      .to(cam, { z: 1, duration: 0.62, ease: 'back.out(1.3)' }, t0 + 0.42)
-      .to(cam, { r: tilt, duration: 0.5, ease: 'sine.inOut' }, t0)
-      .to(cam, { r: 0, duration: 0.55, ease: 'sine.inOut' }, t0 + 0.5)
-      .to(cam, { blur: 30, duration: 0.42, ease: 'power2.in' }, t0 + 0.08)
-      .to(cam, { blur: 0, duration: 0.42, ease: 'power2.out' }, t0 + 0.5);
+  scenes.forEach((s, i) => gsap.set(s, { '--p': i === 0 ? '130%' : '0%' }));
+  gsap.set(scenes[0], { className: 'scene live' });
+
+  /* ---- house motion (template ٤) ---- */
+  const wordIn = (w, at, dur = 0.7) => tl.fromTo(w, { y: 60, opacity: 0, filter: 'blur(12px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: dur }, at);
+  const bigIn  = (w, at) => tl.fromTo(w, { y: 80, opacity: 0, scale: 0.86, filter: 'blur(26px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' }, at);
+  const FX = {
+    card: (el, at) => tl.fromTo(el, { y: 150, opacity: 0, rotation: -1.2 }, { y: 0, opacity: 1, rotation: 0, duration: 0.95, ease: 'expo.out' }, at),
+    pill: (el, at) => tl.fromTo(el.firstElementChild, { y: 40, opacity: 0, scale: 0.92 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, at),
+    chip: (el, at) => tl.fromTo(el.firstElementChild, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, at),
   };
 
-  const FX = {
-    up:   (el, at) => tl.fromTo($$('.k', el).length ? $$('.k', el) : el, { y: 50, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.07 }, at),
-    big:  (el, at) => tl.fromTo($$('.k', el), { scale: 1.6, opacity: 0, filter: 'blur(30px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, at),
-    card: (el, at) => { tl.fromTo(el, { y: 140, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: 'expo.out' }, at);
-                        tl.fromTo($$('.k', el), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.04 }, at + 0.25); },
-    pill: (el, at) => tl.fromTo(el.firstElementChild, { y: 40, opacity: 0, scale: 0.92 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, at),
-    chip: (el, at) => tl.fromTo(el.firstElementChild, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 0.75, duration: 0.5, ease: 'back.out(2)' }, at),
+  /* ---- «مدّ ضوئي»: the light tide ---- */
+  const TIDE = 1.15;
+  const tide = (prev, next, a) => {
+    const t0 = a - 0.62;
+    tl.set(prev, { className: 'scene out', '--p': '0%' }, t0)
+      .set(next, { className: 'scene', '--p': '0%' }, t0)
+      .to([prev, next], { '--p': '130%', duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to($$(':scope > *', prev), { y: -46, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
+      .fromTo('#tide', { y: 1920, opacity: 0 }, { y: -520, duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to('#tide', { opacity: 1, duration: TIDE * 0.35, ease: 'sine.out' }, t0)
+      .to('#tide', { opacity: 0, duration: TIDE * 0.4, ease: 'sine.in' }, t0 + TIDE * 0.6)
+      .set(next, { className: 'scene live' }, t0 + TIDE)
+      .set(prev, { autoAlpha: 0 }, t0 + TIDE);
   };
+
+  /* background: one slow continuous drift + a breath of light on every transition */
+  tl.fromTo('#glow-a', { opacity: 0 }, { opacity: 1, duration: 1.4 }, 0)
+    .fromTo('#glow-b', { opacity: 0 }, { opacity: 1, duration: 1.4 }, 0.2)
+    .to('#glow-a', { x: -70, y: 60, duration: END, ease: 'sine.inOut' }, 0)
+    .to('#glow-b', { x: 70, y: -50, duration: END, ease: 'sine.inOut' }, 0)
+    .fromTo('#handle', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 0.6)
+    .fromTo('#dot', { scale: 0 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' }, 0.2)
+    .fromTo('#dot b', { scale: 1, opacity: 1 }, { scale: 2.4, opacity: 0, duration: 1.4, ease: 'sine.out', repeat: Math.floor(END / 1.4) - 1 }, 0.8);
 
   scenes.forEach((S, i) => {
-    const a = starts[i], b = starts[i + 1] ?? END;
-    tl.fromTo($('.blob.a', S), { x: 0, y: 0 }, { x: -60, y: 50, duration: b - a + 0.4, ease: 'sine.inOut' }, Math.max(0, a - 0.4))
-      .fromTo($('.blob.b', S), { x: 0, y: 0 }, { x: 70, y: -40, duration: b - a + 0.4, ease: 'sine.inOut' }, Math.max(0, a - 0.4));
-    if (i > 0) fly(i, a);
-    else tl.fromTo($('.handle', S), { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.6);
-    // the closing verse: a slow, steady push-in
-    if (i === scenes.length - 1) tl.to(cam, { z: 1.045, duration: END - a - 1.2, ease: 'sine.inOut' }, a + 0.9);
-    const num = $('.num', S);
-    if (num) tl.fromTo(num, { x: -200, opacity: 0 }, { x: 0, opacity: 1, duration: 1.2, ease: 'expo.out' }, a + 0.1);
-    $$('[data-in]', S).forEach(el => FX[el.dataset.fx](el, +el.dataset.in));
-    $$('[data-mark]', S).forEach(m => tl.to(m, { backgroundSize: '100% 38%', duration: 0.5, ease: 'power2.inOut' }, +m.dataset.mark));
-    // a dashed pill dims when the next (solid) pill arrives
+    const a = starts[i];
+    if (i > 0) {
+      tide(scenes[i - 1], S, a);
+      tl.to('#glow-a', { opacity: 0.6, duration: 0.5, ease: 'sine.inOut', yoyo: true, repeat: 1 }, a - 0.6);
+    }
+    $$('[data-in]', S).forEach(el => { if (FX[el.dataset.fx]) FX[el.dataset.fx](el, +el.dataset.in); });
+    $$('[data-mark]', S).forEach(m => tl.to(m, { backgroundSize: '100% 38%', duration: 0.55, ease: 'power2.inOut' }, +m.dataset.mark));
     const dash = $('.pill.dash', S), solid = $('.pill.solid', S);
-    if (dash && solid) tl.to(dash, { opacity: 0.35, scale: 0.94, duration: 0.6 }, +solid.parentElement.dataset.in + 0.1);
+    if (dash && solid) tl.to(dash, { opacity: 0.4, scale: 0.95, duration: 0.6 }, +solid.parentElement.dataset.in + 0.1);
+    if (i === scenes.length - 1) tl.to(S, { scale: 1.03, duration: END - a - 0.8, ease: 'sine.inOut', transformOrigin: '50% 40%' }, a + 0.6);
   });
 
-  /* karaoke: each word lights up when it is spoken */
+  /* words appear exactly when they are spoken (big words with the heavy blur-in) */
   lines.forEach(L => {
-    const S = L.el.closest('.scene');
+    const big = L.el.closest('[data-fx="big"]');
     L.ws.forEach((w, i) => {
       const t = L.times[Math.min(i, L.times.length - 1)] + Math.max(0, i - L.times.length + 1) * 0.12;
-      const color = L.el.classList.contains('onlime') ? '#0a0e13' : L.el.classList.contains('lime') ? '#c6f36b'
-                  : (w.closest('.acc') || L.el.classList.contains('acc')) ? css(S, '--accent') : css(S, '--ink');
-      tl.to(w, { color, duration: 0.18, ease: 'none' }, t - 0.05)
-        .fromTo(w, { scale: 1 }, { scale: 1.08, duration: 0.12, ease: 'power2.out', yoyo: true, repeat: 1 }, t - 0.05);
+      big ? bigIn(w, t - 0.22) : wordIn(w, t - 0.14, 0.65);
     });
   });
+
+  tl.eventCallback('onUpdate', sync);
+  tl.to({}, { duration: 0.001 }, END - 0.001);
+
+  /* -------- player / render API -------- */
+  const stage = $('#stage'), vp = $('#viewport'), voice = $('#voice');
+  const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
+  if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
+  window.__duration = END;
+  window.__scenes = Object.fromEntries(starts.map((s, i) => ['s' + (i + 1), s]).concat([['end', END]]));
+  window.__seek = t => { tl.seek(t, false); };
+  window.__ready = document.fonts.ready.then(() => true);
+
+  const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
+  let withSound = false;
+  scrub.max = END;
+  function sync() { scrub.value = tl.time(); time.textContent = `${tl.time().toFixed(2)} / ${END.toFixed(1)}`; }
+  sync();
+  tl.eventCallback('onComplete', () => { playBtn.textContent = '↺ إعادة'; voice.pause(); });
+  const play = () => { if (withSound) { voice.currentTime = tl.time(); voice.play().catch(() => {}); } tl.play(); };
+  const pause = () => { tl.pause(); voice.pause(); };
+  playBtn.onclick = () => {
+    if (tl.progress() >= 1) { tl.seek(0); play(); } else if (tl.paused()) play(); else pause();
+    playBtn.textContent = tl.paused() ? '▶ تشغيل' : '❚❚ إيقاف';
+  };
+  $('#soundBtn').onclick = () => { withSound = !withSound; $('#soundBtn').style.opacity = withSound ? 1 : .5; if (!tl.paused()) { voice.currentTime = tl.time(); withSound ? voice.play() : voice.pause(); } };
+  $('#soundBtn').style.opacity = .5;
+  scrub.oninput = () => { pause(); tl.seek(+scrub.value); playBtn.textContent = '▶ تشغيل'; sync(); };
+  $('#safeBtn').onclick = () => $('#safe').classList.toggle('on');
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+  if (params.has('t')) tl.seek(+params.get('t'));
+  else if (!params.has('render')) window.__ready.then(() => { tl.play(); playBtn.textContent = '❚❚ إيقاف'; });
+})();
+</script>
+</body>
+</html>
 '''
-rest = tpl[tpl.index("  /* film grain: jitters"):]
-rest = rest.replace("    sync();\n  });", "    applyCam();\n    sync();\n  });\n  applyCam();", 1)
-rest = rest.replace("T.end", "END").replace("window.__scenes = T;", "window.__scenes = Object.fromEntries(starts.map((s, i) => ['s' + (i + 1), s]).concat([['end', END]]));")
-out = head + extra + "</style>\n</head>\n" + body + rest
-open(f"{ROOT}/motion-graphics/quran-tadabbur/index.html", "w", encoding="utf-8").write(out)
+
+out = HTML.replace("__SCENES__", "".join(S)).replace("__END__", str(END))
+open(OUT, "w", encoding="utf-8").write(out)
 print("written", len(out))
