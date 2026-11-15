@@ -71,7 +71,7 @@ const audio = opt('audio', null);
     const withVoice = out.replace(/\.mp4$/, '-voice.mp4');
     const r = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', out, '-i', path.resolve(audio),
       '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k',
-      '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-shortest', withVoice], { stdio: 'inherit' });
+      '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11,apad', '-shortest', withVoice], { stdio: 'inherit' });
     console.log(r.status === 0 ? 'video + voice -> ' + withVoice : 'audio mux failed');
   }
 })();
