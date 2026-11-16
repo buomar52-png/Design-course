@@ -273,6 +273,8 @@ Reference: `motion-graphics/quran-tadabbur/`, a 126 s recording cut down to 95 s
   - Use holds only if the user asks for a scene to linger.
 - **If the speaker misnames a source** (e.g. «الشافعي» for the الشاطبية lines), write the correct name on screen and tell the user. Offer to splice in a re-recorded word; never change the audio silently.
 - `--protect` ranges must start exactly at the onset of the protected speech. A protected range that overlaps a pause used to swallow the whole pause; this is fixed in `clean_voice.py` (the pause is now trimmed up to the protection).
+- **Always end a reel with the share icon** (the paper-plane `#send`, bottom-left). It flies in from the corner (x −140, y 140, rotation −25 → 0, expo.out, 0.9 s) after the last line, then does one small bob.
+- **Heartbeat on a final heart:** 2 quick beats (0.45 s each, 0.55 s apart). Never long or repeated pulsing. No decorative ring around the heart.
 - Big display words (≥200 px): drop the tanween (مختلفٌ → مختلف). It collides with the neighbouring lines.
 
 ## Gotchas (learned the hard way)
