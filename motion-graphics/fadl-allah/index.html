@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فضلٌ ورحمة — نهاري</title>
+<!-- ريل «فضلٌ ورحمة» بالقالب النهاري بدون مربعات، بلا عنوان ولا ترقيم. يُولَّد من tools/build.py -->
+<style>
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-500.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-600.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-700.ttf") format("truetype"); font-weight: 700; }
+  /* القالب ٣ — النهاري بدون مربعات */
+  :root {
+    --bg: #f3f5f4; --ink: #151718; --muted: #7b8386; --teal: #1b7a9c; --teal-line: #4a93b0;
+    --green: #b5dc55; --hl: #d2ee94; --card: #ffffff;
+    --card-edge: rgba(215, 225, 228, .9); --card-shadow: rgba(30, 60, 70, .08); --handle: #9aa1a4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #1d2124; font-family: "Plex Ar", system-ui, sans-serif; color: var(--ink); overflow: hidden;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #viewport { position: relative; flex: 1; width: 100%; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 50% 50%; background: var(--bg); overflow: hidden; }
+  body.render { background: var(--bg); display: block; }
+  body.render #viewport { position: fixed; inset: 0; }
+  body.render #stage { left: 0; top: 0; transform: none !important; }
+  body.render #controls { display: none; }
+
+  .glow { position: absolute; inset: -160px; pointer-events: none; }
+  #glow-a { background: radial-gradient(circle at calc(100% - 160px) 160px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 270px, rgba(140, 196, 220, 0) 660px); }
+  #glow-b { background: radial-gradient(circle at 160px calc(100% - 160px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 270px, rgba(205, 232, 150, 0) 680px); }
+
+  .scene { position: absolute; inset: 0; --p: 0%;
+           -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
+                   mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
+  .scene.out { -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
+                       mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
+  .scene.live { -webkit-mask-image: none; mask-image: none; }
+  /* day tide: a band of soft morning light */
+  #tide { position: absolute; left: -10%; right: -10%; height: 520px; top: 0; pointer-events: none; opacity: 0;
+          background: radial-gradient(ellipse 60% 46% at 50% 50%, rgba(255, 255, 255, .95), rgba(255, 255, 255, .5) 45%, transparent 72%),
+                      radial-gradient(ellipse 50% 30% at 50% 50%, rgba(181, 220, 85, .35), transparent 70%),
+                      radial-gradient(ellipse 80% 50% at 50% 50%, rgba(140, 196, 220, .25), transparent 70%); filter: blur(14px); }
+
+  .c { position: absolute; left: 0; right: 0; text-align: center; }
+  .line { display: block; white-space: nowrap; }
+  .k { display: inline-block; }
+  .acc { color: var(--teal); }
+  .mark { background-image: linear-gradient(var(--hl), var(--hl)); background-repeat: no-repeat; background-position: 100% 86%; background-size: 0% 38%; padding: 0 8px; }
+  .glass { position: absolute; left: 80px; right: 80px; border-radius: 42px; background: var(--card); padding: 44px 46px 48px; text-align: center;
+           box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
+  .glass .gl { display: block; white-space: nowrap; }
+  .pillrow { position: absolute; left: 0; right: 0; text-align: center; }
+  .pill { display: inline-block; padding: 14px 48px 22px; border-radius: 999px; font-weight: 600; white-space: nowrap; background: var(--teal); color: #fff; }
+  .refchip { position: absolute; left: 0; right: 0; text-align: center; font-size: 40px; color: var(--muted); }
+  .icon { position: absolute; left: 50%; }
+  .icon svg, .mini svg { width: 100%; height: 100%; overflow: visible; }
+  .mini { position: absolute; border-radius: 40px; background: #fff; padding: 18px;
+          box-shadow: 0 10px 0 -4px var(--card-edge), 0 24px 50px var(--card-shadow); }
+  .dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .dot i, .dot b { position: absolute; inset: 0; border-radius: 50%; }
+  .dot b { background: rgba(181, 220, 85, .35); }
+  .dot i { inset: 7px; background: var(--green); }
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: var(--handle); letter-spacing: .5px; }
+
+  #safe { display: none; pointer-events: none; } #safe.on { display: block; }
+  #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
+  #controls { width: min(760px, 100%); padding: 12px 16px 16px; display: flex; gap: 12px; align-items: center; color: #e8ecee; font-size: 15px; direction: ltr; }
+  #controls button { font: inherit; color: inherit; background: #2f3539; border: 1px solid #454c51; border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+  #controls input[type=range] { flex: 1; accent-color: #b5dc55; min-width: 60px; }
+  #time { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="glow" id="glow-a"></div>
+    <div class="glow" id="glow-b"></div>
+    <div class="dot" id="dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
+
+    <!-- ===== S1 (0s) ===== -->
+    <section class="scene" id="s1" data-start="0">
+      <div class="icon " style="top:250px;width:370px;height:370px;margin-left:-185px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g data-rise="0.39999999999999997"><circle cx="100" cy="96" r="40" fill="#b5dc55"/>
+          <g stroke="#b5dc55" stroke-width="6"><path d="M100 42v-16M60 58l-11-11M140 58l11-11M44 96H28M156 96h16"/></g></g>
+        <path class="draw" data-draw="0.05" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M74 150 V124 Q74 98 100 90 Q126 98 126 124 V150"/>
+        <path class="draw" data-draw="0.2" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M142 150 V104 L148 94 L154 104 V150"/>
+        <path class="draw" data-draw="0.35" stroke="var(--teal)" stroke-width="5" d="M100 90 V80"/>
+        <path class="draw" data-draw="0.0" stroke="var(--teal)" stroke-width="7" d="M22 150 H178"/>
+        <path class="draw" data-draw="0.45" stroke="var(--teal-line)" stroke-width="5" d="M90 150 V134 Q90 126 100 124 Q110 126 110 134 V150"/></svg></div>
+      <div class="c" style="top:690px;font-size:72px;font-weight:500;" data-in="0.0" data-fx="up"><span class="line kline " data-t="0.05,0.48,1.28,1.36">تسعد بمحافظتك على صلاة</span></div>
+      <div class="c" style="top:800px;font-size:220px;font-weight:700;line-height:1.15;" data-in="1.5" data-fx="big"><span class="line kline acc" data-t="1.68">الفجر</span></div>
+      <div class="c" style="top:1080px;font-size:84px;font-weight:500;" data-in="1.85" data-fx="up"><span class="line kline " data-t="2.06,2.18">في جماعة</span></div>
+    </section>
+
+    <!-- ===== S2 (2.66s) ===== -->
+    <section class="scene" id="s2" data-start="2.66">
+      <div class="icon " style="top:250px;width:380px;height:380px;margin-left:-190px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="2.62" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M100 74 C80 62 52 60 26 66 V154 C52 148 80 150 100 162 C120 150 148 148 174 154 V66 C148 60 120 62 100 74 Z"/>
+        <path class="draw" data-draw="2.87" stroke="var(--teal)" stroke-width="5" d="M100 74 V162"/>
+        <g stroke="var(--teal-line)" stroke-width="4">
+          <path class="draw" data-draw="3.02" d="M86 94 C70 86 54 85 40 88"/><path class="draw" data-draw="3.09" d="M86 112 C70 104 54 103 40 106"/>
+          <path class="draw" data-draw="3.16" d="M86 130 C72 123 60 122 50 124"/>
+          <path class="draw" data-draw="3.02" d="M114 94 C130 86 146 85 160 88"/><path class="draw" data-draw="3.09" d="M114 112 C130 104 146 103 160 106"/>
+          <path class="draw" data-draw="3.16" d="M114 130 C128 123 140 122 150 124"/></g>
+        <g stroke="#b5dc55" stroke-width="6" data-pop="3.3200000000000003"><path d="M100 48 V30"/><path d="M74 54 L64 40"/><path d="M126 54 L136 40"/></g></svg></div>
+      <div class="c" style="top:700px;font-size:200px;font-weight:700;line-height:1.15;" data-in="2.5" data-fx="big"><span class="line kline acc" data-t="2.66">تتلذّذ</span></div>
+      <div class="c" style="top:970px;font-size:96px;font-weight:500;" data-in="3.0" data-fx="up"><span class="line kline " data-t="3.20,3.70">بقراءة <span class="acc">القرآن</span></span></div>
+    </section>
+
+    <!-- ===== S3 (4.59s) ===== -->
+    <section class="scene" id="s3" data-start="4.59">
+      <div class="icon " style="top:250px;width:370px;height:370px;margin-left:-185px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="4.55" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M28 140 V118 Q28 108 38 106 L60 103 L78 80 Q82 75 90 75 H130 Q138 75 142 81 L156 103 L168 106 Q176 108 176 118 V140 Z"/>
+        <path class="draw" data-draw="4.75" stroke="var(--teal-line)" stroke-width="5" d="M70 103 L84 84 H100 V103 Z M108 84 H128 L142 103 H108 Z"/>
+        <circle class="draw" data-draw="4.85" cx="64" cy="142" r="15" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"/>
+        <circle class="draw" data-draw="4.8999999999999995" cx="142" cy="142" r="15" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"/>
+        <g stroke="#b5dc55" stroke-width="6" data-wave="5.1499999999999995">
+          <path d="M86 56 Q100 44 114 56"/><path d="M76 46 Q100 26 124 46"/><path d="M66 36 Q100 8 134 36"/></g></svg></div>
+      <div class="c" style="top:680px;font-size:76px;font-weight:500;" data-in="4.5" data-fx="up"><span class="line kline " data-t="4.59,4.92,5.26,5.38">تستغلّ وقتك في السيارة</span></div>
+      <div class="c" style="top:800px;font-size:96px;font-weight:700;" data-in="5.7" data-fx="up"><span class="line kline " data-t="5.90,6.06,6.42,6.56">في سماع ما <span class="acc">ينفع</span></span></div>
+      <div class="pillrow" style="top:970px;font-size:64px" data-in="6.9" data-fx="pill"><span class="pill"><span class="kline" data-t="7.08,7.34,7.74">وما يدفع للطاعة</span></span></div>
+    </section>
+
+    <!-- ===== S4 (8.61s) ===== -->
+    <section class="scene" id="s4" data-start="8.61">
+      <div class="icon " style="top:240px;width:330px;height:330px;margin-left:-165px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle class="draw" data-draw="8.55" cx="100" cy="74" r="20" stroke="var(--teal)" stroke-width="7"/>
+        <path class="draw" data-draw="8.700000000000001" stroke="var(--teal)" stroke-width="7" d="M68 160 Q68 104 100 104 Q132 104 132 160"/>
+        <circle class="draw" data-draw="8.8" cx="52" cy="92" r="16" stroke="var(--teal-line)" stroke-width="6"/>
+        <path class="draw" data-draw="8.9" stroke="var(--teal-line)" stroke-width="6" d="M26 156 Q26 118 52 118 Q70 118 76 132"/>
+        <circle class="draw" data-draw="8.8" cx="148" cy="92" r="16" stroke="var(--teal-line)" stroke-width="6"/>
+        <path class="draw" data-draw="8.9" stroke="var(--teal-line)" stroke-width="6" d="M174 156 Q174 118 148 118 Q130 118 124 132"/>
+        <path data-pop="9.450000000000001" fill="#b5dc55" d="M100 40 C92 30 76 34 80 46 C83 54 100 62 100 62 C100 62 117 54 120 46 C124 34 108 30 100 40 Z"/></svg></div>
+      <div class="c" style="top:590px;font-size:84px;font-weight:600;" data-in="8.5" data-fx="up"><span class="line kline " data-t="8.61,8.92,9.24">تأنس بصحبٍ <span class="acc">صالح</span></span></div>
+      <div class="c" style="top:735px;font-size:64px;font-weight:500;" data-in="9.45" data-fx="up"><span class="line kline " data-t="9.68,10.16,10.56,10.70,11.06">تذكر معهم ما خُلقت لأجله:</span></div>
+      <div class="glass" style="top:860px" data-in="11.35" data-fx="card"><div class="quote" style="font-size:92px;font-weight:600;line-height:1.5"><span class="line kline gl" data-t="11.60,11.98,12.45">﴿وَمَا خَلَقْتُ الْجِنَّ</span><span class="line kline gl" data-t="12.82,13.16,13.56">وَالْإِنسَ إِلَّا <span class="mark" data-mark="13.95">لِيَعْبُدُونِ﴾</span></span></div></div>
+      <div class="refchip" style="top:1220px" data-in="13.9" data-fx="chip"><span>[الذاريات: ٥٦]</span></div>
+    </section>
+
+    <!-- ===== S5 (14.47s) ===== -->
+    <section class="scene" id="s5" data-start="14.47">
+      <div class="mini" style="top:330px;left:752px;width:170px;height:170px" data-mini="14.45"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g data-rise="-8.65"><circle cx="100" cy="96" r="40" fill="#b5dc55"/>
+          <g stroke="#b5dc55" stroke-width="6"><path d="M100 42v-16M60 58l-11-11M140 58l11-11M44 96H28M156 96h16"/></g></g>
+        <path class="draw" data-draw="-9" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M74 150 V124 Q74 98 100 90 Q126 98 126 124 V150"/>
+        <path class="draw" data-draw="-8.85" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M142 150 V104 L148 94 L154 104 V150"/>
+        <path class="draw" data-draw="-8.7" stroke="var(--teal)" stroke-width="5" d="M100 90 V80"/>
+        <path class="draw" data-draw="-9.05" stroke="var(--teal)" stroke-width="7" d="M22 150 H178"/>
+        <path class="draw" data-draw="-8.6" stroke="var(--teal-line)" stroke-width="5" d="M90 150 V134 Q90 126 100 124 Q110 126 110 134 V150"/></svg></div>
+      <div class="mini" style="top:330px;left:554px;width:170px;height:170px" data-mini="14.59"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="-9" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M100 74 C80 62 52 60 26 66 V154 C52 148 80 150 100 162 C120 150 148 148 174 154 V66 C148 60 120 62 100 74 Z"/>
+        <path class="draw" data-draw="-8.75" stroke="var(--teal)" stroke-width="5" d="M100 74 V162"/>
+        <g stroke="var(--teal-line)" stroke-width="4">
+          <path class="draw" data-draw="-8.6" d="M86 94 C70 86 54 85 40 88"/><path class="draw" data-draw="-8.53" d="M86 112 C70 104 54 103 40 106"/>
+          <path class="draw" data-draw="-8.46" d="M86 130 C72 123 60 122 50 124"/>
+          <path class="draw" data-draw="-8.6" d="M114 94 C130 86 146 85 160 88"/><path class="draw" data-draw="-8.53" d="M114 112 C130 104 146 103 160 106"/>
+          <path class="draw" data-draw="-8.46" d="M114 130 C128 123 140 122 150 124"/></g>
+        <g stroke="#b5dc55" stroke-width="6" data-pop="-8.3"><path d="M100 48 V30"/><path d="M74 54 L64 40"/><path d="M126 54 L136 40"/></g></svg></div>
+      <div class="mini" style="top:330px;left:356px;width:170px;height:170px" data-mini="14.729999999999999"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="-9" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M28 140 V118 Q28 108 38 106 L60 103 L78 80 Q82 75 90 75 H130 Q138 75 142 81 L156 103 L168 106 Q176 108 176 118 V140 Z"/>
+        <path class="draw" data-draw="-8.8" stroke="var(--teal-line)" stroke-width="5" d="M70 103 L84 84 H100 V103 Z M108 84 H128 L142 103 H108 Z"/>
+        <circle class="draw" data-draw="-8.7" cx="64" cy="142" r="15" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"/>
+        <circle class="draw" data-draw="-8.65" cx="142" cy="142" r="15" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"/>
+        <g stroke="#b5dc55" stroke-width="6" data-wave="-8.4">
+          <path d="M86 56 Q100 44 114 56"/><path d="M76 46 Q100 26 124 46"/><path d="M66 36 Q100 8 134 36"/></g></svg></div>
+      <div class="mini" style="top:330px;left:158px;width:170px;height:170px" data-mini="14.87"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle class="draw" data-draw="-9" cx="100" cy="74" r="20" stroke="var(--teal)" stroke-width="7"/>
+        <path class="draw" data-draw="-8.85" stroke="var(--teal)" stroke-width="7" d="M68 160 Q68 104 100 104 Q132 104 132 160"/>
+        <circle class="draw" data-draw="-8.75" cx="52" cy="92" r="16" stroke="var(--teal-line)" stroke-width="6"/>
+        <path class="draw" data-draw="-8.65" stroke="var(--teal-line)" stroke-width="6" d="M26 156 Q26 118 52 118 Q70 118 76 132"/>
+        <circle class="draw" data-draw="-8.75" cx="148" cy="92" r="16" stroke="var(--teal-line)" stroke-width="6"/>
+        <path class="draw" data-draw="-8.65" stroke="var(--teal-line)" stroke-width="6" d="M174 156 Q174 118 148 118 Q130 118 124 132"/>
+        <path data-pop="-8.1" fill="#b5dc55" d="M100 40 C92 30 76 34 80 46 C83 54 100 62 100 62 C100 62 117 54 120 46 C124 34 108 30 100 40 Z"/></svg></div>
+      <div class="c" style="top:580px;font-size:84px;font-weight:500;" data-in="14.4" data-fx="up"><span class="line kline " data-t="14.47,14.52,14.66">كلُّ هذه الأمور</span></div>
+      <div class="c" style="top:720px;font-size:150px;font-weight:700;line-height:1.25;" data-in="14.9" data-fx="big"><span class="line kline acc" data-t="15.08,15.89">فضلٌ <span class="acc">ورحمةٌ</span></span></div>
+      <div class="c" style="top:980px;font-size:84px;font-weight:500;" data-in="16.5" data-fx="up"><span class="line kline " data-t="16.73,16.85,16.98,17.62">من اللهِ سبحانه وتعالى</span></div>
+    </section>
+
+    <!-- ===== S6 (18.92s) ===== -->
+    <section class="scene" id="s6" data-start="18.92">
+      <div class="icon " style="top:240px;width:330px;height:330px;margin-left:-165px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle data-ring="22.3" cx="100" cy="104" r="70" stroke="#b5dc55" stroke-width="4" opacity="0"/>
+        <path data-fill="22.06" fill="#b5dc55" fill-opacity="0" d="M100 168 C64 140 30 116 30 80 C30 56 48 40 70 40 C84 40 94 48 100 60 C106 48 116 40 130 40 C152 40 170 56 170 80 C170 116 136 140 100 168 Z"/>
+        <path class="draw" data-draw="18.9" stroke="var(--teal)" stroke-width="8" d="M100 168 C64 140 30 116 30 80 C30 56 48 40 70 40 C84 40 94 48 100 60 C106 48 116 40 130 40 C152 40 170 56 170 80 C170 116 136 140 100 168 Z"/>
+        <g data-pop="22.36" stroke="#ffffff" stroke-width="6"><path d="M70 82 Q72 64 90 62"/></g></svg></div>
+      <div class="c" style="top:620px;font-size:100px;font-weight:600;line-height:1.6;" data-in="18.85" data-fx="up"><span class="line kline " data-t="18.92,19.14,19.38">﴿وَلَٰكِنَّ اللَّهَ حَبَّبَ</span></div>
+      <div class="c" style="top:780px;font-size:100px;font-weight:600;line-height:1.6;" data-in="19.6" data-fx="up"><span class="line kline " data-t="19.82,20.26">إِلَيْكُمُ <span class="acc">الْإِيمَانَ</span></span></div>
+      <div class="c" style="top:940px;font-size:100px;font-weight:600;line-height:1.6;" data-in="20.9" data-fx="up"><span class="line kline " data-t="21.14,21.70,22.06">وَزَيَّنَهُ فِي <span class="mark" data-mark="22.3">قُلُوبِكُمْ﴾</span></span></div>
+      <div class="refchip" style="top:1160px" data-in="22.6" data-fx="chip"><span>[الحجرات: ٧]</span></div>
+    </section>
+
+
+    <div id="tide"></div>
+    <div id="handle">@abdulla_7amdan</div>
+    <div id="safe" style="position:absolute;inset:0">
+      <div style="left:0;right:0;top:0;height:220px"></div>
+      <div style="left:0;right:0;bottom:0;height:380px"></div>
+      <div style="right:0;width:140px;top:1040px;bottom:380px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ تشغيل</button>
+  <input type="range" id="scrub" min="0" max="40" step="0.01" value="0">
+  <span id="time"></span>
+  <button id="soundBtn" title="تشغيل مع الصوت">🔊</button>
+  <button id="safeBtn">Safe zone</button>
+</div>
+<audio id="voice" src="audio/voice-clean.m4a" preload="auto"></audio>
+
+<script src="gsap.min.js"></script>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  const END = 25.66;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const lines = $$('.kline').map(el => {
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(p => {
+          if (!p) return;
+          if (/^\s+$/.test(p)) return frag.appendChild(document.createTextNode(p));
+          const s = document.createElement('span'); s.className = 'k'; s.textContent = p; frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+    walk(el);
+    return { el, ws: $$('.k', el), times: el.dataset.t.split(',').map(Number) };
+  });
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const scenes = $$('.scene'), starts = scenes.map(s => +s.dataset.start);
+  scenes.forEach((s, i) => gsap.set(s, { '--p': i === 0 ? '130%' : '0%' }));
+  gsap.set(scenes[0], { className: 'scene live' });
+
+  const wordIn = (w, at) => tl.fromTo(w, { y: 56, opacity: 0, filter: 'blur(12px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6 }, at);
+  const bigIn  = (w, at) => tl.fromTo(w, { y: 80, opacity: 0, scale: 0.86, filter: 'blur(26px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' }, at);
+  const FX = {
+    card: (el, at) => tl.fromTo(el, { y: 150, opacity: 0, rotation: -1.2 }, { y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, at),
+    pill: (el, at) => tl.fromTo(el.firstElementChild, { y: 40, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, at),
+    chip: (el, at) => tl.fromTo(el.firstElementChild, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, at),
+  };
+
+  /* «مدّ ضوئي» — continuous: the light descends as the next idea's first word is spoken */
+  const TIDE = 0.95;
+  const tide = (prev, next, a) => {
+    const t0 = a - 0.18;
+    tl.set(prev, { className: 'scene out', '--p': '0%' }, t0)
+      .set(next, { className: 'scene', '--p': '0%' }, t0)
+      .to([prev, next], { '--p': '130%', duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to($$(':scope > *', prev), { y: 40, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
+      .fromTo('#tide', { y: -520, opacity: 0 }, { y: 1920, duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to('#tide', { opacity: 1, duration: TIDE * 0.35, ease: 'sine.out' }, t0)
+      .to('#tide', { opacity: 0, duration: TIDE * 0.4, ease: 'sine.in' }, t0 + TIDE * 0.6)
+      .set(next, { className: 'scene live' }, t0 + TIDE)
+      .set(prev, { autoAlpha: 0 }, t0 + TIDE);
+  };
+
+  tl.fromTo('#glow-a', { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0)
+    .fromTo('#glow-b', { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0.1)
+    .to('#glow-a', { x: -70, y: 60, duration: END, ease: 'sine.inOut' }, 0)
+    .to('#glow-b', { x: 70, y: -50, duration: END, ease: 'sine.inOut' }, 0)
+    .fromTo('#handle', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 0.5)
+    .fromTo('#dot', { scale: 0 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' }, 0.1)
+    .fromTo('#dot b', { scale: 1, opacity: 1 }, { scale: 2.4, opacity: 0, duration: 1.4, ease: 'sine.out', repeat: Math.floor(END / 1.4) - 1 }, 0.7);
+
+  scenes.forEach((S, i) => {
+    const a = starts[i];
+    if (i > 0) tide(scenes[i - 1], S, a);
+    $$('[data-in]', S).forEach(el => { if (FX[el.dataset.fx]) FX[el.dataset.fx](el, +el.dataset.in); });
+    $$('[data-mark]', S).forEach(m => tl.to(m, { backgroundSize: '100% 38%', duration: 0.5, ease: 'power2.inOut' }, +m.dataset.mark));
+    const ic = $('.icon', S);
+    if (ic) tl.fromTo(ic, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5 }, a - 0.12);
+    if (i === scenes.length - 1) tl.to($$(':scope > *', S), { scale: 1.025, duration: END - a - 0.6, ease: 'sine.inOut', transformOrigin: '50% 40%' }, a + 0.5);
+  });
+
+  /* ---- icon motion ---- */
+  $$('.icon path.draw, .icon circle.draw').forEach(p => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
+  $$('.icon [data-draw]').forEach(p => tl.to(p, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, +p.dataset.draw));
+  $$('.icon [data-pop]').forEach(g => tl.fromTo(g, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(2.4)' }, +g.dataset.pop));
+  $$('.icon [data-rise]').forEach(g => tl.fromTo(g, { y: 46, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' }, +g.dataset.rise)
+      .to(g, { y: -4, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, +g.dataset.rise + 1.1));
+  $$('.icon [data-wave]').forEach(g => [...g.children].forEach((w, k) =>
+      tl.fromTo(w, { opacity: 0, scale: 0.7, transformOrigin: '50% 100%' }, { opacity: 1, scale: 1, duration: 0.35, ease: 'sine.out', yoyo: true, repeat: 5 }, +g.dataset.wave + k * 0.16)));
+  $$('.icon [data-fill]').forEach(p => tl.to(p, { attr: { 'fill-opacity': 0.9 }, duration: 0.7, ease: 'power2.out' }, +p.dataset.fill));
+  $$('.icon [data-ring]').forEach(r => tl.fromTo(r, { attr: { r: 60 }, opacity: 0.9 }, { attr: { r: 112 }, opacity: 0, duration: 1.1, ease: 'sine.out', repeat: 2 }, +r.dataset.ring));
+  $$('.icon').forEach(ic => { const r = ic.querySelector('[data-ring]'); if (r) {
+      const t = +r.dataset.ring;
+      [0, 1.1, 2.2].forEach(d => tl.to(ic, { keyframes: { scale: [1, 1.08, 1, 1.04, 1] }, duration: 0.7, ease: 'none' }, t + d)); } });
+
+  /* recap: the four blessings gather, then glow together on «فضلٌ ورحمة» */
+  $$('.mini').forEach((m, k) => {
+    const t = +m.dataset.mini;
+    tl.fromTo(m, { y: 120, opacity: 0, scale: 0.6, rotation: (k - 1.5) * 8 }, { y: 0, opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.7)' }, t)
+      .to(m, { boxShadow: '0 0 0 6px rgba(181,220,85,.9), 0 24px 60px rgba(181,220,85,.45)', duration: 0.5, ease: 'power2.out' }, 15.05 + k * 0.12)
+      .to(m, { y: -10, duration: 0.6, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 15.05 + k * 0.12);
+  });
+
+  /* words appear when they are spoken */
+  lines.forEach(L => {
+    const big = L.el.closest('[data-fx="big"]');
+    L.ws.forEach((w, i) => {
+      const t = L.times[Math.min(i, L.times.length - 1)] + Math.max(0, i - L.times.length + 1) * 0.12;
+      big ? bigIn(w, t - 0.12) : wordIn(w, t - 0.06);
+    });
+  });
+
+  tl.eventCallback('onUpdate', sync);
+  tl.to({}, { duration: 0.001 }, END - 0.001);
+
+  const stage = $('#stage'), vp = $('#viewport'), voice = $('#voice');
+  const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
+  if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
+  window.__duration = END;
+  window.__scenes = Object.fromEntries(starts.map((s, i) => ['s' + (i + 1), s]).concat([['end', END]]));
+  window.__seek = t => { tl.seek(t, false); };
+  window.__ready = document.fonts.ready.then(() => true);
+
+  const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
+  let withSound = false;
+  scrub.max = END;
+  function sync() { scrub.value = tl.time(); time.textContent = `${tl.time().toFixed(2)} / ${END.toFixed(1)}`; }
+  sync();
+  tl.eventCallback('onComplete', () => { playBtn.textContent = '↺ إعادة'; voice.pause(); });
+  const play = () => { if (withSound) { voice.currentTime = tl.time(); voice.play().catch(() => {}); } tl.play(); };
+  const pause = () => { tl.pause(); voice.pause(); };
+  playBtn.onclick = () => {
+    if (tl.progress() >= 1) { tl.seek(0); play(); } else if (tl.paused()) play(); else pause();
+    playBtn.textContent = tl.paused() ? '▶ تشغيل' : '❚❚ إيقاف';
+  };
+  $('#soundBtn').onclick = () => { withSound = !withSound; $('#soundBtn').style.opacity = withSound ? 1 : .5; if (!tl.paused()) { voice.currentTime = tl.time(); withSound ? voice.play() : voice.pause(); } };
+  $('#soundBtn').style.opacity = .5;
+  scrub.oninput = () => { pause(); tl.seek(+scrub.value); playBtn.textContent = '▶ تشغيل'; sync(); };
+  $('#safeBtn').onclick = () => $('#safe').classList.toggle('on');
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+  if (params.has('t')) tl.seek(+params.get('t'));
+  else if (!params.has('render')) window.__ready.then(() => { tl.play(); playBtn.textContent = '❚❚ إيقاف'; });
+})();
+</script>
+</body>
+</html>
