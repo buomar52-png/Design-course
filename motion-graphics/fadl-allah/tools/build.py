@@ -60,13 +60,11 @@ def ic_friends(t):  # three companions, a small heart rises above them
         <circle class="draw" data-draw="{t + 0.25}" cx="52" cy="92" r="16" stroke="var(--teal-line)" stroke-width="6"/>
         <path class="draw" data-draw="{t + 0.35}" stroke="var(--teal-line)" stroke-width="6" d="M26 156 Q26 118 52 118 Q70 118 76 132"/>
         <circle class="draw" data-draw="{t + 0.25}" cx="148" cy="92" r="16" stroke="var(--teal-line)" stroke-width="6"/>
-        <path class="draw" data-draw="{t + 0.35}" stroke="var(--teal-line)" stroke-width="6" d="M174 156 Q174 118 148 118 Q130 118 124 132"/>
-        <path data-pop="{t + 0.9}" fill="#b5dc55" d="M100 40 C92 30 76 34 80 46 C83 54 100 62 100 62 C100 62 117 54 120 46 C124 34 108 30 100 40 Z"/>''')
+        <path class="draw" data-draw="{t + 0.35}" stroke="var(--teal-line)" stroke-width="6" d="M174 156 Q174 118 148 118 Q130 118 124 132"/>''')
 HEART = "M100 168 C64 140 30 116 30 80 C30 56 48 40 70 40 C84 40 94 48 100 60 C106 48 116 40 130 40 C152 40 170 56 170 80 C170 116 136 140 100 168 Z"
 def ic_heart(t, fill_at, beat_at):
     return SVG.format(f'''
-        <circle data-ring="{beat_at}" cx="100" cy="104" r="70" stroke="#b5dc55" stroke-width="4" opacity="0"/>
-        <path data-fill="{fill_at}" fill="#b5dc55" fill-opacity="0" d="{HEART}"/>
+        <path data-fill="{fill_at}" data-beat="{beat_at}" fill="#b5dc55" fill-opacity="0" d="{HEART}"/>
         <path class="draw" data-draw="{t}" stroke="var(--teal)" stroke-width="8" d="{HEART}"/>
         <g data-pop="{fill_at + 0.3}" stroke="#ffffff" stroke-width="6"><path d="M70 82 Q72 64 90 62"/></g>''')
 
@@ -102,7 +100,7 @@ S.append(scene(3, 4.59,
 # 4 — الصحبة الصالحة
 S.append(scene(4, 8.61,
   icon(240, 330, ic_friends(8.55)) +
-  c(590, 84, 600, kl('تأنس بصحبٍ <span class="acc">صالح</span>', "8.61,8.92,9.24"), 8.5) +
+  c(590, 84, 600, kl('تأنس بصحبةٍ <span class="acc">صالحةٍ</span>', "8.61,8.92,9.24"), 8.5) +
   c(735, 64, 500, kl("تذكر معهم ما خُلقت لأجله:", "9.68,10.16,10.56,10.70,11.06"), 9.45) +
   card(860, 11.35, '<div class="quote" style="font-size:92px;font-weight:600;line-height:1.5">'
        + kl("﴿وَمَا خَلَقْتُ الْجِنَّ", "11.60,11.98,12.45", "gl")
@@ -302,9 +300,8 @@ __SCENES__
   $$('.icon [data-wave]').forEach(g => [...g.children].forEach((w, k) =>
       tl.fromTo(w, { opacity: 0, scale: 0.7, transformOrigin: '50% 100%' }, { opacity: 1, scale: 1, duration: 0.35, ease: 'sine.out', yoyo: true, repeat: 5 }, +g.dataset.wave + k * 0.16)));
   $$('.icon [data-fill]').forEach(p => tl.to(p, { attr: { 'fill-opacity': 0.9 }, duration: 0.7, ease: 'power2.out' }, +p.dataset.fill));
-  $$('.icon [data-ring]').forEach(r => tl.fromTo(r, { attr: { r: 60 }, opacity: 0.9 }, { attr: { r: 112 }, opacity: 0, duration: 1.1, ease: 'sine.out', repeat: 2 }, +r.dataset.ring));
-  $$('.icon').forEach(ic => { const r = ic.querySelector('[data-ring]'); if (r) {
-      const t = +r.dataset.ring;
+  $$('.icon').forEach(ic => { const r = ic.querySelector('[data-beat]'); if (r) {      // heartbeat once the heart is full
+      const t = +r.dataset.beat;
       [0, 1.1, 2.2].forEach(d => tl.to(ic, { keyframes: { scale: [1, 1.08, 1, 1.04, 1] }, duration: 0.7, ease: 'none' }, t + d)); } });
 
   /* recap: the four blessings gather, then glow together on «فضلٌ ورحمة» */
