@@ -45,14 +45,13 @@ def ic_book(t):    # an open mushaf, light rising from it
           <path class="draw" data-draw="{t + 0.4}" d="M114 94 C130 86 146 85 160 88"/><path class="draw" data-draw="{t + 0.47}" d="M114 112 C130 104 146 103 160 106"/>
           <path class="draw" data-draw="{t + 0.54}" d="M114 130 C128 123 140 122 150 124"/></g>
         <g stroke="#b5dc55" stroke-width="6" data-pop="{t + 0.7}"><path d="M100 48 V30"/><path d="M74 54 L64 40"/><path d="M126 54 L136 40"/></g>''')
-def ic_car(t):     # a car with sound waves (listening on the road)
+def ic_car(t):     # listening to what benefits: headphones with a live equaliser between the ear cups
     return SVG.format(f'''
-        <path class="draw" data-draw="{t}" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M28 140 V118 Q28 108 38 106 L60 103 L78 80 Q82 75 90 75 H130 Q138 75 142 81 L156 103 L168 106 Q176 108 176 118 V140 Z"/>
-        <path class="draw" data-draw="{t + 0.2}" stroke="var(--teal-line)" stroke-width="5" d="M70 103 L84 84 H100 V103 Z M108 84 H128 L142 103 H108 Z"/>
-        <circle class="draw" data-draw="{t + 0.3}" cx="64" cy="142" r="15" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"/>
-        <circle class="draw" data-draw="{t + 0.35}" cx="142" cy="142" r="15" stroke="var(--teal)" stroke-width="7" fill="var(--bg)"/>
-        <g stroke="#b5dc55" stroke-width="6" data-wave="{t + 0.6}">
-          <path d="M86 56 Q100 44 114 56"/><path d="M76 46 Q100 26 124 46"/><path d="M66 36 Q100 8 134 36"/></g>''')
+        <path class="draw" data-draw="{t}" stroke="var(--teal)" stroke-width="8" d="M40 120 V104 Q40 44 100 44 Q160 44 160 104 V120"/>
+        <path class="draw" data-draw="{t + 0.2}" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M30 118 Q30 108 40 108 H54 Q62 108 62 116 V160 Q62 168 54 168 H40 Q30 168 30 158 Z"/>
+        <path class="draw" data-draw="{t + 0.2}" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M170 118 Q170 108 160 108 H146 Q138 108 138 116 V160 Q138 168 146 168 H160 Q170 168 170 158 Z"/>
+        <g stroke="#b5dc55" stroke-width="8" data-wave="{t + 0.55}">
+          <path d="M82 150 V122"/><path d="M94 150 V104"/><path d="M106 150 V96"/><path d="M118 150 V114"/></g>''')
 def ic_friends(t):  # three companions, a small heart rises above them
     return SVG.format(f'''
         <circle class="draw" data-draw="{t}" cx="100" cy="74" r="20" stroke="var(--teal)" stroke-width="7"/>
@@ -301,7 +300,7 @@ __SCENES__
   $$('.icon [data-rise]').forEach(g => tl.fromTo(g, { y: 46, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' }, +g.dataset.rise)
       .to(g, { y: -4, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, +g.dataset.rise + 1.1));
   $$('.icon [data-wave]').forEach(g => [...g.children].forEach((w, k) =>
-      tl.fromTo(w, { opacity: 0, scale: 0.7, transformOrigin: '50% 100%' }, { opacity: 1, scale: 1, duration: 0.35, ease: 'sine.out', yoyo: true, repeat: 5 }, +g.dataset.wave + k * 0.16)));
+      tl.fromTo(w, { opacity: 0.35, scaleY: 0.35, transformOrigin: '50% 100%' }, { opacity: 1, scaleY: 1, duration: 0.28, ease: 'sine.inOut', yoyo: true, repeat: 9 }, +g.dataset.wave + k * 0.09)));
   $$('.icon [data-fill]').forEach(p => tl.to(p, { attr: { 'fill-opacity': 0.9 }, duration: 0.7, ease: 'power2.out' }, +p.dataset.fill));
   $$('.icon').forEach(ic => { const r = ic.querySelector('[data-beat]'); if (r) {      // heartbeat once the heart is full
       const t = +r.dataset.beat;
