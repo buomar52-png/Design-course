@@ -118,7 +118,9 @@ S.append(scene(6, 18.92,
   c(620, 100, 600, kl("﴿وَلَٰكِنَّ اللَّهَ حَبَّبَ", "18.92,19.14,19.38"), 18.85, lh=1.6) +
   c(780, 100, 600, kl('إِلَيْكُمُ <span class="acc">الْإِيمَانَ</span>', "19.82,20.26"), 19.6, lh=1.6) +
   c(940, 100, 600, kl('وَزَيَّنَهُ فِي ' + mark("قُلُوبِكُمْ﴾", 22.3), "21.14,21.70,22.06"), 20.9, lh=1.6) +
-  ref(1160, "[الحجرات: ٧]", 22.6)))
+  ref(1160, "[الحجرات: ٧]", 22.6) +
+  '      <svg id="send" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">'
+  '<path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/></svg>\n'))
 
 HTML = r'''<!doctype html>
 <html lang="ar" dir="rtl">
@@ -180,6 +182,7 @@ HTML = r'''<!doctype html>
   .icon svg, .mini svg { width: 100%; height: 100%; overflow: visible; }
   .mini { position: absolute; border-radius: 40px; background: #fff; padding: 18px;
           box-shadow: 0 10px 0 -4px var(--card-edge), 0 24px 50px var(--card-shadow); }
+  #send { position: absolute; left: 110px; top: 1300px; width: 96px; height: 96px; }
   .dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; }
   .dot i, .dot b { position: absolute; inset: 0; border-radius: 50%; }
   .dot b { background: rgba(181, 220, 85, .35); }
@@ -302,7 +305,10 @@ __SCENES__
   $$('.icon [data-fill]').forEach(p => tl.to(p, { attr: { 'fill-opacity': 0.9 }, duration: 0.7, ease: 'power2.out' }, +p.dataset.fill));
   $$('.icon').forEach(ic => { const r = ic.querySelector('[data-beat]'); if (r) {      // heartbeat once the heart is full
       const t = +r.dataset.beat;
-      [0, 1.1, 2.2].forEach(d => tl.to(ic, { keyframes: { scale: [1, 1.08, 1, 1.04, 1] }, duration: 0.7, ease: 'none' }, t + d)); } });
+      [0, 0.55].forEach(d => tl.to(ic, { keyframes: { scale: [1, 1.08, 1, 1.04, 1] }, duration: 0.45, ease: 'none' }, t + d)); } });
+  if (document.getElementById('send'))                   // share icon flies in at the end
+    tl.fromTo('#send', { x: -140, y: 140, opacity: 0, rotation: -25 }, { x: 0, y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, 23.1)
+      .to('#send', { x: 10, y: -10, duration: 0.45, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 24.0);
 
   /* recap: the four blessings gather, then glow together on «فضلٌ ورحمة» */
   $$('.mini').forEach((m, k) => {
