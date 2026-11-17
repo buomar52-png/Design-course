@@ -43,6 +43,14 @@
           background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(76, 179, 214, .55), rgba(76, 179, 214, .16) 45%, transparent 72%),
                       radial-gradient(ellipse 34% 22% at 50% 50%, rgba(181, 220, 85, .45), transparent 70%); filter: blur(18px); }
 
+  /* day slides inside the night reel: the slide carries its own day palette and background */
+  .scene[data-day] { --bg: #f3f5f4; --ink: #151718; --muted: #7b8386; --teal: #1b7a9c; --teal-line: #4a93b0;
+               --hl: #d2ee94; --card: #ffffff; --card-edge: rgba(215, 225, 228, .9); --card-shadow: rgba(30, 60, 70, .08);
+               background: var(--bg); color: var(--ink); }
+  .scene[data-day]::before { content: ""; position: absolute; inset: -160px; pointer-events: none;
+    background: radial-gradient(circle at calc(100% - 160px) 160px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 270px, rgba(140, 196, 220, 0) 660px),
+                radial-gradient(circle at 160px calc(100% - 160px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 270px, rgba(205, 232, 150, 0) 680px); }
+  .scene[data-day] .pill.solid { color: #fff; }
   .c { position: absolute; left: 0; right: 0; text-align: center; }
   .line { display: block; white-space: nowrap; }
   .k { display: inline-block; }
@@ -84,7 +92,7 @@
     <div class="dot" id="dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
 
     <!-- ===== S1 (0s) ===== -->
-    <section class="scene" id="s1" data-start="0">
+    <section class="scene" id="s1" data-start="0" data-day="1">
       <div class="c" style="top:430px;font-size:96px;font-weight:700;" data-in="0.05" data-fx="up"><span class="line kline " data-t="0.10,0.26,0.42,0.60">كتابُ اللهِ عزَّ وجلّ</span></div>
       <div class="c" style="top:600px;font-size:250px;font-weight:700;line-height:1.15;" data-in="0.7" data-fx="big"><span class="line kline acc" data-t="0.92">مختلف</span></div>
       <div class="c" style="top:920px;font-size:76px;font-weight:500;" data-in="1.2" data-fx="up"><span class="line kline " data-t="1.38,1.58,1.90">عن جميعِ الكتب</span></div>
@@ -180,7 +188,7 @@
     </section>
 
     <!-- ===== S8 (43.42s) ===== -->
-    <section class="scene" id="s8" data-start="43.42">
+    <section class="scene" id="s8" data-start="43.42" data-day="1">
       <div class="c" style="top:450px;font-size:100px;font-weight:600;line-height:1.6;" data-in="43.35" data-fx="up"><span class="line kline " data-t="43.42,43.55,43.70,43.95">﴿إِنَّ فِي ذَٰلِكَ لَذِكْرَىٰ</span></div>
       <div class="c" style="top:610px;font-size:100px;font-weight:600;line-height:1.6;" data-in="44.25" data-fx="up"><span class="line kline " data-t="44.49,44.73,44.97,45.21">لِمَن كَانَ لَهُ <span class="mark " data-mark="45.45">قَلْبٌ</span></span></div>
       <div class="c" style="top:770px;font-size:100px;font-weight:600;line-height:1.6;" data-in="46.15" data-fx="up"><span class="line kline " data-t="46.37,46.55,46.81">أَوْ أَلْقَى السَّمْعَ</span></div>

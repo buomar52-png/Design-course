@@ -15,8 +15,9 @@ def pill(top, fs, text, t, at, kind="dash", kcls=""):
     return f'      <div class="pillrow" style="top:{top}px;font-size:{fs}px" data-in="{at}" data-fx="pill"><span class="pill {kind}"><span class="kline {kcls}" data-t="{t}">{text}</span></span></div>\n'
 def ref(top, text, at):
     return f'      <div class="refchip" style="top:{top}px" data-in="{at}" data-fx="chip"><span>{text}</span></div>\n'
-def scene(i, theme, start, body, num=None):          # theme / num kept for spec compatibility (single night look)
-    return f'    <!-- ===== S{i} ({start}s) ===== -->\n    <section class="scene" id="s{i}" data-start="{start}">\n{body}    </section>\n\n'
+def scene(i, theme, start, body, num=None):          # theme "day" gives this slide the day palette; others stay night
+    dayattr = ' data-day="1"' if theme == "day" else ""   # attribute, not a class: the tide transitions rewrite className
+    return f'    <!-- ===== S{i} ({start}s) ===== -->\n    <section class="scene" id="s{i}" data-start="{start}"{dayattr}>\n{body}    </section>\n\n'
 
 import json as _json
 # v4 — new recording (voice-original-v2.m4a), continuous speech. Times are on audio/voice-clean.m4a directly.
@@ -67,7 +68,7 @@ ICON_FORK = lambda: '''<svg viewBox="0 0 200 200" fill="none" stroke-linecap="ro
 
 S = []
 # 1 — كتاب الله مختلف
-S.append(scene(1, "night", 0,
+S.append(scene(1, "day", 0,
   c(430, 96, 700, kl("كتابُ اللهِ عزَّ وجلّ", "0.10,0.26,0.42,0.60"), 0.05) +
   c(600, 250, 700, kl("مختلف", "0.92", "acc"), 0.7, "big", 1.15) +
   c(920, 76, 500, kl("عن جميعِ الكتب", "1.38,1.58,1.90"), 1.2) +
@@ -118,7 +119,7 @@ S.append(scene(7, "night", 37.17,
   c(820, 260, 700, kl("قلب", "41.33", "acc"), 41.10, "big", 1.15) +
   c(1210, 88, 600, kl("طاهرٍ ونقيّ", "41.97,42.61"), 41.75)))
 # 8 — الآية الختامية
-S.append(scene(8, "night", 43.42,
+S.append(scene(8, "day", 43.42,
   c(450, 100, 600, kl("﴿إِنَّ فِي ذَٰلِكَ لَذِكْرَىٰ", "43.42,43.55,43.70,43.95"), 43.35, lh=1.6) +
   c(610, 100, 600, kl('لِمَن كَانَ لَهُ ' + mark("قَلْبٌ", 45.45), "44.49,44.73,44.97,45.21"), 44.25, lh=1.6) +
   c(770, 100, 600, kl("أَوْ أَلْقَى السَّمْعَ", "46.37,46.55,46.81"), 46.15, lh=1.6) +
@@ -173,6 +174,14 @@ HTML = r'''<!doctype html>
           background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(76, 179, 214, .55), rgba(76, 179, 214, .16) 45%, transparent 72%),
                       radial-gradient(ellipse 34% 22% at 50% 50%, rgba(181, 220, 85, .45), transparent 70%); filter: blur(18px); }
 
+  /* day slides inside the night reel: the slide carries its own day palette and background */
+  .scene[data-day] { --bg: #f3f5f4; --ink: #151718; --muted: #7b8386; --teal: #1b7a9c; --teal-line: #4a93b0;
+               --hl: #d2ee94; --card: #ffffff; --card-edge: rgba(215, 225, 228, .9); --card-shadow: rgba(30, 60, 70, .08);
+               background: var(--bg); color: var(--ink); }
+  .scene[data-day]::before { content: ""; position: absolute; inset: -160px; pointer-events: none;
+    background: radial-gradient(circle at calc(100% - 160px) 160px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 270px, rgba(140, 196, 220, 0) 660px),
+                radial-gradient(circle at 160px calc(100% - 160px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 270px, rgba(205, 232, 150, 0) 680px); }
+  .scene[data-day] .pill.solid { color: #fff; }
   .c { position: absolute; left: 0; right: 0; text-align: center; }
   .line { display: block; white-space: nowrap; }
   .k { display: inline-block; }
