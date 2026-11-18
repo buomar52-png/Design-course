@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Centrifugal Compressors in 5 Days</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: long scroll course. Sticky day bar, each day = band of principles (text | live model), quiz cards under each principle, final exam carousel. */
+:root{
+  --bg:#EDF1F4; --surface:#FFFFFF; --surface-2:#F4F7F9; --ink:#14202B; --muted:#566676; --line:#D3DCE4;
+  --accent:#C9501A; --accent-soft:rgba(201,80,26,.10); --steel:#2B6A9C; --steel-soft:rgba(43,106,156,.10);
+  --good:#1D8350; --good-soft:rgba(29,131,80,.10); --bad:#BF3328; --bad-soft:rgba(191,51,40,.09);
+  --stage-a:#F9FBFC; --stage-b:#DCE4EB; --on-accent:#FFFFFF; --shadow:0 1px 2px rgba(20,32,43,.06),0 8px 24px rgba(20,32,43,.06);
+  --f-display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --gutter:max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C131A; --surface:#131D27; --surface-2:#18242F; --ink:#E4ECF2; --muted:#93A4B4; --line:#24354A;
+    --accent:#F07B3C; --accent-soft:rgba(240,123,60,.13); --steel:#6EA9DA; --steel-soft:rgba(110,169,218,.12);
+    --good:#3CBF7E; --good-soft:rgba(60,191,126,.12); --bad:#F06A5E; --bad-soft:rgba(240,106,94,.12);
+    --stage-a:#182532; --stage-b:#0E1720; --on-accent:#10161C; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C131A; --surface:#131D27; --surface-2:#18242F; --ink:#E4ECF2; --muted:#93A4B4; --line:#24354A;
+  --accent:#F07B3C; --accent-soft:rgba(240,123,60,.13); --steel:#6EA9DA; --steel-soft:rgba(110,169,218,.12);
+  --good:#3CBF7E; --good-soft:rgba(60,191,126,.12); --bad:#F06A5E; --bad-soft:rgba(240,106,94,.12);
+  --stage-a:#182532; --stage-b:#0E1720; --on-accent:#10161C; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--surface)}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--steel);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter-r)}
+.mono{font-family:var(--f-mono)}
+.label{font:600 11.5px/1 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font:700 15px/1 var(--f-display);text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand svg{flex:none}
+.brand span{display:none}
+@media (min-width:760px){.brand span{display:inline}}
+.daynav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.daynav::-webkit-scrollbar{display:none}
+.daynav a{flex:none;text-decoration:none;color:var(--muted);font:600 13px/1 var(--f-display);padding:9px 12px;border-radius:999px;border:1px solid transparent;display:flex;gap:6px;align-items:center}
+.daynav a .dot{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.daynav a.done .dot{background:var(--good)}
+.daynav a:hover{color:var(--ink);background:var(--surface-2)}
+.daynav a.active{color:var(--ink);border-color:var(--line);background:var(--surface-2)}
+.progress{flex:none;display:flex;align-items:center;gap:8px;font:600 12px/1 var(--f-mono);color:var(--muted)}
+.ring{--p:0;width:30px;height:30px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center}
+.ring::after{content:"";width:22px;height:22px;border-radius:50%;background:var(--surface)}
+.progress .txt{display:none}
+@media (min-width:560px){.progress .txt{display:inline}}
+.themebtn{flex:none;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center;color:var(--muted)}
+
+/* hero */
+.hero{padding-block:44px 28px}
+.hero .wrap{display:grid;gap:28px;align-items:center}
+@media (min-width:920px){.hero .wrap{grid-template-columns:1.02fr 1fr}}
+.hero h1{font-size:clamp(34px,5.6vw,60px);letter-spacing:-.02em;font-weight:700}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{margin-top:16px;font-size:18px;color:var(--muted);max-width:56ch}
+.facts{display:flex;flex-wrap:wrap;gap:22px;margin-top:24px}
+.facts div{display:grid;gap:4px}
+.facts b{font:700 26px/1 var(--f-display)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font:600 14.5px/1.1 var(--f-display);text-decoration:none;color:var(--ink);cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.small{padding:8px 12px;font-size:13px;border-radius:8px}
+.btn[aria-pressed="true"]{background:var(--steel);border-color:var(--steel);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hero-stage{position:relative;aspect-ratio:1/0.82;max-width:100%;border-radius:20px;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,var(--stage-a),var(--stage-b));border:1px solid var(--line)}
+.hero-stage .stage{position:absolute;inset:0}
+.hero-stage .cap{position:absolute;left:14px;bottom:12px;right:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;pointer-events:none}
+
+/* roadmap */
+.roadmap{padding-block:18px 40px}
+.roadmap h2{font-size:26px}
+.road{display:grid;gap:12px;margin-top:18px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.road a{display:grid;gap:8px;padding:16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);transition:border-color .2s,transform .2s}
+.road a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.road .n{font:700 13px/1 var(--f-mono);color:var(--accent)}
+.road h3{font-size:17px}
+.road p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.road .meta{display:flex;justify-content:space-between;font:500 12px/1 var(--f-mono);color:var(--muted);margin-top:auto}
+.road .score{color:var(--good)}
+
+/* day */
+.day{padding-block:36px 24px;border-top:1px solid var(--line)}
+.dayhead{display:grid;gap:14px;margin-bottom:26px}
+@media (min-width:860px){.dayhead{grid-template-columns:auto 1fr;align-items:end;column-gap:28px}}
+.bignum{font:700 clamp(72px,11vw,128px)/.82 var(--f-display);color:transparent;-webkit-text-stroke:1.5px var(--accent);letter-spacing:-.04em}
+.dayhead h2{font-size:clamp(26px,3.6vw,38px);letter-spacing:-.01em}
+.dayhead .sub{margin-top:8px;color:var(--muted);max-width:70ch}
+.goals{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.goals span{font-size:13px;padding:6px 10px;border-radius:8px;background:var(--steel-soft);color:var(--ink)}
+.daymeta{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+
+/* topic */
+.topic{padding-block:26px;border-top:1px dashed var(--line)}
+.topic:first-of-type{border-top:0}
+.topic-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.topic-head h3{font-size:clamp(21px,2.6vw,27px)}
+.topic-head .tn{font:700 14px/1 var(--f-mono);color:var(--accent)}
+.frames{font:500 11.5px/1 var(--f-mono);color:var(--muted);padding:5px 8px;border:1px solid var(--line);border-radius:6px}
+.tbody{display:grid;gap:22px}
+.tbody.has-viz{grid-template-columns:1fr}
+@media (min-width:960px){.tbody.has-viz{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:start}.tbody.has-viz .viz{position:sticky;top:84px}}
+.prose{min-width:0;display:grid;gap:12px;max-width:68ch}
+.prose p{color:var(--ink)}
+.prose strong{font-weight:600}
+.prose .term{font-weight:600;color:var(--steel)}
+.keys{list-style:none;margin:4px 0 0;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:grid;gap:8px}
+.keys li{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:14.5px;line-height:1.5}
+.keys li::before{content:"";width:8px;height:8px;margin-top:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+.keys .kt{font:600 11.5px/1 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);display:block;grid-column:1/-1}
+.keys .kt::before{display:none}
+.formula{font-family:var(--f-mono);font-size:14px;padding:10px 14px;border-radius:10px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);overflow-x:auto}
+
+/* viz */
+.viz{margin:0;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.viz .vhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.viz .vhead b{font:600 14px/1.2 var(--f-display)}
+.viz .tag{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:5px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.viz .tag.s{background:var(--steel-soft);color:var(--steel)}
+.stagebox{position:relative;aspect-ratio:4/3;max-width:100%;background:radial-gradient(120% 100% at 50% 35%,var(--stage-a),var(--stage-b))}
+.stage{position:absolute;inset:0;touch-action:pan-y;cursor:grab}
+.stage:active{cursor:grabbing}
+.stage canvas{display:block;width:100%!important;height:100%!important}
+.stage.nogl::after{content:"3D view needs WebGL. The explanation and controls still work.";position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted);font-size:14px}
+.hud{position:absolute;left:10px;top:10px;display:grid;gap:4px;pointer-events:none}
+.hud span{font:600 11.5px/1.2 var(--f-mono);padding:5px 7px;border-radius:6px;background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--line);color:var(--ink);width:max-content;max-width:100%}
+.hud span.warn{color:var(--bad);border-color:var(--bad)}
+.hud span.ok{color:var(--good)}
+.drag-hint{position:absolute;right:10px;bottom:10px;font:500 11px/1 var(--f-mono);color:var(--muted);pointer-events:none}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 14px 0;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:26px;height:8px;border-radius:4px;vertical-align:middle;margin-right:6px}
+.vcontrols{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px}
+.vcontrols label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vcontrols input[type=range]{width:150px;accent-color:var(--accent)}
+.vcap{padding:0 14px 14px;font-size:13.5px;color:var(--muted);line-height:1.5;min-height:2.6em}
+.vcap b{color:var(--ink)}
+.svgbox{padding:10px 10px 0;overflow-x:auto}
+.svgbox svg{display:block;width:100%;height:auto;min-width:300px}
+.svgbox text{font-family:var(--f-mono)}
+canvas.c2d{display:block;width:100%;height:auto}
+
+/* calculator */
+.calc{display:grid;gap:12px;padding:14px}
+.calc .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.calc label{display:grid;gap:6px;font-size:12.5px;color:var(--muted)}
+.calc input{font:600 16px/1 var(--f-mono);padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);width:100%}
+.calc .steps{font:500 13.5px/1.75 var(--f-mono);background:var(--surface-2);border-radius:10px;padding:12px 14px;overflow-x:auto}
+.calc .big{font:700 34px/1 var(--f-display);color:var(--accent)}
+
+/* quiz */
+.quiz{margin-top:22px;border-radius:16px;background:var(--surface);border:1px solid var(--line);padding:18px;display:grid;gap:18px}
+.quiz-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.quiz-h h4{font-size:16px}
+.quiz-h .qs{font:600 12px/1 var(--f-mono);color:var(--muted)}
+.q{display:grid;gap:10px}
+.q + .q{padding-top:16px;border-top:1px solid var(--line)}
+.q-text{font-weight:500}
+.q-num{font:700 12px/1 var(--f-mono);color:var(--accent);margin-right:8px}
+.opts{display:grid;gap:8px}
+@media (min-width:700px){.opts{grid-template-columns:1fr 1fr}}
+.opt{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;text-align:left;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;line-height:1.4;font-size:14.5px;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--steel)}
+.opt .l{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font:700 12px/1 var(--f-mono);background:var(--surface);border:1px solid var(--line)}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--good);background:var(--good-soft)}
+.opt.correct .l{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .l{background:var(--bad);border-color:var(--bad);color:var(--on-accent)}
+.opt.dim{opacity:.55}
+.fb{padding:12px 14px;border-radius:10px;font-size:14.5px;line-height:1.55;animation:pop .25s ease}
+.fb.ok{background:var(--good-soft);border:1px solid color-mix(in srgb,var(--good) 35%,transparent)}
+.fb.no{background:var(--bad-soft);border:1px solid color-mix(in srgb,var(--bad) 35%,transparent)}
+.fb .h{font:700 13px/1 var(--f-display);display:block;margin-bottom:6px}
+.fb.ok .h{color:var(--good)} .fb.no .h{color:var(--bad)}
+@keyframes pop{from{transform:translateY(-4px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.fb{animation:none}}
+
+/* day end */
+.dayend{margin-top:28px;padding:20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:grid;gap:14px}
+@media (min-width:800px){.dayend{grid-template-columns:1.3fr 1fr}}
+.dayend h4{font-size:18px}
+.dayend ul{margin:8px 0 0;padding-left:18px;display:grid;gap:4px;font-size:14.5px}
+.dayend .scorecard{display:grid;gap:10px;align-content:start;padding:16px;border-radius:12px;background:var(--surface-2)}
+.meter{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--good);width:0;transition:width .4s}
+
+/* exam */
+.exam{padding-block:40px 70px;border-top:1px solid var(--line)}
+.examcard{margin-top:22px;border-radius:18px;background:var(--surface);border:1px solid var(--line);padding:22px;box-shadow:var(--shadow);display:grid;gap:16px}
+.exambar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.examq{font:600 clamp(18px,2.3vw,22px)/1.35 var(--f-display)}
+.examnav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.results{display:grid;gap:16px}
+.bigscore{font:700 clamp(48px,8vw,80px)/1 var(--f-display)}
+.breakdown{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.breakdown > div{padding:12px;border-radius:10px;background:var(--surface-2);display:grid;gap:6px;font-size:13px}
+.mist{display:grid;gap:12px}
+.mist .m{padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);display:grid;gap:6px;font-size:14.5px}
+.mist .m .yours{color:var(--bad)} .mist .m .right{color:var(--good)}
+footer{padding-block:30px 50px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+.reset{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13px;padding:0}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Back to top">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" stroke-width="1.6"/><g fill="var(--accent)"><path d="M13 13 L13 2.5 A10.5 10.5 0 0 1 20 5 Z" transform="rotate(0 13 13)"/><path d="M13 13 L13 2.5 A10.5 10.5 0 0 1 20 5 Z" transform="rotate(90 13 13)"/><path d="M13 13 L13 2.5 A10.5 10.5 0 0 1 20 5 Z" transform="rotate(180 13 13)"/><path d="M13 13 L13 2.5 A10.5 10.5 0 0 1 20 5 Z" transform="rotate(270 13 13)"/></g><circle cx="13" cy="13" r="3" fill="var(--surface)" stroke="currentColor" stroke-width="1.4"/></svg>
+      <span>Centrifugal Compressors</span>
+    </a>
+    <nav class="daynav" id="daynav" aria-label="Course days"></nav>
+    <div class="progress" title="Questions answered across the 5 days"><div class="ring" id="ring"></div><span class="txt" id="ringtxt">0%</span></div>
+    <button class="themebtn" id="themebtn" aria-label="Toggle light or dark theme"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13z" fill="currentColor"/><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="label">Unit 3 · Profit &amp; Pilot workbook 1053WB, rebuilt as a 5-day course</div>
+        <h1 style="margin-top:12px">How a spinning wheel turns <em>speed</em> into <em>pressure</em>.</h1>
+        <p class="lede">Every frame of the centrifugal-compressor workbook, reorganised into five daily sessions. Read a principle, play with a live 3D model of it, then check yourself with multiple-choice questions. Wrong answers come with the right one and the reason.</p>
+        <div class="facts" id="facts"></div>
+        <div class="cta">
+          <a class="btn primary" href="#day-1">Start Day 1</a>
+          <a class="btn" href="#exam">Jump to the final exam</a>
+        </div>
+      </div>
+      <figure class="hero-stage" id="hero3d" style="margin:0">
+        <div class="stage"></div>
+        <div class="cap"><span class="label">Live model · gas enters the eye, leaves through the volute</span><span class="label">drag to rotate</span></div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="roadmap">
+    <div class="wrap">
+      <div class="label">Your plan</div>
+      <h2 style="margin-top:8px">Five sessions, one machine</h2>
+      <div class="road" id="road"></div>
+    </div>
+  </section>
+
+  <div id="days"></div>
+
+  <section class="exam" id="exam">
+    <div class="wrap">
+      <div class="label">After Day 5</div>
+      <h2 style="margin-top:8px;font-size:clamp(28px,4vw,40px)">Final exam: the whole workbook</h2>
+      <p style="margin-top:10px;color:var(--muted);max-width:70ch">New questions that mix all five days, one at a time. If you pick a wrong answer you see the correct one straight away with the reasoning, and every miss is collected for review at the end.</p>
+      <div class="examcard" id="examcard"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <span>Content follows <i>Centrifugal Compressors</i>, Unit 3 of the Compressors program (workbook 1053WB). Pressure values in the multi-stage model are illustrative.</span>
+    <button class="reset" id="resetall">Reset all my answers</button>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* =========================================================
+   COURSE CONTENT
+   ========================================================= */
+const COURSE = [
+{ day:1, title:"Energy, motion and the centrifugal idea", short:"Energy & motion",
+  sub:"Before the machine, the physics. Today you learn the two forms of gas energy, why a body wants to travel in a straight line, and how a spinning bladed disc throws things outward and speeds them up.",
+  frames:"Section 1 · frames 1–88", mins:"~70 min",
+  goals:["Tell potential from kinetic energy","Trade pressure against velocity","Explain centripetal force vs centrifugal tendency","See why the impeller rim moves fastest"],
+  takeaways:["Energy is never created or destroyed, only converted. Work done on something adds energy to it.","Gas energy has two forms: pressure (static, all directions) and velocity (flow, one direction).","With no work and no losses, total gas energy is constant: faster flow means lower pressure, slower flow means higher pressure.","A body keeps moving in a straight line unless a force acts. The string's pull is centripetal; the outward 'fling' is only a tendency.","On a spinning disc the rim travels farthest per revolution, so anything carried outward gains velocity."],
+  topics:[
+  { t:"Potential and kinetic energy", f:"Frames 1–20",
+    body:`<p>To do work you need energy. An electric motor needs electric energy; a wound-up clock spring and a moving hammer can also do work. Both hold energy, but of <strong>different kinds</strong>.</p>
+<p><span class="term">Kinetic energy</span> is the energy a body has because of its <strong>motion</strong>: a moving hammer, flowing water. <span class="term">Potential energy</span> is the energy a body has because of its <strong>position or molecular arrangement</strong>: a wound spring, still water behind a dam.</p>
+<p>Lift an iron ball 20 feet: the work you did is stored as potential energy. Let it drop and the potential energy turns into kinetic energy. When it hits the ground the kinetic energy does work. Work → potential → kinetic → work.</p>`,
+    keys:["Energy cannot be created or destroyed, only converted from one form to another.","Potential can become kinetic energy or work; kinetic can become potential energy.","As work is done on an object, some kind of energy is added to it."],
+    quiz:[
+      {q:"Still water held behind a dam mainly has…",o:["Kinetic energy, because water can flow","Potential energy, because of its position","No energy until the gates open","Only heat energy"],a:1,w:"Potential energy is energy due to position or molecular arrangement. The water is not moving, so it has no kinetic energy yet, but its raised position lets it do work when released."},
+      {q:"A lifted ball is released and falls. What happens to its energy on the way down?",o:["Kinetic energy turns into potential energy","Its energy is slowly destroyed by gravity","Potential energy turns into kinetic energy","It stays as potential energy until it lands"],a:2,w:"The ball loses height (potential energy) and gains speed (kinetic energy). Energy is converted, never destroyed. On impact the kinetic energy does work."},
+      {q:"What happens when work is done on an object, such as winding a spring?",o:["Energy is added to the object","Energy is removed from the object","Nothing changes until the object moves","The object's energy becomes zero"],a:0,w:"Frame 20: as work is done on an object, energy is added to it. The wound spring stores the work as potential energy."}
+    ]},
+  { t:"Pressure and velocity: the two forms of gas energy", f:"Frames 21–36", viz:"energy",
+    body:`<p>Squeeze a gas into a smaller volume and its <strong>pressure rises</strong>, but only because <strong>work</strong> was done on it. A compressed gas sitting still pushes equally in <strong>all directions</strong>. That is its potential energy, held as <span class="term">pressure</span>.</p>
+<p>Let the gas flow and part of that pressure energy becomes energy of motion in <strong>a single direction</strong>. That is kinetic energy, held as <span class="term">velocity</span> (the speed of flow).</p>
+<p>The total energy of a flowing gas is a function of its <strong>pressure plus its velocity</strong> (and temperature). If no work is done and no energy is lost, that total <strong>stays constant</strong>. So when velocity goes up, pressure must go down; slow the gas down and its pressure must go up.</p>`,
+    keys:["Static gas: all its energy is pressure.","Flowing gas: total energy = pressure energy + velocity energy.","A compressor does work on a gas and so increases its total energy."],
+    quiz:[
+      {q:"A gas flows with no work done and no losses. Its velocity increases. Its pressure must…",o:["Increase","Decrease","Stay the same","Drop to zero"],a:1,w:"Total energy stays constant when no work is done and nothing is lost. Energy moved into velocity has to come out of pressure, so the pressure decreases."},
+      {q:"A tank of compressed gas sits still with its valve closed. Its energy is…",o:["All in the form of velocity","Half pressure, half velocity","All in the form of pressure","Zero, because it is not moving"],a:2,w:"Gas in a static state has all of its energy as pressure, pushing in every direction. Velocity energy only appears once the gas flows."},
+      {q:"How does a compressor increase the total energy of a gas?",o:["By doing work on the gas","By creating new energy inside the casing","By lowering the gas velocity only","By cooling the gas"],a:0,w:"Energy cannot be created. The compressor does work on the gas, and that work is added to the gas as energy (frames 35–36)."}
+    ]},
+  { t:"Laws of motion: inertia", f:"Frames 37–45",
+    body:`<p>Floor the accelerator and you are pressed <strong>backward</strong> into the seat. Brake and you are thrown <strong>forward</strong>. Turn the wheels on ice and the car keeps going <strong>in a straight line</strong>.</p>
+<p>All three are the same law. A body at rest tends to <strong>remain at rest</strong>, and a body in motion tends to <strong>continue in motion in a straight line</strong>, unless an outside <strong>force</strong> acts on it. A car opposes any change of direction.</p>
+<p>The same holds for gas: gas sitting in a pipe that is not flowing tends to <strong>remain static</strong>. Something must push it.</p>`,
+    keys:["At rest stays at rest; moving keeps moving in a straight line.","Changing speed or direction needs an outside force.","Gas resists being set in motion, and this resistance is the key to compression."],
+    quiz:[
+      {q:"A car's front wheels are turned on smooth ice. The car tends to…",o:["Turn sharply","Stop immediately","Continue in a straight line","Spin around its centre"],a:2,w:"With no traction there is no sideways force to change its direction, so inertia keeps the car moving in a straight line."},
+      {q:"A body is moving and no outside force acts on it. It will…",o:["Gradually curve","Continue in a straight line","Slow down and stop on its own","Move toward the nearest centre of rotation"],a:1,w:"A body in motion continues in motion in a straight line unless an outside force acts on it (frame 42)."}
+    ]},
+  { t:"Dynamic compressors: the fan analogy", f:"Frames 46–57",
+    body:`<p>A <span class="term">dynamic compressor</span> adds energy to a gas the same way an electric fan does. The spinning blades push on air that would rather stay at rest.</p>
+<p>Because the still air <strong>resists</strong> the push, its molecules are crowded <strong>closer together</strong>, its volume decreases and its <strong>pressure increases</strong>. At the same time the blades overcome the resistance and thrust the air forward, giving it <strong>velocity</strong>. Faster blades push the air faster.</p>
+<p>So the fan, by doing work on the air, raises both pressure and velocity. The gas leaving a compressor therefore has <strong>more total energy</strong> than the gas entering, and the gain comes from the <strong>work</strong> done on it.</p>`,
+    keys:["Dynamic compressors add both pressure and velocity.","Pressure rises because resting gas resists the blades and gets squeezed.","Energy gained = work done by the machine."],
+    quiz:[
+      {q:"A dynamic compressor increases the total energy of a gas by adding…",o:["Pressure only","Velocity only","Pressure and velocity","Temperature only"],a:2,w:"The blades both squeeze the resisting gas (pressure) and throw it forward (velocity). Both raise total energy (frames 53–55)."},
+      {q:"Why does air pressure rise when fan blades push on it?",o:["The blades heat the air","Air at rest resists the push, so its molecules are crowded together and its volume drops","The blades remove some air","Air pressure always rises when air flows"],a:1,w:"Inertia: still air resists the blades. The molecules are brought closer together, the volume decreases and pressure increases (frames 48–51)."}
+    ]},
+  { t:"Centripetal force and centrifugal tendency", f:"Frames 58–71", viz:"string",
+    body:`<p>Set a ball moving with no gravity and nothing in the way: it travels in a <strong>straight line</strong>. Tie it to a fixed pivot with a string. At first it still moves in its direction of motion, but once the string goes taut it <strong>deflects</strong> the ball, and the ball travels in an <strong>arc</strong>, then a circle.</p>
+<p>At every instant the ball still "wants" to travel in a straight line (the tangent). The string keeps pulling it toward the centre. That pull is <span class="term">centripetal force</span>. Cut the string and the ball flies off in a <strong>straight line</strong>, not in a bigger circle.</p>
+<p>The ball's apparent urge to pull away from the centre is the <span class="term">centrifugal tendency</span>. It acts <strong>opposite</strong> to the centripetal force, and it is <strong>not really a force</strong>: it is the straight-line tendency of the ball while it is being pulled toward a centre.</p>`,
+    keys:["Centripetal = pulling in toward the centre. It keeps an object on a circular path.","Remove it and the object moves in a straight line along the tangent.","Centrifugal tendency is the result of inertia, not a separate force."],
+    quiz:[
+      {q:"A ball whirling on a string is released when the string breaks. It moves…",o:["Outward along the string's direction","In a larger circle","In a straight line, tangent to the circle","Back toward the pivot"],a:2,w:"Once the centripetal pull is gone, nothing deflects the ball, so inertia carries it in a straight line along the tangent at the moment of release (frames 65–67)."},
+      {q:"Which force keeps an object travelling in a circle?",o:["Centrifugal force","Centripetal force","Axial force","Gravity only"],a:1,w:"Centripetal means 'pulling in toward the centre'. The string supplies it; without it the path would be straight."},
+      {q:"The centrifugal tendency is best described as…",o:["A real force pushing outward from the centre","The straight-line tendency of an object while it is pulled toward a centre","The same thing as centripetal force","A force created by air resistance"],a:1,w:"Frame 71: the centrifugal tendency is not a force. It results from the object trying to move in a straight line while centripetal force pulls it toward the centre of rotation."}
+    ]},
+  { t:"The spinning disc becomes an impeller", f:"Frames 72–88", viz:"disc",
+    body:`<p>Put a ball bearing near the centre of a disc that has radial blades. As the disc turns, a blade pushes the bearing and makes it <strong>move</strong>. The bearing tends to travel straight, and <strong>no centripetal force</strong> holds it in, so it is forced <strong>away from the centre</strong>, sliding along the blade while staying in contact with it.</p>
+<p>Compare two points on a turning disc: point A on the rim and point B near the middle. Each revolution A covers the larger distance, so <strong>A moves faster</strong>. Anything carried outward from centre to rim therefore <strong>gains velocity</strong>.</p>
+<p>A compressor <span class="term">impeller</span> is two plates separated by blades. Spin it and the blades force the gas to move; the gas moves out from the <strong>eye</strong> (centre) and gains velocity, and because the gas also resists the blades its <strong>pressure is increased</strong>. A machine that uses this centrifugal tendency to give gas pressure and velocity is a <span class="term">centrifugal compressor</span>.</p>`,
+    keys:["Rim speed is higher than centre speed on a rotating disc.","Gas flung outward along the blades gains velocity and pressure.","Impeller = two plates + blades; gas enters at the eye."],
+    quiz:[
+      {q:"On a rotating disc, which point travels fastest?",o:["A point near the centre","A point on the outer rim","All points move at the same speed","The exact centre"],a:1,w:"All points complete a turn in the same time, but the rim covers the largest distance per turn, so it moves fastest (frames 77–79)."},
+      {q:"Why does gas move outward through a spinning impeller?",o:["The blades suck it outward","There is no centripetal force holding it in, so its straight-line tendency carries it outward","Gravity pulls it to the rim","Pressure at the rim is lowest"],a:1,w:"The blades set the gas moving; nothing pulls it inward, so its tendency to go straight carries it away from the centre. This is the centrifugal tendency (frames 83–84, 88)."}
+    ]}
+  ]},
+
+{ day:2, title:"Inside the machine: impeller, diffuser, volute, stages", short:"Inside the machine",
+  sub:"Follow one parcel of gas through the compressor: into the eye, out along the blades, through the diffuser and volute, and from stage to stage. Then compare the axial compressor.",
+  frames:"Section 1 · frames 89–149", mins:"~60 min",
+  goals:["Trace gas from eye to discharge","Explain what diffusers and volutes do","Count stages in a multi-stage machine","Compare rotor and stator blades in an axial machine"],
+  takeaways:["The impeller adds velocity and pressure; maximum velocity is at the blade tips.","Speeding gas away from the eye creates low pressure there, which draws more gas in.","Diffuser and volute slow the gas down and turn velocity into pressure inside the compressor.","Impeller + diffuser = one stage. More stages give more pressure rise.","Axial: rotor blades (on the shaft) do the work, stator blades (on the casing) act as diffusers; blades shrink toward discharge."],
+  topics:[
+  { t:"The impeller: eye, blades and rim", f:"Frames 89–95", viz:"impeller",
+    body:`<p>The impeller is the part that moves the gas. Gas enters at the <span class="term">eye</span> and the rotating blades carry it toward the <span class="term">outer rim</span>. As it moves outward its <strong>velocity increases</strong>.</p>
+<p>Because gas is being accelerated away from the eye, a <strong>low-pressure area</strong> forms at the eye. That suction <strong>allows more gas to enter</strong>, which is what keeps gas flowing in.</p>
+<p>The impeller does work on the gas, and the work becomes the energy the gas gains, in the form of both <strong>pressure and velocity</strong>. At the tips of the blades the gas is at its <strong>maximum velocity</strong>.</p>`,
+    keys:["Eye = inlet at the centre, rim = outlet.","Low pressure at the eye pulls new gas in.","Highest gas velocity: at the impeller blade tips."],
+    quiz:[
+      {q:"Where does the impeller create a low-pressure area?",o:["At the outer rim","At the eye","In the volute","In the discharge pipe"],a:1,w:"Gas is accelerated away from the eye toward the rim, leaving a low-pressure area at the eye. This suction allows more gas to enter (frames 91–92)."},
+      {q:"At which point is gas velocity highest in a centrifugal stage?",o:["Entering the eye","At the impeller blade tips","At the volute outlet","In the return passage"],a:1,w:"Gas gains velocity all the way out along the blades and is at maximum velocity at the tips (frame 95). After that, the diffuser slows it down."}
+    ]},
+  { t:"Diffuser and volute: velocity becomes pressure", f:"Frames 96–104",
+    body:`<p>Leaving the impeller, the gas is thrust into a passage called the <span class="term">diffuser</span>. Here the impeller is <strong>no longer acting directly</strong> on the gas.</p>
+<p>The diffuser has a <strong>larger radius</strong> than the impeller, so the gas follows a larger, longer spiral. With a longer path and no blade pushing, the gas <strong>slows down</strong>, and as velocity decreases its <strong>pressure increases</strong>. The diffuser converts velocity into pressure.</p>
+<p>From the diffuser the gas passes into the <span class="term">volute</span>, the snail-shaped casing that grows wider toward the outlet, where the conversion from velocity to pressure <strong>continues</strong>. The overall pattern: the impeller gives the gas pressure and velocity, then the velocity is converted to pressure <strong>within the compressor</strong>. In the live model above, watch the particles change colour from orange (fast) back to blue as they enter the diffuser, while they grow larger (higher pressure).</p>`,
+    keys:["Diffuser: bigger radius, longer path, no blades pushing, so speed falls and pressure rises.","Volute: continues the conversion and collects the gas for discharge.","Velocity-to-pressure conversion happens inside the compressor."],
+    quiz:[
+      {q:"What is the main job of the diffuser?",o:["Add velocity to the gas","Convert gas velocity into pressure","Cool the gas","Seal the shaft"],a:1,w:"With a larger radius and no blades acting, the gas slows down and its pressure rises. The diffuser converts velocity to increased pressure (frame 101)."},
+      {q:"In the volute, the conversion from velocity to pressure…",o:["Stops completely","Reverses, so pressure becomes velocity","Continues","Happens only at shutdown"],a:2,w:"Frame 102: in the volute the conversion from velocity to pressure continues. Both diffusers and volutes serve to turn velocity into pressure."}
+    ]},
+  { t:"Multi-stage centrifugal compressors", f:"Frames 105–116", viz:"multistage",
+    body:`<p>One impeller and its diffuser form a <span class="term">stage</span>. Put several on one shaft and you have a multi-stage compressor; the one in the workbook has <strong>four impellers</strong>, so it is a four-stage machine.</p>
+<p>Gas leaves the first impeller with extra velocity and pressure. Its velocity is partly converted to pressure in the <strong>diffuser</strong>. It then enters the <span class="term">return passage</span>, which guides it into the <strong>eye of the next impeller</strong>. It arrives there at a <strong>greater pressure</strong> than it had at the first eye.</p>
+<p>Each impeller adds to the total energy of the gas, so a <strong>multi-stage</strong> machine gives a greater pressure increase. The gas leaves with added energy, mostly as increased <strong>pressure and temperature</strong>. The work done by a compressor is the total energy it adds to the gas.</p>`,
+    keys:["Stage = impeller + diffuser.","Return passage guides gas from a diffuser into the next eye.","Each stage raises pressure further; leaving gas is hotter and at higher pressure."],
+    quiz:[
+      {q:"One 'stage' of a centrifugal compressor is…",o:["One impeller and its diffuser","The whole casing","One bearing and one seal","The inlet and discharge nozzles"],a:0,w:"Frame 106: each impeller and diffuser make a stage. Four impellers with their diffusers make a four-stage compressor."},
+      {q:"What guides gas from one stage's diffuser into the next impeller?",o:["The volute","The balancing drum","The return passage","The thrust bearing"],a:2,w:"After the diffuser, the gas enters the return passage, which turns it back inward and guides it into the eye of the next impeller (frame 109)."},
+      {q:"Gas leaving a compressor carries its added energy mainly as…",o:["Higher velocity only","Increased pressure and temperature","Lower pressure and lower temperature","Increased density at constant pressure only"],a:1,w:"Velocity added by the impellers is converted to pressure inside the machine, and compression also heats the gas. Frame 116: added energy is usually in the form of increased pressure and temperature."}
+    ]},
+  { t:"Axial compressors", f:"Frames 117–137", viz:"axial",
+    body:`<p><span class="term">Axial motion</span> is straight-line motion along the axis of a shaft. An axial compressor moves gas <strong>parallel to the shaft</strong> instead of flinging it outward.</p>
+<p>It has two kinds of blades. <span class="term">Rotor blades</span> are attached to the <strong>shaft</strong> and turn with it; like fan blades they force the gas to move and give it pressure and velocity. <span class="term">Stator blades</span> are attached to the <strong>casing</strong>, with a set of stators between each two sets of rotors. The openings between stator blades act as <strong>diffusers</strong>: they slow the gas, so its pressure rises, and guide it into the next rotor row.</p>
+<p>The blades get <strong>gradually smaller toward the discharge</strong>. The gas is forced into less and less volume, which raises its pressure further. The flow path stays <strong>somewhat straight</strong>, not spiral.</p>`,
+    keys:["Rotor blades (on shaft) do the work on the gas.","Stator blades (on casing) act as diffusers and guide the flow.","Shrinking blade height squeezes the gas toward the discharge."],
+    quiz:[
+      {q:"In an axial compressor, which blades act as diffusers?",o:["Rotor blades","Stator blades","Impeller blades","Guide-vane linkages"],a:1,w:"The openings between stator blades slow the gas down, converting velocity to pressure, so they act as diffusers (frames 125, 148)."},
+      {q:"Why are the blades smaller toward the discharge end?",o:["To save weight","To force the gas into a smaller volume and raise its pressure","To reduce the speed of the shaft","To let the gas expand and cool"],a:1,w:"As gas moves through, it is forced to occupy successively less volume, so its pressure increases (frames 131–133, 136)."},
+      {q:"Stator blades are attached to the…",o:["Shaft","Casing","Impeller eye","Thrust collar"],a:1,w:"Rotor blades are on the shaft and rotate; stator blades are fixed to the casing (frames 119–120)."}
+    ]},
+  { t:"Review: rules of dynamic compressors", f:"Frames 138–149",
+    body:`<p>Centrifugal and axial machines are both <span class="term">dynamic compressors</span>, as opposed to positive-displacement machines. They share a few rules worth memorising:</p>
+<p>Gas energy has two forms, pressure and velocity, and total energy of a flowing gas depends on <strong>pressure, velocity and temperature</strong>. When a flowing gas is slowed down, the lost velocity becomes pressure. During flow, total energy (less friction and heat losses) remains constant.</p>
+<p>In a dynamic compressor the added velocity is changed into pressure <strong>within the compressor</strong>. Diffusers, volutes and axial stator blades all do that job. The total energy gained by the gas comes from the <strong>work</strong> done by the compressor.</p>`,
+    keys:["Centrifugal and axial = dynamic compressors.","Diffusers, volutes and stators all convert velocity into pressure.","Energy gain = work done."],
+    quiz:[
+      {q:"Centrifugal and axial compressors are both…",o:["Positive-displacement compressors","Dynamic compressors","Reciprocating compressors","Rotary-screw compressors"],a:1,w:"Frame 145: they add energy by accelerating gas continuously, the dynamic principle. Positive-displacement machines trap a volume and squeeze it."},
+      {q:"Diffusers and volutes both convert…",o:["Pressure into velocity","Gas velocity into pressure","Heat into velocity","Pressure into temperature"],a:1,w:"Frame 147: the function of both diffusers and volutes is to convert gas velocity into pressure."}
+    ]}
+  ]},
+
+{ day:3, title:"Performance: R, head, horsepower and surge", short:"Performance & surge",
+  sub:"Numbers day. Calculate ratio of compression, understand capacity, head and horsepower, see how density and speed change them, then learn the most important danger: surge.",
+  frames:"Section 1 · frames 150–341", mins:"~90 min",
+  goals:["Compute R from gauge readings","Explain head as work per pound","Predict effects of density and RPM","Read the head–capacity curve and spot surge","Match control method to objective"],
+  takeaways:["R = absolute discharge ÷ absolute suction. Convert psig to psia by adding 14.7 at sea level.","Capacity is volume per time; actual CFM is measured at suction (before compression).","Head (ft) = foot-pounds of work per pound of gas. It depends on speed, not on gas density.","A denser gas at the same speed gives the same head but higher discharge pressure, higher R and more BHP.","When required head exceeds the compressor's maximum, flow reverses back and forth: surge. Keep flow above the minimum."],
+  topics:[
+  { t:"Ratio of compression (R)", f:"Frames 150–169", viz:"rcalc",
+    body:`<p>A compressor is a machine that increases gas pressure by doing work on it. Gas enters at the suction pressure and leaves at a higher discharge pressure.</p>
+<p>The <span class="term">ratio of compression</span>, R, compares the two, and it must use <strong>absolute</strong> pressures:</p>
+<div class="formula">R = P₂ / P₁ &nbsp;&nbsp;(P₂ = absolute discharge, P₁ = absolute suction)<br>psia = psig + 14.7 &nbsp;(at sea level)</div>
+<p>Gauges read zero at atmospheric pressure, so they <strong>do not record</strong> the atmosphere. Add it back first. Workbook example: suction 14.7 psia, discharge 58.8 psig → 58.8 + 14.7 = 73.5 psia, so R = 73.5 / 14.7 = <strong>5</strong>. Discharge is always higher than suction during compression, so R is always <strong>greater than 1</strong>. The greater R, the greater the pressure increase.</p>`,
+    keys:["Always convert gauge readings to absolute before dividing.","R tells how many times suction pressure 'goes into' discharge pressure.","R of 2 at 20 psia suction means 40 psia discharge."],
+    quiz:[
+      {q:"At sea level a compressor takes gas at 0 psig and discharges at 44.1 psig. What is R?",o:["3","4","44.1","2"],a:1,w:"Convert to absolute: P₁ = 0 + 14.7 = 14.7 psia, P₂ = 44.1 + 14.7 = 58.8 psia. R = 58.8 / 14.7 = 4."},
+      {q:"Why must R be calculated with absolute pressure?",o:["Gauge pressure is always negative","Gauges read zero at atmosphere, so they leave out atmospheric pressure and distort the ratio","Absolute pressure is easier to read","It doesn't matter, both give the same R"],a:1,w:"A gauge ignores the 14.7 psi of the atmosphere. Using gauge numbers would give a wrong (and possibly infinite) ratio. Frames 156–158."},
+      {q:"A compressor with R = 3 takes in gas at 15 psia. Its discharge pressure is…",o:["5 psia","18 psia","45 psia","45 psig"],a:2,w:"P₂ = R × P₁ = 3 × 15 = 45 psia. The answer is absolute, because R is defined with absolute pressures (frame 167)."}
+    ]},
+  { t:"Capacity", f:"Frames 170–185",
+    body:`<p>The <span class="term">capacity</span> of a compressor is the <strong>volume</strong> of gas it moves in a given time, usually in cubic feet per minute (CFM). At the same velocity, a larger passage carries more CFM; in the same passage, higher velocity means more CFM.</p>
+<p>Because the compressor compresses the gas, the volume entering is <strong>greater than</strong> the volume leaving. So we define <span class="term">actual CFM</span> as the volume <strong>before</strong> compression, measured at the <strong>suction</strong> end.</p>
+<p>The <span class="term">capacity limit</span> is the maximum flow rate through the machine. As a dynamic compressor approaches it, <strong>efficiency falls off</strong>, so for best efficiency run it at less than its capacity limit.</p>`,
+    keys:["Capacity = volume per unit time (CFM).","Actual CFM: measured at suction, before compression.","Near the capacity limit, efficiency drops."],
+    quiz:[
+      {q:"Where must actual CFM be measured?",o:["At the discharge end","At the suction end","Between the third and fourth stage","At the aftercooler outlet"],a:1,w:"Actual CFM is the volume of gas before compression, so it is measured at suction (frames 176–177). At discharge the same gas occupies less volume."},
+      {q:"As a dynamic compressor nears its capacity limit, its efficiency…",o:["Rises sharply","Stays the same","Falls off","Becomes infinite"],a:2,w:"Frame 184: near the capacity limit the efficiency falls off, which is why it should be operated at less than its capacity limit."}
+    ]},
+  { t:"Work, horsepower and head", f:"Frames 186–207",
+    body:`<p>A <span class="term">foot-pound</span> is the <strong>amount</strong> of work needed to raise one pound one foot. <span class="term">Horsepower</span> measures the <strong>rate</strong> of doing work: 1 hp = 550 ft·lb per second, so in one minute it does 60 × 550 = <strong>33,000 ft·lb</strong>.</p>
+<p>Think of compression as lifting a column of gas. For each pound lifted one foot, one foot-pound of work is done. The height the gas is lifted is called <span class="term">head</span> and is measured in <strong>feet</strong>.</p>
+<p>The compressor lifts the gas by giving it velocity with the impeller; faster impeller, higher velocity, higher head. Head in feet therefore equals the output in <strong>foot-pounds per pound</strong> of gas handled. More head means more work per pound.</p>`,
+    keys:["ft·lb = amount of work; hp = rate of work.","1 hp = 550 ft·lb/s = 33,000 ft·lb/min.","Head (ft) = ft·lb of work per lb of gas."],
+    quiz:[
+      {q:"One horsepower is equal to…",o:["550 foot-pounds per second","550 foot-pounds per minute","33,000 foot-pounds per second","1 foot-pound per second"],a:0,w:"Frame 188: one horsepower equals 550 ft·lb per second, which is 33,000 ft·lb per minute."},
+      {q:"The head developed by a compressor represents…",o:["The discharge pressure in psig","Foot-pounds of work done per pound of gas","The volume of gas moved per minute","The height of the compressor casing"],a:1,w:"Treating compression as lifting a column of gas, head in feet is the output in ft·lb per lb of gas handled (frame 205)."}
+    ]},
+  { t:"RPM, density, R and brake horsepower", f:"Frames 208–257",
+    body:`<p>Faster <span class="term">RPM</span> means higher gas velocity, more work per pound and therefore <strong>more head</strong>. At any given RPM the head is <strong>fairly constant</strong>: the work done per pound of gas is the same whatever the gas.</p>
+<p>Now switch to a <strong>denser</strong> gas at the same RPM. Actual CFM stays the same, but each cubic foot weighs more, so <strong>more pounds</strong> are moved per minute. Work per pound (head) is unchanged, but the rate of work rises, so the <strong>horsepower increases</strong>. The same head in a heavier gas also produces a <strong>higher discharge pressure</strong> and therefore a <strong>higher R</strong>.</p>
+<p>In short: density does <strong>not</strong> affect head, but it <strong>does</strong> affect R, discharge pressure and horsepower. A higher suction pressure gives a higher discharge pressure for the same head and R. A hotter suction gas is lighter, so the same head gives a <strong>lower R</strong>. <span class="term">BHP</span> (brake horsepower) is the horsepower required by the compressor shaft; it rises as the gas gets heavier and changes during operation as density varies.</p>`,
+    keys:["RPM ↑ → head ↑, capacity ↑, weight flow ↑, HP ↑.","Density ↑ (same RPM) → head same, R ↑, discharge pressure ↑, BHP ↑.","Suction temperature ↑ → lighter gas → lower R for the same head."],
+    quiz:[
+      {q:"A compressor at fixed RPM switches to a denser gas. What happens?",o:["Head rises, R stays the same","Head stays about the same, but R and BHP increase","Head falls and BHP falls","Nothing changes"],a:1,w:"Head (work per pound) depends on speed, not density. But more pounds are moved and the same head in a heavier gas makes higher discharge pressure, so R and BHP rise (frames 234, 248–256)."},
+      {q:"Suction temperature rises, so the gas is lighter. For the same head, R will be…",o:["Higher","Lower","Unchanged","Zero"],a:1,w:"Frame 255: a lighter gas lifted to the same head produces less discharge pressure, so R is lower."},
+      {q:"BHP (brake horsepower) is…",o:["Horsepower lost to friction in the bearings","The horsepower required by the shaft of the compressor","The horsepower of the gas leaving the volute","A unit of pressure"],a:1,w:"Frame 256: BHP is the horsepower required by the compressor shaft. It increases as the gas becomes heavier."}
+    ]},
+  { t:"Surging and the head–capacity curve", f:"Frames 258–298", viz:"curve",
+    body:`<p>Start a compressor into a large empty system and there is <strong>little resistance</strong>, so capacity is high. If the system then uses gas more slowly than it is delivered, system pressure <strong>rises</strong>, resistance at discharge rises, and capacity <strong>decreases</strong> while the compressor must do more work per pound.</p>
+<p>The <strong>maximum head</strong> is the most work the compressor can do per pound to keep flow going. When the head needed rises above it, <strong>flow stops</strong>. The pressure in the system is now higher than in the compressor, so gas flows <strong>back</strong> into the compressor. System pressure drops, the compressor delivers again, climbs back to maximum head, stops again… This rapid back-and-forth is <span class="term">surging</span>. It sets up severe <strong>vibration</strong> in compressor and piping that can cause <strong>damage</strong>. Surge happens when flow drops <strong>below the minimum</strong> stable capacity.</p>
+<p>Exhibit 1 (reproduced in the model) is a head–capacity curve at rated RPM: 100% head at 100% capacity, 102% head at 90%, 104% at 70%, and surge at <strong>105% head, 50% capacity</strong>. The surge point is the <strong>left</strong> limit, the capacity limit the <strong>right</strong> limit. Raising speed raises head and BHP. On a constant-speed machine with fixed suction, higher discharge pressure means <strong>lower capacity and higher R</strong>; less capacity means less BHP. If less gas is needed, run at a <strong>lower speed</strong>.</p>`,
+    keys:["Surge: required head > maximum head → flow reverses repeatedly.","Left end of the curve = surge limit; right end = capacity limit.","Rising discharge pressure pushes the operating point toward surge."],
+    quiz:[
+      {q:"From Exhibit 1, if the system needs 104% of rated head, capacity is about…",o:["90%","100%","70%","50%"],a:2,w:"Reading the curve: 102% head → 90%, 104% head → 70%. Frame 286. The point is now close to the surge line."},
+      {q:"Surge occurs when…",o:["Flow rises above the capacity limit","Flow drops below the minimum stable level because required head exceeds the maximum head","The suction valve is fully open","Oil pressure is too high"],a:1,w:"When the head needed exceeds the compressor's maximum head, flow stops and reverses, then restarts. That cycle is surge, occurring below minimum capacity (frames 267–275)."},
+      {q:"Constant-speed compressor, fixed suction pressure. Discharge pressure rises. Then…",o:["Capacity rises and R falls","Capacity decreases and R increases","Both capacity and R increase","Nothing changes on a constant-speed machine"],a:1,w:"Frame 296: higher discharge pressure moves the operating point up and left along the curve. Capacity falls and the ratio R rises."}
+    ]},
+  { t:"Control objectives, drivers and control elements", f:"Frames 299–330",
+    body:`<p>There are three basic <strong>control objectives</strong>: a <strong>constant weight flow</strong> (a cat cracker needs a steady weight of air to keep its catalyst effective), a <strong>variable flow equal to make</strong> (move gas as fast as it is produced), or a <strong>variable flow equal to demand</strong> (move gas as fast as it is used). Discharge systems are either <strong>constant-pressure</strong> (small pressure change) or <strong>variable-pressure</strong>.</p>
+<p><strong>Drivers</strong> are constant-speed or variable-speed. <span class="term">Steam turbines</span> are variable-speed, with a governor; a process signal makes the governor raise or lower speed, which raises or lowers mass flow and horsepower. Lower speed also reduces actual CFM, moving the machine <strong>closer to surge</strong>. <span class="term">Electric motors</span> are normally constant-speed, so they use <strong>variable guide vanes</strong> (closing them reduces mass flow) or a <strong>suction throttle</strong> (lower suction pressure → lower density → fewer pounds; actual CFM usually decreases).</p>
+<p>Control elements: a <span class="term">flow meter</span> for constant-weight flow, placed at the <strong>discharge</strong>. A <span class="term">pressure controller</span> for variable flow: at the <strong>discharge</strong> end for flow equal to <strong>demand</strong>, at the <strong>suction</strong> end for flow equal to <strong>make</strong>. Machines feeding fixed-pressure systems are instrumented against surge.</p>`,
+    keys:["Objectives: constant weight · equal to make · equal to demand.","Turbine: change speed with the governor. Motor: guide vanes or suction throttle.","Demand → pressure controller at discharge; make → at suction; constant weight → flow meter at discharge."],
+    quiz:[
+      {q:"For variable flow equal to make, the pressure controller goes at the…",o:["Discharge end","Suction end","Balancing drum","Seal-oil head tank"],a:1,w:"Flow equal to make means moving gas as fast as it is produced upstream, so the controller watches suction pressure (frame 324). For demand it sits at discharge."},
+      {q:"Electric-motor drivers are normally…",o:["Variable-speed, controlled by a governor","Constant-speed","Started with the suction valve wide open under full load","Unable to drive centrifugal compressors"],a:1,w:"Frame 309: electric motors are normally constant-speed drivers, so capacity is controlled with guide vanes or a suction throttle instead of speed."},
+      {q:"On a steam-turbine-driven compressor, capacity is usually controlled by…",o:["Changing the speed through the governor","Changing the number of impellers","Venting oil pressure","Closing the discharge check valve"],a:0,w:"Steam turbines are variable-speed drivers. A process signal adjusts the governor to raise or lower speed, which changes mass flow (frames 309–313)."}
+    ]},
+  { t:"Dynamic versus positive displacement", f:"Frames 331–341",
+    body:`<p>A <span class="term">positive-displacement</span> compressor first <strong>traps</strong> a volume of gas, then displaces it into a smaller volume. In a <span class="term">dynamic</span> compressor the gas is never trapped; it <strong>flows continuously</strong>.</p>
+<p>Dynamic machines are simpler, so they usually need <strong>less maintenance</strong>, but they take more horsepower for the same job, so their efficiency is <strong>lower</strong>. They are the economic choice when lower first cost and maintenance offset that, which is usually when the <strong>volume handled is large</strong>.</p>
+<p><strong>Axial</strong> compressors suit relatively <strong>low heads and high capacities</strong>. For <strong>large capacities and high heads</strong>, use a <strong>centrifugal</strong>. A dynamic machine's head at an operating point stays fairly <strong>constant</strong> (a positive-displacement machine's head varies), so dynamic compressors are used for large volumes at fairly constant heads and Rs.</p>`,
+    keys:["PD traps and squeezes; dynamic flows continuously.","Dynamic: less maintenance, lower efficiency, best for large volumes.","Axial: low head / high capacity. Centrifugal: high capacity and high head."],
+    quiz:[
+      {q:"A job needs a large capacity at a high head. The workbook recommends…",o:["An axial compressor","A centrifugal compressor","A positive-displacement compressor","A fan"],a:1,w:"Frame 339: for large capacities and high heads a centrifugal compressor is used. Axial machines suit relatively low heads at high capacity."},
+      {q:"Compared with positive-displacement machines, dynamic compressors usually…",o:["Need more maintenance and are more efficient","Need less maintenance but have lower efficiency","Trap gas in pockets","Are only used for small volumes"],a:1,w:"Simple construction means less maintenance, but they take more horsepower, so efficiency is lower (frames 334–336)."}
+    ]}
+  ]},
+
+{ day:4, title:"Construction: casings, impellers and seals", short:"Construction & seals",
+  sub:"Section 2 opens the machine. Compare the two casing designs, the three impeller types, diaphragms and guide vanes, then the family of shaft seals from labyrinths to liquid-film seals.",
+  frames:"Section 2 · frames 1–132", mins:"~75 min",
+  goals:["Choose horizontal or vertical split","Match impeller type to service","Explain diaphragms and guide vanes","Compare labyrinth, ring, contact and liquid-film seals"],
+  takeaways:["Horizontally split: easiest access, but a long joint to seal. Vertically split (barrel): joints only at the ends, best for high pressure and hydrogen.","Open impeller: high heads, single stage. Semi-enclosed: large flow, single stage or first stage. Enclosed: multi-stage, best flow control.","Diaphragms are stationary; their walls form diffusers and return passages. Guide vanes steer gas into each eye; adjustable ones control capacity.","Labyrinths never stop all leakage; interlocking ones work best. Ported labyrinths handle toxic gas.","Liquid-film seals use oil a few psi above gas pressure (head tank), up to about 10,000 psi."],
+  topics:[
+  { t:"Casings: horizontally and vertically split", f:"Frames 1–15", viz:"casings",
+    body:`<p>A <span class="term">horizontally split</span> casing is two halves <strong>bolted</strong> together along a joint at shaft height. Lift the top half and all the internal parts are <strong>easily accessible</strong>.</p>
+<p>A <span class="term">vertically split</span> (barrel) casing is sealed by <strong>end covers</strong> bolted to the ends. To reach the working parts, the cover has to be pulled and the internals <strong>removed</strong> from the case.</p>
+<p>Inside, the pressure is <strong>higher</strong> than outside, and the casing must <strong>prevent</strong> gas from escaping. In the vertically split casing the joints are only at the <strong>ends</strong>. In the horizontally split casing the joint runs the whole length, so it has a <strong>larger area</strong> and the high pressure is in contact with it more. Hard-to-hold gases such as <strong>hydrogen</strong> under high pressure, and moderate-to-high pressure service in general, call for a <strong>vertically split</strong> casing. For easiest access, choose <strong>horizontally split</strong>.</p>`,
+    keys:["Horizontal split → easy maintenance, larger sealing area.","Vertical split → small end joints, minimal leakage.","High-pressure hydrogen → vertically split."],
+    quiz:[
+      {q:"Which casing suits high-pressure hydrogen service?",o:["Horizontally split","Vertically split","Either, it makes no difference","Neither; hydrogen cannot be compressed"],a:1,w:"Hydrogen is extremely hard to contain. The vertically split casing has joints only at the ends, a much smaller sealing area, so it minimises leaks (frames 12–15)."},
+      {q:"Which casing gives the easiest access to internal parts?",o:["Horizontally split","Vertically split","Barrel with two covers","All are equal"],a:0,w:"Removing the top half of a horizontally split casing exposes every internal component without pulling the bundle out (frames 2, 14)."}
+    ]},
+  { t:"Impeller designs and mounting", f:"Frames 16–23", viz:"imptypes",
+    body:`<p>The impeller is the part that adds velocity to the gas. There are three basic designs:</p>
+<p><span class="term">Open</span>: blades with no side plates. Used for <strong>high heads</strong> and small to large flow in <strong>single-stage compressors only</strong>. Gas flow is <strong>least controlled</strong>. <span class="term">Semi-enclosed</span>: blades on one back plate. Used for <strong>large flow</strong>, usually single-stage, or as the <strong>first stage</strong> of a multi-stage machine. <span class="term">Enclosed</span>: blades between two plates; gas is drawn into the eye and flows out of the rim. Used mainly in <strong>multi-stage</strong> compressors, and flow is <strong>most controlled</strong>.</p>
+<p>The impeller is <strong>shrunk onto the shaft</strong> and rotates with it; a <strong>key</strong> keeps it from turning on the shaft. A loose or unbalanced impeller <strong>vibrates</strong>, so it must be shrunk on and <strong>well balanced</strong>.</p>`,
+    keys:["Open: high head, single stage, least control.","Semi-enclosed: large flow, single or first stage.","Enclosed: multi-stage, most control. Shrink fit + key + balance."],
+    quiz:[
+      {q:"In which impeller is gas flow most controlled?",o:["Open","Semi-enclosed","Enclosed","All equally"],a:2,w:"The enclosed impeller has plates on both sides, so the gas is confined between eye and rim. Frame 20."},
+      {q:"What prevents the impeller from turning on the shaft?",o:["A key","The thrust collar","A garter spring","The balance line"],a:0,w:"The impeller is shrunk onto the shaft and a key prevents it from turning relative to the shaft (frame 21)."}
+    ]},
+  { t:"Diaphragms and guide vanes", f:"Frames 24–47",
+    body:`<p>A multi-stage compressor contains <span class="term">diaphragms</span>, located <strong>between the impellers</strong>. The adjacent walls of the diaphragms form the <strong>diffuser</strong> passage; after the diffuser the gas enters the <strong>return passage</strong>, which guides it to the next impeller. Diaphragms are cast iron or steel and <strong>do not rotate</strong>.</p>
+<p>Some diaphragms are <strong>liquid-cooled</strong>: water flows in through an intake tube, circulates inside the diaphragm and leaves through a discharge tube. Gas touching the diaphragm walls is cooled, so the diaphragms act as a <strong>cooling system</strong> inside the compressor.</p>
+<p><span class="term">Guide vanes</span>, permanent or replaceable, sit <strong>ahead of each impeller eye</strong> at the end of the diaphragm's return passage, guiding gas efficiently into the eye. <strong>Inlet guide vanes can be adjustable</strong>: changing the angle of flow into the eye changes the impeller's performance curve, so <strong>capacity can be controlled</strong>. Some adjust automatically to keep the machine within its operating range. Adjustable vanes give the best control of capacity and flow angle.</p>`,
+    keys:["Diaphragms: stationary, form diffuser + return passage, may be water-cooled.","Guide vanes: steer gas into each eye.","Adjustable inlet guide vanes: control capacity by changing inlet flow angle."],
+    quiz:[
+      {q:"Which statement about diaphragms is correct?",o:["They rotate with the shaft","Their adjacent walls form the diffuser passage and they stay stationary","They are made of carbon","They sit outside the casing"],a:1,w:"Diaphragms are cast iron or steel, do not rotate, and their adjacent walls form the diffuser; the return passage follows (frames 25–27)."},
+      {q:"Adjustable inlet guide vanes are used to…",o:["Seal the shaft","Change the flow angle into the eye and so control capacity","Cool the seal oil","Balance axial thrust"],a:1,w:"The angle of flow into the eye affects the impeller's characteristic curve, so adjusting the vanes controls compressor capacity (frames 36–38)."},
+      {q:"In a multi-stage compressor, the first impeller can be…",o:["Open only","Enclosed or semi-enclosed","Only enclosed","Any type, including an axial rotor"],a:1,w:"Frame 41: the first impeller can be either enclosed or semi-enclosed; the rest are normally enclosed."}
+    ]},
+  { t:"Labyrinth seals", f:"Frames 48–76", viz:"labyrinth",
+    body:`<p>The shaft passes through the diaphragms but is <strong>not attached</strong> to them. Pressure increases from suction to discharge, so gas can leak from high to low pressure through the gap between shaft and diaphragm. <strong>Seals</strong> prevent this, and the most common is the <span class="term">labyrinth seal</span>: a set of metal rings or teeth that <strong>encircle the shaft without touching it</strong>.</p>
+<p>The teeth are <strong>soft metal</strong> so the shaft is not damaged by accidental contact, and <strong>sharp</strong> so any friction is small. Gas entering the spaces between teeth slows down and changes direction; the turbulence <strong>resists</strong> flow. It does <strong>not prevent all leakage</strong>. At high velocity some gas skips straight under the teeth, increasing leakage, so a <strong>straight</strong> labyrinth becomes less effective. In an <strong>interlocking</strong> labyrinth the shaft has teeth too, gas cannot pass in a straight line, and the seal is more efficient.</p>
+<p>Labyrinths suit places where some leakage is acceptable, such as <strong>interstage</strong> seals (the pressure difference between stages is low). Between shaft and casing, toxic or hazardous gas must not leak to atmosphere, so the seal is <strong>ported</strong>: if port pressure is below atmospheric, gas leaks to the port and is piped to a safe place. Or <strong>inert gas</strong> is forced into the port at a pressure <strong>higher</strong> than the compressor's internal pressure, so process gas cannot leak out (some inert gas does).</p>`,
+    keys:["Teeth: soft, sharp, never touching the shaft.","Turbulence resists flow; some leakage always remains.","Interlocking > straight. Ported or inert-gas-buffered for dangerous gases."],
+    quiz:[
+      {q:"Why are labyrinth teeth made of soft metal?",o:["To make them cheaper","So the shaft will not be damaged by accidental contact","So they wear into a perfect seal","To conduct heat to the oil"],a:1,w:"Frame 54: the rings or teeth are soft so that the shaft is not damaged if they touch. They are also sharp so contact friction stays small."},
+      {q:"Which labyrinth is more efficient?",o:["Straight labyrinth","Interlocking labyrinth","Both are the same","Neither works at high velocity"],a:1,w:"In an interlocking labyrinth the shaft teeth mesh with the seal teeth, so gas cannot skip through in a straight line. It is forced to change direction and meets more resistance (frames 62–66)."},
+      {q:"Inert gas is injected into a ported labyrinth. To stop process gas escaping, the inert gas pressure must be…",o:["Lower than atmospheric","Equal to suction pressure","Higher than the compressor's internal pressure","Exactly 14.7 psi"],a:2,w:"Frame 75: if the inert gas pressure is higher than the internal pressure, compressor gas cannot leak to atmosphere. Some inert gas leaks instead, so this is only used where that is allowed."}
+    ]},
+  { t:"Restrictive-ring and mechanical contact seals", f:"Frames 77–97",
+    body:`<p>A <span class="term">restrictive-ring seal</span> uses rings of low-friction material such as <strong>carbon</strong>, either one piece reinforced by a <strong>steel band</strong>, or segmented and held by a <strong>garter spring</strong>. Stationary <strong>ring cups</strong> hold the rings around the shaft; the cups do not touch the shaft. Leakage over the ring is prevented by vertical contact between ring and cup, but since the rings don't touch the shaft, <strong>some leakage will occur</strong>. These seals can be ported for scavenging or inert sealing gas and are used together with labyrinths.</p>
+<p>In a <span class="term">contact seal</span> a moving part touches a stationary part. Rubbing makes friction and heat, so most contact seals must be <strong>lubricated</strong> to reduce friction and carry heat away.</p>
+<p>The <span class="term">mechanical-contact shaft seal</span> works up to about <strong>1000 psi</strong>. A <strong>carbon ring</strong> sits between a <strong>rotating seat</strong> and a <strong>stationary seat</strong>; sealing is by vertical contact between them. Oil at about <strong>40 psi above gas pressure</strong> is fed through a drilled passage; it lubricates, carries heat and itself helps seal. A labyrinth between gas passage and seal, with gas flowing toward the seal, keeps oil out of the process. Oil that touches the gas becomes <strong>contaminated</strong> and drains to a trap to be salvaged. A <strong>pressure breakdown sleeve</strong> is used at the atmosphere end.</p>`,
+    keys:["Ring seal: carbon rings in stationary cups, small leakage.","Contact seals need lubrication to remove friction heat.","Mechanical seal: ≤ ~1000 psi, oil ~40 psi above gas."],
+    quiz:[
+      {q:"In a mechanical-contact seal, oil is supplied at about…",o:["40 psi above gas pressure","40 psi below gas pressure","Atmospheric pressure","10,000 psi"],a:0,w:"Frame 92: oil at about 40 psi higher than the gas pressure in the seal zone is fed through a drilled passage."},
+      {q:"Mechanical-contact shaft seals are effective up to about…",o:["100 psi","1000 psi","10,000 psi","Any pressure"],a:1,w:"Frame 88: for pressures up to about 1000 psi the mechanical-contact seal is effective. Above that, up to 10,000 psi, the liquid-film seal is used."}
+    ]},
+  { t:"Liquid-film seals and seal oil", f:"Frames 98–132",
+    body:`<p>For sealing pressures up to <strong>10,000 psi</strong> a <span class="term">liquid-film seal</span> is used. It has an <strong>inner and outer sleeve</strong> that do not touch each other or the shaft. The shaft carries its own <strong>shaft sleeve</strong>, which rotates with it. High-pressure oil is forced between the sleeves so the shaft sleeve spins inside a <strong>film of oil</strong>; nothing touches, so friction is tiny and there is almost <strong>no wear</strong>.</p>
+<p>The oil pressure must be slightly <strong>higher than gas pressure</strong> and must vary with it. A <span class="term">head tank</span> does this: its top is vented to the <strong>pressure side</strong> of the seal, and the oil column adds its own head. 15–21 ft of oil adds <strong>5–7 psi</strong>, so seal oil is always that much above gas pressure, however the compressor pressure changes.</p>
+<p>Several gallons a day leak into the pressure side; most is recovered through the oil outlets. The seal needs a continuous supply of <strong>clean oil</strong> at high pressure: no dirt in the reservoir, lines free of particles. Oil leaking into the machine must be removed through a <strong>trap for each seal</strong>; that oil is contaminated, and <strong>excessive flow to the traps means the seal is defective</strong>. A buffer gas in a ported labyrinth raises seal-zone pressure and keeps process gas away from the oil. A breakdown (outer bushing) sleeve limits oil leaking to atmosphere and carries heat away. With <strong>oxygen</strong>, which is dangerous mixed with oil, seal liquids <strong>other than oil</strong> must be used.</p>`,
+    keys:["Up to ~10,000 psi; no metal contact.","Head tank keeps oil 5–7 psi above gas.","Watch the traps: excessive oil flow = defective seal. Oxygen: no oil."],
+    quiz:[
+      {q:"A head tank holds 15–21 ft of oil above the seal. Seal oil pressure is therefore…",o:["Equal to gas pressure","About 5–7 psi above gas pressure","About 40 psi below gas pressure","Fixed, regardless of gas pressure"],a:1,w:"The tank is vented to the pressure side, so gas pressure acts on the oil surface, and 15–21 ft of oil head adds 5–7 psi on top (frames 108–112)."},
+      {q:"Excessive oil flow to the seal traps indicates…",o:["Normal operation","A defective seal","Low suction pressure","That the oil is too cold"],a:1,w:"Frame 123: excessive oil flow to the traps indicates that the seal is defective."},
+      {q:"For an oxygen compressor, the liquid-film seal should use…",o:["Light mineral oil","Heavy oil","A liquid other than oil","No liquid at all"],a:2,w:"Oxygen is dangerous when mixed with oil, so liquids other than oil must be used for shaft seals in oxygen service (frame 132)."}
+    ]}
+  ]},
+
+{ day:5, title:"Bearings, support systems and operation", short:"Systems & operation",
+  sub:"Keep the rotor in place, keep it lubricated, cooled and protected, then run it: series and parallel arrangements, startup and shutdown procedures from Exhibit 2.",
+  frames:"Section 2 · frames 133–318", mins:"~90 min",
+  goals:["Match journal and thrust bearings to motions","Explain the balancing drum","Trace the oil-circulation system","Describe overspeed trips, vents and bypasses","Run startup and shutdown safely"],
+  takeaways:["Journal bearings stop radial motion; thrust bearings stop axial motion. Both ride on an oil film over babbitt.","Rotor thrust pushes toward suction; a balancing drum vented to suction pushes back. Keep the balance line clear.","Two pumps, two coolers, two filters; trip on low oil pressure; auxiliary pump covers startup and shutdown.","Overspeed trip: weight overcomes spring, hits trip arm, steam valve closes.","Vent (harmless gas) or bypass after the aftercooler (valuable/toxic gas) stops surge. Shut down into fixed pressure with them open."],
+  topics:[
+  { t:"Bearings: journal and thrust", f:"Frames 133–155", viz:"bearings",
+    body:`<p>Compressor parts have very close clearances. Impellers and shaft must rotate freely but <strong>must not move any other way</strong>. An unsupported shaft can move three ways: <strong>rotation</strong>, <strong>axial motion</strong> (thrust, along the shaft) and <strong>radial motion</strong> (off-centre). Gas pushing on the sides of impellers causes axial thrust; an unbalanced impeller causes radial vibration.</p>
+<p>A <span class="term">journal bearing</span> restricts <strong>radial</strong> motion; axial motion is still possible. A <span class="term">thrust bearing</span> restricts <strong>axial</strong> motion: a <strong>thrust collar</strong> on the shaft rotates between stationary <strong>thrust shoes</strong>. The rubbing surfaces are lined with <strong>babbitt</strong> (a low-friction metal) and run on an <strong>oil film</strong>, supplied under pressure through grooves to prevent overheating. In a <strong>tilting-pad</strong> journal bearing, oil is trapped in wedges between shaft and pads.</p>
+<p>Shaft seals sit between high-pressure gas and any bearing. If the gas may mix with oil, one seal outboard of the drive-end bearing is enough; if not, a seal goes between the process gas and each radial bearing, with a vented space between a labyrinth and the bearing.</p>`,
+    keys:["Radial → journal bearing. Axial (thrust) → thrust bearing.","Thrust collar rotates; thrust shoes are stationary.","Babbitt surfaces on a pressurised oil film."],
+    quiz:[
+      {q:"A journal bearing restricts which motion?",o:["Axial","Radial","Rotation","All three"],a:1,w:"Frame 140: the journal bearing restricts radial motion. Axial motion is still possible, which is why a thrust bearing is also needed."},
+      {q:"In a thrust bearing, which part rotates with the shaft?",o:["The thrust shoes","The thrust collar","The stationary thrust surface","The oil supply line"],a:1,w:"Frame 149: the thrust collar rotates with the shaft; the shoes are stationary and stop it moving axially."},
+      {q:"Bearing rubbing surfaces are made of…",o:["Carbon","Babbitt, lubricated by an oil film","Hardened steel running dry","Rubber"],a:1,w:"Frame 145: the rubbing surface of journal and thrust bearings is a low-friction metal, babbitt, lubricated by a film of oil."}
+    ]},
+  { t:"Balancing drum", f:"Frames 156–172", viz:"drum",
+    body:`<p>Pressure on the rotor is <strong>higher on the discharge side</strong> than on the suction side. The imbalance creates an axial force that pushes the rotor toward the <strong>suction end</strong>. On small or low-pressure machines a <strong>thrust bearing</strong> can take it.</p>
+<p>When the thrust is too great for a bearing alone, a <span class="term">balancing drum</span> is fitted to the shaft at the <strong>discharge end</strong>. The drum's outer face (nearest the end of the shaft) is <strong>vented to suction</strong> through a <strong>balance line</strong>; its inner face sees <strong>discharge pressure</strong>. That difference pushes the rotor toward the <strong>discharge end</strong>, opposite to the impeller thrust, so the shaft carries little net axial force. A <strong>labyrinth</strong> seals around the drum's circumference.</p>
+<p>Keep the <strong>balance line from plugging</strong>; otherwise the thrust bearing may fail from overload. Because the drum is vented, both the discharge and end seals operate at <strong>suction pressure</strong>.</p>`,
+    keys:["Impeller thrust → toward suction.","Drum (discharge end, vented to suction) → toward discharge.","Plugged balance line → thrust bearing overload."],
+    quiz:[
+      {q:"The unbalanced pressure on a multi-stage rotor pushes it toward the…",o:["Discharge end","Suction end","Top of the casing","It does not push at all"],a:1,w:"Discharge-side pressure is higher, so the net force on the impellers pushes the rotor toward the suction end (frames 157–158)."},
+      {q:"What happens if the balance line plugs?",o:["Nothing important","The thrust bearing may fail from overload","Capacity doubles","The seals stop leaking"],a:1,w:"With the line plugged, the drum's vented side is no longer held at suction pressure, the drum's counter-force is lost and the full thrust lands on the thrust bearing (frame 171)."}
+    ]},
+  { t:"The oil-circulation system", f:"Frames 173–197", viz:"oil",
+    body:`<p>Lube oil is supplied under pressure to the <strong>bearings</strong>; lose the pressure and they are not lubricated. Oil is stored in a <strong>reservoir</strong>, forced out by a <strong>main oil pump</strong>, passed through an <strong>oil cooler</strong> (hot oil is too thin to hold a protective film; but too-cold oil is too viscous to lubricate well) and then an <strong>oil filter</strong>. If oil stops, bearings may fail or seize.</p>
+<p>Because the whole system must stop if pumping fails, most compressors have <strong>two pumps</strong>: the main pump for normal running, an <strong>auxiliary pump</strong> with its own driver for emergencies. A shaft-driven main pump does <strong>not operate at startup</strong>, so the auxiliary pump lubricates until the compressor reaches operating speed, and again at shutdown as the shaft slows. There are also <strong>two filters and two coolers</strong>.</p>
+<p>Most compressors are stopped by an automatic <strong>trip on low oil pressure</strong>; alarms warn when oil pressure falls or oil temperature rises. A clogged filter activates a pressure-operated trip. Filter and cooler must be filled with oil and at recommended pressure, or the unit trips.</p>`,
+    keys:["Reservoir → pump → cooler → filter → bearings.","Two of each: pumps, coolers, filters.","Auxiliary pump covers startup, shutdown and emergencies. Low-pressure trip protects bearings."],
+    quiz:[
+      {q:"At startup, a shaft-driven main oil pump…",o:["Supplies full pressure immediately","Does not operate, so the auxiliary pump lubricates the bearings","Runs backwards","Is bypassed by the seal-oil head tank"],a:1,w:"The shaft isn't turning yet, so a shaft-driven pump gives no oil. The separately driven auxiliary pump lubricates until operating speed (frames 187–188)."},
+      {q:"A clogged oil filter triggers an automatic trip. That device is operated by…",o:["Temperature","Pressure","Shaft speed","Vibration"],a:1,w:"Frame 195: the tripping device is operated by pressure; a clogged filter makes oil pressure to the bearings fall."}
+    ]},
+  { t:"Cooling and drivers", f:"Frames 198–211",
+    body:`<p>Compression <strong>heats</strong> gas, and the greater the R the greater the temperature rise; multi-staging raises R and so raises final temperature. Often the gas must be <strong>cooled</strong> for safe operation. Three ways: <strong>diaphragm cooling</strong> (water through the diaphragms, cooling the gas between each stage), <span class="term">intercoolers</span> (gas taken outside the compressor, cooled, and returned), and an <span class="term">aftercooler</span> (gas cooled after it leaves, on its way to the flow line).</p>
+<p>Centrifugal compressors run over a <strong>wide</strong> speed range, 3,000 to 50,000 RPM, normally 3,000–12,000. 3,000 RPM counts as low speed, 10,000 as high. <strong>Turbines</strong> are high-speed drivers and can be coupled directly to a high-speed compressor. An <strong>electric motor</strong> tops out at <strong>3,600 RPM</strong>, so it can be direct-coupled only to a low-speed compressor; for a high-speed machine it needs <strong>step-up gears</strong>. Gas or diesel <strong>engines</strong> are low-speed too and also need step-up gears.</p>`,
+    keys:["Higher R → hotter gas. Cool by diaphragms, intercoolers, aftercoolers.","Motor ≤ 3,600 RPM → step-up gears for high-speed compressors.","Turbines direct-couple to high-speed machines."],
+    quiz:[
+      {q:"An electric motor drives a 10,000 RPM compressor. What is needed?",o:["Nothing, motors reach 10,000 RPM","Step-up gears","A governor","A balancing drum"],a:1,w:"A motor's maximum speed is 3,600 RPM, so step-up gears are needed to reach the high speed (frames 209–210)."},
+      {q:"An intercooler cools the gas…",o:["Inside the impeller","Outside the compressor, then returns it to the compressor","Only after final discharge","By mixing oil with the gas"],a:1,w:"Frames 203–204: in an intercooler system the gas is cooled outside the compressor and returned to it. An aftercooler is the one after discharge."}
+    ]},
+  { t:"Safety devices and the overspeed trip", f:"Frames 212–232", viz:"overspeed",
+    body:`<p>An <strong>electric motor</strong> must be protected against overload, which overheats and can burn out the windings. A <strong>thermostat</strong> in the windings trips a solenoid switch that cuts the current; a <strong>circuit breaker</strong> responding to current also protects it.</p>
+<p>A <strong>turbine</strong> needs a <span class="term">governor</span> to keep speed constant by controlling fuel (gas turbine) or <strong>steam</strong> (steam turbine). A servo-motor linked to the <strong>throttle valve</strong> <strong>opens</strong> it when the turbine slows and <strong>closes</strong> it when it speeds up. But if the compressor suddenly unloads, speed rises <strong>quickly</strong> and the governor may be too slow; steam impurities can also <strong>foul</strong> it. So an extra device is needed.</p>
+<p>The <span class="term">overspeed trip</span> is always located in the turbine shaft: a <strong>weight held in by a spring</strong>. At safe speeds the weight stays in the shaft. If the turbine overspeeds, the weight's <strong>centrifugal tendency exceeds the spring tension</strong>, the weight comes out of the shaft, strikes a <strong>trip arm</strong>, and a spring closes the <strong>valve</strong> that shuts off the steam. Other automatic shutdowns respond to oil pressure, cooling-water temperature and seal-oil pressure; where immediate action isn't needed, an alarm warns first and an automatic valve stops the driver if the operator doesn't correct the condition.</p>`,
+    keys:["Motors: thermostat + circuit breaker.","Turbines: governor + servo-motor on throttle valve.","Overspeed trip: centrifugal tendency beats spring → trip arm → steam valve shuts."],
+    quiz:[
+      {q:"In the overspeed trip, what moves the weight out of the shaft?",o:["An electric solenoid","Its centrifugal tendency exceeding the spring tension","Oil pressure","The governor"],a:1,w:"At overspeed the weight's tendency to fly outward is greater than the spring holding it in, so it comes out and strikes the trip arm (frames 228–229). It's the Day 1 principle at work."},
+      {q:"A loaded turbine begins to slow down. The governor's servo-motor…",o:["Closes the throttle valve","Opens the throttle valve","Trips the overspeed weight","Shuts off the oil pump"],a:1,w:"To hold constant speed under varying load, the throttle is opened when the turbine slows and closed when it speeds up (frames 218–219)."}
+    ]},
+  { t:"Vents and bypasses against surge", f:"Frames 233–244",
+    body:`<p>Surge begins when flow drops below the surge level and gas momentarily flows back into the compressor; in other words when discharge pressure is <strong>too high</strong>. Many centrifugal compressors are fitted with <strong>vents or bypasses</strong> to protect them.</p>
+<p>A <span class="term">vent</span> is an automatic valve in the <strong>discharge line</strong>. Releasing gas <strong>increases flow</strong> through the compressor, which keeps it out of surge. Because it dumps gas to <strong>atmosphere</strong>, a vent is used only when the gas is <strong>not hazardous or valuable</strong>. Near surge, flow becomes slower, so vent valves are set to open on <strong>low flow rate</strong>.</p>
+<p>For hazardous or valuable gas, use a <span class="term">bypass</span>: it returns gas from discharge back to <strong>suction</strong>, nothing is released. Compression has heated the discharge gas, so taking it straight back would raise suction temperature; the bypass gas is therefore taken from <strong>after the aftercooler</strong>. Bypasses, like vents, open automatically on <strong>low flow</strong>.</p>`,
+    keys:["Both raise flow through the machine to stay out of surge.","Vent → atmosphere, harmless gas only. Bypass → back to suction.","Take bypass gas after the aftercooler; trigger on low flow."],
+    quiz:[
+      {q:"The gas is toxic and valuable. Which anti-surge device is right?",o:["A vent to atmosphere","A bypass back to suction","Removing the check valve","Closing the suction valve fully"],a:1,w:"A vent releases gas to atmosphere, which is only acceptable for harmless, cheap gas. A bypass recirculates it to suction, nothing is released (frames 237, 240)."},
+      {q:"Where is bypass gas taken from, and why?",o:["Before the aftercooler, to keep it hot","After the aftercooler, so suction temperature doesn't rise","From the oil reservoir","From the first-stage diffuser"],a:1,w:"Discharge gas is hot from compression. Recirculating it uncooled would keep raising suction temperature, so it is taken after the aftercooler (frames 242–243)."}
+    ]},
+  { t:"Series and parallel operation", f:"Frames 245–258", viz:"series",
+    body:`<p>In <span class="term">series</span>, the discharge of one compressor feeds the <strong>suction</strong> of the next. The second machine receives gas at a <strong>higher pressure</strong> than the first. Series operation increases the <strong>head</strong> (pressure).</p>
+<p>In <span class="term">parallel</span>, both compressors discharge into the <strong>same line</strong>, which increases <strong>capacity</strong>. Their discharge pressures <strong>must be the same</strong>: if one falls below the other, the weaker machine <strong>surges</strong>. So every parallel machine has a <strong>check valve</strong> in its discharge line. A check valve allows flow in only <strong>one direction</strong> and prevents backflow, but the compressor can still surge if its flow is low, so a bypass or vent is installed <strong>between the discharge and the check valve</strong>.</p>`,
+    keys:["Series → more head. Parallel → more capacity.","Parallel units need equal discharge pressures and check valves.","Anti-surge bypass/vent sits between discharge and check valve."],
+    quiz:[
+      {q:"To increase capacity, compressors are connected in…",o:["Series","Parallel","Either; both raise capacity equally","Neither"],a:1,w:"Frame 257: parallel operation increases capacity; series operation increases pressure (head)."},
+      {q:"Where is the anti-surge bypass or vent placed on a parallel compressor?",o:["Between the check valve and the system","Between the compressor discharge and the check valve","On the suction filter","Inside the impeller eye"],a:1,w:"Downstream of a closed check valve the compressor can't 'see' the bypass. It must sit between discharge and check valve so the machine can recirculate even when the check valve is shut (frame 256)."}
+    ]},
+  { t:"Startup and shutdown", f:"Frames 259–318", viz:"startup",
+    body:`<p><strong>Prestart.</strong> Drain or purge all <strong>liquids</strong>, which can seriously damage the machine. Check lube and seal-oil reservoirs; start the <strong>prelube pump before startup</strong>. Watch the filter pressure drop, which should <strong>decrease</strong> as oil warms. Run lube and seal-oil systems <strong>10–20 minutes</strong> before starting; start the cooling system <strong>after</strong> the lube system so the oil can warm. Make sure coolant circulates, safety devices are set, and <strong>turn the rotor by hand</strong>. Follow company procedure closely.</p>
+<p><strong>Startup.</strong> The driver must handle the gas load and accelerate itself and the compressor. <strong>Motors must reach full speed quickly</strong> to avoid burnout, and a heavier gas load makes them slower, so with motors the load is <strong>reduced</strong>: suction <strong>throttled</strong>, bypass opened, then the suction opened slowly and the bypass put on automatic. Motors need a <strong>large</strong> power margin; other drivers a small one. A <strong>turbine</strong> has high starting torque and can start under some load: suction and discharge valves <strong>open</strong>, the discharge check valve held closed by system pressure, bypass <strong>open</strong>; bring it to speed (point 2 on Exhibit 2), then <strong>slowly close the bypass</strong> until the compressor builds enough pressure to open the check valve and reaches stable point 3, and put the bypass on automatic. Pass through <strong>critical speeds rapidly</strong> to avoid vibration damage.</p>
+<p><strong>Shutdown.</strong> With no fixed discharge pressure, flow simply falls with speed (point 3 → 1) and there is <strong>no danger of surge</strong>. Into a <strong>fixed-pressure</strong> system the check valve closes as soon as discharge pressure drops below line pressure, capacity goes to zero, and trapped gas drives the slowing compressor into surge. So shut down with the <strong>vent or bypass open</strong>. Rate-controlled bypasses open automatically; pressure-regulated ones don't, so operate them <strong>manually</strong>. After stopping, close suction and discharge valves, keep auxiliary lube and seal-oil pumps and cooling water running until the machine has cooled, and with toxic gas purge the system (leave steam eductors until after shutdown; keep liquid seals circulating until purged).</p>`,
+    keys:["Prelube first; oil 10–20 min before start; cooling after lube.","Motor start: throttle suction, bypass open, accelerate fast.","Into fixed pressure: shut down with vent/bypass open."],
+    quiz:[
+      {q:"Starting a motor-driven compressor, the suction valve is…",o:["Fully open, bypass closed","Throttled, with the bypass open","Closed, with the discharge closed","Open, with the check valve removed"],a:1,w:"Motors must reach full speed quickly, so the gas load is reduced: suction throttled and bypass open. After reaching speed, suction is opened slowly (frames 274–277)."},
+      {q:"How should a compressor pass through its critical speeds?",o:["As slowly as possible","As rapidly as possible","It should stop at each one","Critical speeds are only reached at shutdown"],a:1,w:"At critical speeds vibration is excessive and can be dangerous, so the machine is accelerated through them rapidly (frame 299)."},
+      {q:"Shutting down a compressor that feeds a fixed-pressure system, the vent or bypass should be…",o:["Closed","Open","Removed","Set to manual and closed"],a:1,w:"The check valve slams shut and capacity drops to zero, so trapped discharge gas would repeatedly surge the slowing compressor. An open vent or bypass relieves it (frames 305–310)."},
+      {q:"Why is the cooling system started after the lube system?",o:["To let the oil warm up to operating conditions","Because coolers need oil to work","To raise filter pressure drop","It is not; cooling always starts first"],a:0,w:"Frame 265: the cooling system is started after the lube system so the oil can warm up to operating temperature, where it flows more easily."}
+    ]}
+  ]}
+];
+
+const FINAL = [
+ {d:1,q:"Kinetic energy is energy a body has because of its…",o:["Position","Motion","Temperature","Molecular arrangement"],a:1,w:"Kinetic energy comes from motion (a moving hammer, flowing water). Position or molecular arrangement gives potential energy."},
+ {d:1,q:"A flowing gas is slowed down with no losses. Its pressure…",o:["Increases","Decreases","Stays the same","Becomes atmospheric"],a:0,w:"Total energy is constant, so velocity energy that is lost reappears as pressure. This is exactly what the diffuser exploits."},
+ {d:1,q:"A ball on a string is circling a pivot. What supplies the centripetal force?",o:["The ball's inertia","The string","Air resistance","The centrifugal force"],a:1,w:"The string pulls the ball toward the centre, which is the centripetal force. Inertia is what produces the centrifugal tendency."},
+ {d:2,q:"In a centrifugal compressor, gas enters the impeller at the…",o:["Outer rim","Eye","Volute tongue","Diffuser"],a:1,w:"Gas is drawn in at the eye, the centre of the impeller, by the low pressure created there, then flung toward the rim."},
+ {d:2,q:"Where is velocity converted into pressure in a centrifugal stage?",o:["Only in the impeller","In the diffuser and volute","In the bearings","In the inlet guide vanes only"],a:1,w:"The impeller adds velocity and pressure; the diffuser (and volute or return passage) slows the gas, turning velocity into pressure."},
+ {d:2,q:"Which blades do the work on the gas in an axial compressor?",o:["Stator blades","Rotor blades","Guide vanes","Diaphragm blades"],a:1,w:"Rotor blades, attached to the shaft, rotate and push the gas like a fan. Stators only slow and guide it."},
+ {d:2,q:"Gas enters the second impeller of a multi-stage compressor at…",o:["The same pressure as the first","A higher pressure than at the first eye","A lower pressure","Atmospheric pressure"],a:1,w:"The first impeller and diffuser have already raised its pressure, so it reaches the second eye at greater pressure (frame 110)."},
+ {d:3,q:"At sea level, suction is 14.7 psig and discharge is 102.9 psig. What is R?",o:["7","4","3.5","117.6"],a:1,w:"P₁ = 14.7 + 14.7 = 29.4 psia. P₂ = 102.9 + 14.7 = 117.6 psia. R = 117.6 / 29.4 = 4. Using gauge numbers (102.9 / 14.7 = 7) is the classic mistake."},
+ {d:3,q:"A 1-hp machine running for one minute does…",o:["550 ft·lb","3,300 ft·lb","33,000 ft·lb","60 ft·lb"],a:2,w:"1 hp = 550 ft·lb per second, × 60 seconds = 33,000 ft·lb."},
+ {d:3,q:"Same compressor, same RPM, heavier gas. Which stays about the same?",o:["Horsepower","Discharge pressure","Head","Ratio of compression"],a:2,w:"Head is work per pound and depends on speed, not density. Horsepower, discharge pressure and R all rise with a denser gas."},
+ {d:3,q:"On Exhibit 1, where does surge begin?",o:["100% head, 100% capacity","102% head, 90% capacity","105% head, 50% capacity","96% head, 110% capacity"],a:2,w:"The rated-RPM curve meets the surge line at 105% of rated head and 50% of rated capacity (frames 289–290)."},
+ {d:3,q:"Why is surge harmful?",o:["It lowers oil temperature","Rapid flow reversals set up severe vibration in compressor and piping","It increases efficiency too much","It stops the governor"],a:1,w:"Gas rushing back and forth causes severe vibrations that can damage the compressor and piping (frame 274)."},
+ {d:3,q:"The control objective is a constant weight flow. The control element is…",o:["A pressure controller at suction","A flow meter at the discharge end","A pressure controller at discharge","The overspeed trip"],a:1,w:"Frame 322: a flow meter, placed at the discharge end, is used for constant-weight flow."},
+ {d:3,q:"Where is actual CFM measured?",o:["Discharge","Suction","After the aftercooler","At the balance line"],a:1,w:"Actual CFM is the volume before compression, measured at the suction end."},
+ {d:4,q:"A horizontally split casing has a disadvantage compared with a barrel. Which?",o:["Internals are hard to reach","It has a larger joint area to seal","It cannot hold any pressure","It needs no bolts"],a:1,w:"The horizontal joint runs the whole length of the casing, so far more joint area is exposed to high pressure. The upside is easy access."},
+ {d:4,q:"Open impellers are used for…",o:["Multi-stage compressors only","High heads in single-stage compressors only","The last stage of axial machines","Seal-oil pumps"],a:1,w:"Open impellers serve high heads and small-to-large flows in single-stage machines only; their flow is the least controlled."},
+ {d:4,q:"Why does a straight labyrinth leak more at high gas velocity?",o:["The teeth melt","Some gas skips straight under the teeth without changing direction","The oil film breaks","The shaft stops rotating"],a:1,w:"Fast gas doesn't swirl into the cavities; it skips across in a straight line, so turbulence resistance drops and leakage rises."},
+ {d:4,q:"Liquid-film shaft seals can seal pressures up to about…",o:["100 psi","1,000 psi","10,000 psi","50,000 psi"],a:2,w:"Frame 98: up to 10,000 psi, compared with about 1,000 psi for mechanical-contact seals."},
+ {d:4,q:"Why can a liquid-film seal run for long periods with almost no wear?",o:["Its sleeves are made of diamond","There is no direct contact between stationary and moving parts, only an oil film","It runs dry","It turns very slowly"],a:1,w:"The shaft sleeve spins inside an oil film; inner and outer sleeves touch neither each other nor the shaft (frames 113–114)."},
+ {d:5,q:"Which bearing prevents axial motion of the rotor?",o:["Journal bearing","Thrust bearing","Tilting-pad journal","Labyrinth"],a:1,w:"The thrust bearing's stationary shoes hold the rotating thrust collar, stopping end-to-end (axial) movement."},
+ {d:5,q:"Because the balancing drum is vented to suction, the discharge and end seals operate at…",o:["Discharge pressure","Suction pressure","Atmospheric pressure","Seal-oil pressure"],a:1,w:"Frame 172: venting the drum to suction means both end seals see suction pressure, which eases sealing."},
+ {d:5,q:"Lube oil that gets too hot…",o:["Becomes too thick to flow","Becomes too thin to hold a protective film","Improves bearing life","Raises the trip setting"],a:1,w:"Hot oil thins out and can't maintain the film between metal parts, which is why it passes through a cooler first."},
+ {d:5,q:"A vent to atmosphere is acceptable as surge protection when the gas is…",o:["Toxic","Valuable","Neither hazardous nor valuable","Hydrogen at high pressure"],a:2,w:"Vents dump gas to atmosphere. For hazardous or valuable gas a bypass back to suction is used instead."},
+ {d:5,q:"Compressors operating in parallel must have…",o:["Different discharge pressures","Check valves in their discharge lines","No bypass","Electric-motor drivers only"],a:1,w:"Check valves stop backflow if one machine's discharge pressure drops below the other's (frames 252–258)."},
+ {d:5,q:"What must be done to liquids in the system before starting a centrifugal compressor?",o:["Heat them","Drain or purge them","Leave them to lubricate the impeller","Pump them into the seal-oil tank"],a:1,w:"Liquids could seriously damage the compressor at startup, so they are drained or purged first (frame 259)."},
+ {d:5,q:"When the overspeed trip operates on a steam turbine, the result is…",o:["The governor speeds up","A spring closes the steam valve","The oil pump stops","The check valve opens"],a:1,w:"The thrown-out weight hits the trip arm, and a spring closes the valve that shuts off the steam supply (frame 229)."}
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const KEY="cc5day-v1";
+let store={a:{}};
+try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s&&s.a) store=s; }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(store)); }catch(e){} }
+const reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const LET="ABCD";
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* =========================================================
+   RENDER COURSE
+   ========================================================= */
+let totalQ=0;
+COURSE.forEach(d=>d.topics.forEach(t=>totalQ+=t.quiz.length));
+const vizCount = COURSE.reduce((n,d)=>n+d.topics.filter(t=>t.viz).length,0);
+
+$("#facts").innerHTML = `
+  <div><b>5</b><span class="label">days</span></div>
+  <div><b>${COURSE.reduce((n,d)=>n+d.topics.length,0)}</b><span class="label">principles</span></div>
+  <div><b>${vizCount}</b><span class="label">live models</span></div>
+  <div><b>${totalQ+FINAL.length}</b><span class="label">MCQs</span></div>`;
+
+$("#daynav").innerHTML = COURSE.map(d=>`<a href="#day-${d.day}" data-day="${d.day}"><span class="dot"></span>Day ${d.day}</a>`).join("")+`<a href="#exam" data-day="exam"><span class="dot"></span>Exam</a>`;
+
+$("#road").innerHTML = COURSE.map(d=>{
+  const q=d.topics.reduce((n,t)=>n+t.quiz.length,0);
+  return `<a href="#day-${d.day}"><span class="n">DAY ${d.day}</span><h3>${esc(d.short)}</h3><p>${esc(d.title)}</p><div class="meta"><span>${d.mins} · ${q} Qs</span><span class="score" data-roadscore="${d.day}"></span></div></a>`;}).join("");
+
+const VIZMETA={
+  energy:{title:"Pressure ⇄ velocity balance",tag:"Interactive",kind:"2d"},
+  string:{title:"Ball on a string",tag:"3D model",kind:"3d"},
+  disc:{title:"Bladed disc and ball bearing",tag:"3D model",kind:"3d"},
+  impeller:{title:"Impeller, diffuser and volute",tag:"3D model",kind:"3d"},
+  multistage:{title:"Four-stage compressor, cut away",tag:"3D model",kind:"3d"},
+  axial:{title:"Axial compressor: rotors and stators",tag:"3D model",kind:"3d"},
+  rcalc:{title:"R calculator (gauge → absolute)",tag:"Calculator",kind:"2d"},
+  curve:{title:"Exhibit 1: head–capacity curve and surge",tag:"Interactive",kind:"2d"},
+  casings:{title:"Horizontal vs vertical split casing",tag:"3D model",kind:"3d"},
+  imptypes:{title:"Open, semi-enclosed, enclosed",tag:"3D model",kind:"3d"},
+  labyrinth:{title:"Labyrinth seal, cross-section",tag:"Interactive",kind:"2d"},
+  bearings:{title:"Three shaft motions and two bearings",tag:"3D model",kind:"3d"},
+  drum:{title:"Thrust balance on the rotor",tag:"Interactive",kind:"2d"},
+  oil:{title:"Oil-circulation system",tag:"Interactive",kind:"2d"},
+  overspeed:{title:"Turbine overspeed trip",tag:"3D model",kind:"3d"},
+  series:{title:"Series vs parallel",tag:"Interactive",kind:"2d"},
+  startup:{title:"Exhibit 2: startup operating path",tag:"Interactive",kind:"2d"}
+};
+
+const days=$("#days");
+COURSE.forEach(d=>{
+  const sec=document.createElement("section");
+  sec.className="day"; sec.id="day-"+d.day; sec.dataset.day=d.day;
+  const q=d.topics.reduce((n,t)=>n+t.quiz.length,0);
+  let h=`<div class="wrap"><div class="dayhead"><div class="bignum" aria-hidden="true">0${d.day}</div><div>
+    <div class="label">Day ${d.day} · ${d.frames} · ${d.mins}</div>
+    <h2 style="margin-top:8px">${esc(d.title)}</h2><p class="sub">${esc(d.sub)}</p>
+    <div class="goals">${d.goals.map(g=>`<span>${esc(g)}</span>`).join("")}</div></div></div>`;
+  d.topics.forEach((t,ti)=>{
+    const id=`d${d.day}t${ti+1}`;
+    const vm=t.viz?VIZMETA[t.viz]:null;
+    h+=`<article class="topic" id="${id}">
+      <div class="topic-head"><span class="tn">${d.day}.${ti+1}</span><h3>${esc(t.t)}</h3><span class="frames">${t.f}</span></div>
+      <div class="tbody${t.viz?" has-viz":""}">
+        <div class="prose">${t.body}<ul class="keys"><li class="kt">Remember</li>${t.keys.map(k=>`<li>${k}</li>`).join("")}</ul></div>
+        ${t.viz?`<figure class="viz" data-viz="${t.viz}"><div class="vhead"><b>${vm.title}</b><span class="tag${vm.kind==="2d"?" s":""}">${vm.tag}</span></div><div class="vmount"></div></figure>`:""}
+      </div>
+      <div class="quiz"><div class="quiz-h"><h4>Check yourself: ${esc(t.t)}</h4><span class="qs" data-qs="${id}"></span></div>
+      ${t.quiz.map((qq,qi)=>qHTML(`${id}q${qi}`,qq,qi+1)).join("")}</div>
+    </article>`;
+  });
+  h+=`<div class="dayend"><div><h4>Day ${d.day} in five lines</h4><ul>${d.takeaways.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="scorecard"><span class="label">Your Day ${d.day} score</span><b class="mono" style="font-size:22px" data-dayscore="${d.day}">0 / ${q}</b><div class="meter"><i data-daymeter="${d.day}"></i></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px">${d.day<5?`<a class="btn small primary" href="#day-${d.day+1}">Continue to Day ${d.day+1}</a>`:`<a class="btn small primary" href="#exam">Take the final exam</a>`}<button class="reset" data-resetday="${d.day}">Reset Day ${d.day} answers</button></div></div></div></div>`;
+  sec.innerHTML=h; days.appendChild(sec);
+});
+
+function qHTML(qid,qq,n){
+  return `<div class="q" data-qid="${qid}"><p class="q-text"><span class="q-num">Q${n}</span>${esc(qq.q)}</p>
+  <div class="opts">${qq.o.map((o,i)=>`<button class="opt" data-i="${i}"><span class="l">${LET[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+  <div class="fbwrap"></div></div>`;
+}
+function findQ(qid){ const m=qid.match(/^d(\d)t(\d+)q(\d+)$/); return COURSE[m[1]-1].topics[m[2]-1].quiz[m[3]]; }
+function paintQ(el, qq, chosen){
+  const btns=$$(".opt",el), fb=$(".fbwrap",el);
+  btns.forEach((b,i)=>{ b.classList.remove("correct","wrong","dim"); b.disabled = chosen!=null;
+    if(chosen!=null){ if(i===qq.a) b.classList.add("correct"); else if(i===chosen) b.classList.add("wrong"); else b.classList.add("dim"); }});
+  if(chosen==null){ fb.innerHTML=""; return; }
+  fb.innerHTML = chosen===qq.a
+    ? `<div class="fb ok"><span class="h">Correct</span>${esc(qq.w)}</div>`
+    : `<div class="fb no"><span class="h">Not quite. The correct answer is ${LET[qq.a]}: ${esc(qq.o[qq.a])}</span><b>Why:</b> ${esc(qq.w)}</div>`;
+}
+$$(".q").forEach(el=>{
+  const qid=el.dataset.qid, qq=findQ(qid);
+  if(store.a[qid]!=null) paintQ(el,qq,store.a[qid]);
+  el.addEventListener("click",e=>{
+    const b=e.target.closest(".opt"); if(!b||b.disabled) return;
+    const i=+b.dataset.i; store.a[qid]=i; save(); paintQ(el,qq,i); updateScores();
+  });
+});
+function updateScores(){
+  let answered=0;
+  COURSE.forEach(d=>{
+    let c=0,a=0,tot=0;
+    d.topics.forEach((t,ti)=>{ let tc=0,ta=0; t.quiz.forEach((qq,qi)=>{ const v=store.a[`d${d.day}t${ti+1}q${qi}`]; tot++; if(v!=null){a++;ta++; if(v===qq.a){c++;tc++;}} });
+      const s=$(`[data-qs="d${d.day}t${ti+1}"]`); if(s) s.textContent= ta? `${tc}/${t.quiz.length} correct` : `${t.quiz.length} questions`; });
+    answered+=a;
+    $(`[data-dayscore="${d.day}"]`).textContent=`${c} / ${tot}`+(a<tot?`  ·  ${tot-a} left`:"");
+    $(`[data-daymeter="${d.day}"]`).style.width=(tot?c/tot*100:0)+"%";
+    $(`[data-roadscore="${d.day}"]`).textContent= a? `${c}/${tot}` : "";
+    const nav=$(`.daynav a[data-day="${d.day}"]`); nav.classList.toggle("done", a===tot);
+  });
+  const p=Math.round(answered/totalQ*100);
+  $("#ring").style.setProperty("--p",p); $("#ringtxt").textContent=p+"%";
+}
+updateScores();
+$$("[data-resetday]").forEach(b=>b.addEventListener("click",()=>{
+  const d=b.dataset.resetday; Object.keys(store.a).forEach(k=>{ if(k.startsWith("d"+d+"t")) delete store.a[k]; }); save();
+  $$(`#day-${d} .q`).forEach(el=>paintQ(el,findQ(el.dataset.qid),null)); updateScores();
+}));
+$("#resetall").addEventListener("click",()=>{ store={a:{}}; save(); $$(".q").forEach(el=>paintQ(el,findQ(el.dataset.qid),null)); updateScores(); exam.reset(); });
+
+/* active day in nav */
+const navObs=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ const id=e.target.id==="exam"?"exam":e.target.dataset.day; $$(".daynav a").forEach(a=>a.classList.toggle("active",a.dataset.day===String(id))); const act=$(`.daynav a[data-day="${id}"]`); if(act&&act.scrollIntoView){ const nav=$("#daynav"); nav.scrollTo({left:act.offsetLeft-nav.offsetLeft-20,behavior:"smooth"}); } } }); },{rootMargin:"-45% 0px -50% 0px"});
+$$(".day, #exam").forEach(s=>navObs.observe(s));
+
+/* theme toggle */
+$("#themebtn").addEventListener("click",()=>{
+  const r=document.documentElement; const cur=r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  r.dataset.theme = cur==="dark"?"light":"dark"; try{localStorage.setItem(KEY+"-theme",r.dataset.theme);}catch(e){}
+  refreshColors();
+});
+try{ const t=localStorage.getItem(KEY+"-theme"); if(t) document.documentElement.dataset.theme=t; }catch(e){}
+let COL={};
+function refreshColors(){ const cs=getComputedStyle(document.documentElement); ["--ink","--muted","--line","--accent","--steel","--good","--bad","--surface","--surface-2"].forEach(k=>COL[k.slice(2)]=cs.getPropertyValue(k).trim()); }
+refreshColors();
+if(window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",refreshColors);
+
+/* =========================================================
+   FINAL EXAM
+   ========================================================= */
+const exam=(()=>{
+  const card=$("#examcard"); let order=[],i=0,ans=[];
+  function shuffle(a){ a=a.slice(); for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];} return a; }
+  function start(){ order=shuffle(FINAL.map((_,k)=>k)); i=0; ans=[]; show(); }
+  function intro(){
+    card.innerHTML=`<div class="exambar"><span class="label">${FINAL.length} questions · all five days · about 15 minutes</span></div>
+    <p class="examq">Ready when you are. Aim for 80% or better.</p>
+    <p style="color:var(--muted)">Questions come in random order. Pick an answer to lock it in; if it's wrong you'll see the correct option and why, then move on.</p>
+    <div><button class="btn primary" id="exstart">Start the exam</button></div>`;
+    $("#exstart").onclick=start;
+  }
+  function show(){
+    const qq=FINAL[order[i]];
+    card.innerHTML=`<div class="exambar"><span class="label">Question ${i+1} of ${order.length} · from Day ${qq.d}</span><span class="label">${ans.filter(x=>x.ok).length} correct so far</span></div>
+    <div class="meter"><i style="width:${i/order.length*100}%;background:var(--accent)"></i></div>
+    <div class="q" id="exq"><p class="examq">${esc(qq.q)}</p><div class="opts">${qq.o.map((o,k)=>`<button class="opt" data-i="${k}"><span class="l">${LET[k]}</span><span>${esc(o)}</span></button>`).join("")}</div><div class="fbwrap"></div></div>
+    <div class="examnav"><span></span><button class="btn primary" id="exnext" disabled>${i<order.length-1?"Next question":"See my results"}</button></div>`;
+    const el=$("#exq");
+    el.addEventListener("click",e=>{ const b=e.target.closest(".opt"); if(!b||b.disabled) return; const c=+b.dataset.i;
+      ans.push({k:order[i],c,ok:c===qq.a}); paintQ(el,qq,c); $("#exnext").disabled=false; $("#exnext").focus({preventScroll:true}); });
+    $("#exnext").onclick=()=>{ if(i<order.length-1){ i++; show(); card.scrollIntoView({block:"start"}); } else results(); };
+  }
+  function results(){
+    const ok=ans.filter(a=>a.ok).length, pct=Math.round(ok/ans.length*100);
+    try{ store.exam={pct,at:Date.now()}; save(); }catch(e){}
+    const byDay=[1,2,3,4,5].map(d=>{ const xs=ans.filter(a=>FINAL[a.k].d===d); return {d,ok:xs.filter(a=>a.ok).length,n:xs.length}; });
+    const wrong=ans.filter(a=>!a.ok);
+    const verdict= pct>=90?"Excellent. You know this machine.": pct>=75?"Solid pass. Review the misses below.": pct>=50?"Getting there. Revisit the days with the lowest scores.":"Worth another pass through the course, then retake.";
+    card.innerHTML=`<div class="results"><span class="label">Your result</span>
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap"><span class="bigscore" style="color:${pct>=75?"var(--good)":pct>=50?"var(--accent)":"var(--bad)"}">${pct}%</span><span class="mono">${ok} / ${ans.length} correct</span></div>
+      <p>${verdict}</p>
+      <div class="breakdown">${byDay.map(b=>`<div><span class="label">Day ${b.d}</span><b class="mono">${b.ok}/${b.n}</b><div class="meter"><i style="width:${b.n?b.ok/b.n*100:0}%"></i></div><a href="#day-${b.d}" style="color:var(--steel);font-size:12.5px">Review Day ${b.d}</a></div>`).join("")}</div>
+      ${wrong.length?`<h4 style="font-size:18px;margin-top:6px">Review your ${wrong.length} miss${wrong.length>1?"es":""}</h4><div class="mist">${wrong.map(a=>{const qq=FINAL[a.k];return `<div class="m"><b>${esc(qq.q)}</b><span class="yours">You chose: ${LET[a.c]}. ${esc(qq.o[a.c])}</span><span class="right">Correct: ${LET[qq.a]}. ${esc(qq.o[qq.a])}</span><span><b>Why:</b> ${esc(qq.w)}</span></div>`;}).join("")}</div>`:`<p class="mono" style="color:var(--good)">No mistakes. Perfect score.</p>`}
+      <div><button class="btn primary" id="exagain">Retake in a new order</button></div></div>`;
+    $("#exagain").onclick=start;
+  }
+  intro();
+  return {reset:intro};
+})();
+
+/* =========================================================
+   3D ENGINE (lazy, one WebGL context per visible model)
+   ========================================================= */
+function mat(kind,c){
+  const T=THREE;
+  switch(kind){
+    case "steel": return new T.MeshStandardMaterial({color:c??0xa9b8c6,metalness:.55,roughness:.32});
+    case "dark": return new T.MeshStandardMaterial({color:c??0x5a6977,metalness:.6,roughness:.42});
+    case "accent": return new T.MeshStandardMaterial({color:c??0xe0631f,metalness:.25,roughness:.42});
+    case "blue": return new T.MeshStandardMaterial({color:c??0x2f74b5,metalness:.3,roughness:.4});
+    case "glass": return new T.MeshStandardMaterial({color:c??0x9cc2e6,transparent:true,opacity:.17,side:T.DoubleSide,depthWrite:false,roughness:.15,metalness:0});
+    case "flat": return new T.MeshBasicMaterial({color:c});
+  }
+}
+const CBLUE=[0.18,0.48,0.86], CORANGE=[1.0,0.45,0.12], CRED=[0.88,0.16,0.14];
+function lerpColor(col,t,a=CBLUE,b=CORANGE){ t=Math.max(0,Math.min(1,t)); col.setRGB(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t); return col; }
+
+function mount3D(host, build, o={}){
+  const stage=host.querySelector(".stage");
+  const cam={az:o.az??0.55, el:o.el??0.35, dist:o.dist??8, target:o.target||[0,0,0], auto:reduced?0:(o.auto??0.12)};
+  const state=host._state||(host._state={});
+  let R=null;
+  function init(){
+    if(R) return;
+    if(!window.THREE){ stage.classList.add("nogl"); return; }
+    let renderer;
+    try{ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:"low-power"}); }catch(e){ stage.classList.add("nogl"); return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.outputEncoding=THREE.sRGBEncoding;
+    stage.appendChild(renderer.domElement);
+    const scene=new THREE.Scene();
+    const camera=new THREE.PerspectiveCamera(o.fov||34,1,0.1,200);
+    scene.add(new THREE.HemisphereLight(0xffffff,0x3a4a5a,0.85));
+    const d1=new THREE.DirectionalLight(0xffffff,0.95); d1.position.set(5,8,6); scene.add(d1);
+    const d2=new THREE.DirectionalLight(0xa8c8ff,0.4); d2.position.set(-6,-3,-5); scene.add(d2);
+    const root=new THREE.Group(); scene.add(root);
+    const api=build({scene,root,camera,state,host})||{};
+    R={renderer,scene,camera,root,api,raf:0,last:performance.now(),t:0};
+    resize(); tick();
+  }
+  function resize(){ if(!R) return; const w=stage.clientWidth||1,h=stage.clientHeight||1; R.renderer.setSize(w,h,false); R.camera.aspect=w/h; R.camera.updateProjectionMatrix(); }
+  function tick(){
+    R.raf=requestAnimationFrame(tick);
+    const now=performance.now(); const dt=Math.min(0.05,(now-R.last)/1000); R.last=now; R.t+=dt;
+    if(!drag) cam.az+=cam.auto*dt;
+    const c=R.camera, ce=Math.cos(cam.el);
+    c.position.set(cam.target[0]+cam.dist*ce*Math.sin(cam.az), cam.target[1]+cam.dist*Math.sin(cam.el), cam.target[2]+cam.dist*ce*Math.cos(cam.az));
+    c.lookAt(cam.target[0],cam.target[1],cam.target[2]);
+    R.api.update && R.api.update(dt,R.t);
+    R.renderer.render(R.scene,c);
+  }
+  function destroy(){
+    if(!R) return; cancelAnimationFrame(R.raf);
+    R.scene.traverse(ob=>{ if(ob.geometry) ob.geometry.dispose(); if(ob.material) [].concat(ob.material).forEach(m=>m.dispose()); });
+    R.renderer.dispose(); try{R.renderer.forceContextLoss();}catch(e){} R.renderer.domElement.remove(); R=null;
+  }
+  let drag=null;
+  stage.addEventListener("pointerdown",e=>{ drag={x:e.clientX,y:e.clientY}; stage.setPointerCapture?.(e.pointerId); });
+  stage.addEventListener("pointermove",e=>{ if(!drag) return; cam.az-=(e.clientX-drag.x)*0.008; cam.el=Math.max(-1.2,Math.min(1.35,cam.el+(e.clientY-drag.y)*0.006)); drag={x:e.clientX,y:e.clientY}; });
+  const end=()=>{drag=null;}; stage.addEventListener("pointerup",end); stage.addEventListener("pointercancel",end); stage.addEventListener("pointerleave",end);
+  new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?init():destroy()),{rootMargin:"150px 0px"}).observe(host);
+  if(window.ResizeObserver) new ResizeObserver(resize).observe(stage);
+  return {state};
+}
+function stageHTML(hud=true){ return `<div class="stagebox"><div class="stage"></div>${hud?`<div class="hud"></div>`:""}<span class="drag-hint">drag to rotate</span></div>`; }
+function controls(host, items){ // items: [{id,label,type:'btn'|'toggle'|'range',...}]
+  const box=document.createElement("div"); box.className="vcontrols"; host.appendChild(box); return box;
+}
+
+/* ---------- impeller builder (Day 2 + hero) ---------- */
+function bladeShape(r1,r2,sweep,th){
+  const s=new THREE.Shape(), N=14, L=[],Rr=[];
+  for(let i=0;i<=N;i++){ const r=r1+(r2-r1)*i/N, ph=-sweep*(i/N)**1.2; L.push([r*Math.cos(ph+th/r), r*Math.sin(ph+th/r)]); Rr.push([r*Math.cos(ph-th/r), r*Math.sin(ph-th/r)]); }
+  s.moveTo(L[0][0],L[0][1]); L.forEach(p=>s.lineTo(p[0],p[1])); Rr.reverse().forEach(p=>s.lineTo(p[0],p[1])); s.closePath(); return s;
+}
+function buildImpeller(ctx, opt={}){
+  const T=THREE, {root,state}=ctx;
+  state.speed??=1.7; state.focus??="none"; state.shroud??=true;
+  const g=new T.Group(); root.add(g); g.rotation.y=0; g.position.set(-0.35,-0.45,0);
+  const R1=0.45,R2=1.6,H=0.34,RD=2.35;
+  const imp=new T.Group(); g.add(imp);
+  const backM=mat("steel"); const back=new T.Mesh(new T.CylinderGeometry(R2,R2,0.08,72),backM); back.rotation.x=Math.PI/2; back.position.z=-0.04; imp.add(back);
+  const hub=new T.Mesh(new T.CylinderGeometry(0.22,0.42,0.55,36),mat("dark")); hub.rotation.x=Math.PI/2; hub.position.z=0.2; imp.add(hub);
+  const bladeM=mat("accent"); const bs=bladeShape(R1,R2,1.0,0.035); const bg=new T.ExtrudeGeometry(bs,{depth:H,bevelEnabled:false});
+  for(let i=0;i<9;i++){ const m=new T.Mesh(bg,bladeM); m.rotation.z=i*Math.PI*2/9; imp.add(m); }
+  const shroudM=mat("glass",0xd4e6f7); shroudM.opacity=.28; const shroud=new T.Mesh(new T.RingGeometry(0.62,R2,72,1),shroudM); shroud.position.z=H; imp.add(shroud);
+  const eyeRing=new T.Mesh(new T.TorusGeometry(0.62,0.03,10,60),mat("dark")); eyeRing.position.z=H; imp.add(eyeRing);
+  const shaft=new T.Mesh(new T.CylinderGeometry(0.13,0.13,1.6,24),mat("dark")); shaft.rotation.x=Math.PI/2; shaft.position.z=-0.85; g.add(shaft);
+  // diffuser plates
+  const difM=mat("glass",0x7fb0e0); difM.opacity=.22;
+  const dA=new T.Mesh(new T.RingGeometry(R2+0.05,RD,72,1),difM); dA.position.z=-0.03; g.add(dA);
+  const dB=new T.Mesh(new T.RingGeometry(R2+0.05,RD,72,1),difM); dB.position.z=H+0.03; g.add(dB);
+  // volute sweep
+  const zc=H/2, NS=90, NC=20, pos=[], idx=[];
+  const rt=th=>0.17+0.33*(th/(Math.PI*2)), rc=th=>RD+rt(th)-0.02;
+  for(let i=0;i<=NS;i++){ const th=i/NS*Math.PI*2, c=Math.cos(th), s=Math.sin(th), R=rc(th), r=rt(th);
+    for(let j=0;j<=NC;j++){ const a=j/NC*Math.PI*2; const u=Math.cos(a)*r, w=Math.sin(a)*r; pos.push((R+u)*c,(R+u)*s,zc+w); } }
+  for(let i=0;i<NS;i++) for(let j=0;j<NC;j++){ const a=i*(NC+1)+j,b=a+NC+1; idx.push(a,b,a+1,b,b+1,a+1); }
+  const vg=new T.BufferGeometry(); vg.setAttribute("position",new T.Float32BufferAttribute(pos,3)); vg.setIndex(idx); vg.computeVertexNormals();
+  const volM=mat("glass",0x9cc2e6); volM.opacity=.2; const vol=new T.Mesh(vg,volM); g.add(vol);
+  const volEdge=new T.LineSegments(new T.EdgesGeometry(vg,25),new T.LineBasicMaterial({color:0x6f93b5,transparent:true,opacity:.35})); g.add(volEdge);
+  const rEnd=rt(Math.PI*2), RcEnd=rc(Math.PI*2);
+  const pipe=new T.Mesh(new T.CylinderGeometry(rEnd,rEnd,2.3,32,1,true),volM); pipe.position.set(RcEnd,1.15,zc); g.add(pipe);
+  const inlet=new T.Mesh(new T.CylinderGeometry(0.62,0.62,1.9,40,1,true),volM); inlet.rotation.x=Math.PI/2; inlet.position.z=H+0.95; g.add(inlet);
+  // particles
+  const N=opt.n||240; const sph=new T.SphereGeometry(1,8,6); const pm=new T.MeshStandardMaterial({roughness:.5,metalness:0});
+  const inst=new T.InstancedMesh(sph,pm,N); g.add(inst);
+  const col=new T.Color(), dummy=new T.Object3D(); const P=[];
+  function spawn(p){ p.s=0; p.rin=Math.sqrt(Math.random())*0.48; p.th=Math.random()*Math.PI*2; p.z=H+1.9-Math.random()*0.2; p.a=(Math.random()-.5)*1.4; p.b=(Math.random()-.5)*1.4; p.y=0; p.k=0; }
+  for(let i=0;i<N;i++){ const p={}; spawn(p); p.z=H+0.2+Math.random()*1.7; P.push(p); }
+  function step(dt){
+    const w=state.speed, sf=Math.max(0.15,w/1.7);
+    for(const p of P){
+      if(p.s===0){ p.z-=1.3*dt*sf; if(p.z<=H*0.5){ p.s=1; p.r=R1; } }
+      else if(p.s===1){ p.th+=w*dt; p.r+=(0.35+0.7*p.r)*dt*sf; if(p.r>=R2){ p.s=2; } }
+      else if(p.s===2){ p.th+=w*R2/p.r*0.42*dt; p.r+=0.42*dt*sf; if(p.r>=RD){ p.s=3; p.k=Math.floor(p.th/(Math.PI*2)); } }
+      else if(p.s===3){ p.th+=0.85*dt*sf; if(Math.floor(p.th/(Math.PI*2))>p.k){ p.s=4; p.y=0; } }
+      else { p.y+=1.15*dt*sf; if(p.y>2.25) spawn(p); }
+    }
+  }
+  for(let k=0;k<500;k++) step(1/60);
+  const highlight={eye:[eyeRing.material,hub.material],impeller:[bladeM],diffuser:[difM],volute:[volM]};
+  function setFocus(){ Object.entries(highlight).forEach(([k,ms])=>ms.forEach(m=>{ const on=state.focus===k; if(m.emissive) m.emissive.setHex(on?0x553311:0x000000); if(m.transparent){ m.opacity = on? .45 : (m===difM?.22:.2); } })); }
+  let lastFocus=null;
+  return { update(dt){
+    imp.rotation.z+=state.speed*dt; shroud.visible=state.shroud; eyeRing.visible=state.shroud;
+    if(lastFocus!==state.focus){ setFocus(); lastFocus=state.focus; }
+    step(dt);
+    for(let i=0;i<N;i++){ const p=P[i]; let x,y,z,v,pr;
+      if(p.s===0){ x=p.rin*Math.cos(p.th); y=p.rin*Math.sin(p.th); z=p.z; v=.12; pr=.25; }
+      else if(p.s===1){ const f=(p.r-R1)/(R2-R1); x=p.r*Math.cos(p.th); y=p.r*Math.sin(p.th); z=H*0.5+p.a*0.08; v=.2+.8*f; pr=.3+.3*f; }
+      else if(p.s===2){ const f=(p.r-R2)/(RD-R2); x=p.r*Math.cos(p.th); y=p.r*Math.sin(p.th); z=H*0.5+p.a*0.1; v=1-.7*f; pr=.6+.3*f; }
+      else if(p.s===3){ const th=p.th%(Math.PI*2), r=rt(th)*0.75, R=rc(th)+p.a*r*0.5; x=R*Math.cos(th); y=R*Math.sin(th); z=zc+p.b*r*0.5; v=.28; pr=.92; }
+      else { x=RcEnd+p.a*rEnd*0.5; y=p.y; z=zc+p.b*rEnd*0.5; v=.25; pr=1; }
+      dummy.position.set(x,y,z); const sc=0.028+0.032*pr; dummy.scale.set(sc,sc,sc); dummy.updateMatrix(); inst.setMatrixAt(i,dummy.matrix); inst.setColorAt(i,lerpColor(col,v));
+    }
+    inst.instanceMatrix.needsUpdate=true; if(inst.instanceColor) inst.instanceColor.needsUpdate=true;
+  }};
+}
+
+/* ---------- other 3D builders ---------- */
+const BUILD={
+string(ctx){
+  const T=THREE,{root,state,host}=ctx; state.cut??=false;
+  const hud=$(".hud",host);
+  const grid=new T.PolarGridHelper(3.2,12,4,64,0x8899aa,0x8899aa); grid.material.transparent=true; grid.material.opacity=.25; root.add(grid);
+  const pivot=new T.Mesh(new T.SphereGeometry(0.09,16,12),mat("dark")); root.add(pivot);
+  const ball=new T.Mesh(new T.SphereGeometry(0.22,32,20),mat("accent")); root.add(ball);
+  const lineG=new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]); const line=new T.Line(lineG,new T.LineBasicMaterial({color:0x445566})); root.add(line);
+  const vArrow=new T.ArrowHelper(new T.Vector3(1,0,0),new T.Vector3(),1,0xe0631f,0.25,0.15); root.add(vArrow);
+  const fArrow=new T.ArrowHelper(new T.Vector3(1,0,0),new T.Vector3(),1,0x2f74b5,0.25,0.15); root.add(fArrow);
+  const trail=[]; const trG=new T.BufferGeometry(); const trL=new T.Line(trG,new T.LineBasicMaterial({color:0xe0631f,transparent:true,opacity:.5})); root.add(trL);
+  const Rr=2, w=1.6; let th=0, free=null, ft=0;
+  return {update(dt){
+    if(state.cut && !free){ free={p:new T.Vector3(Rr*Math.cos(th),0,-Rr*Math.sin(th)), v:new T.Vector3(-Math.sin(th),0,-Math.cos(th)).multiplyScalar(Rr*w)}; ft=0; }
+    if(!state.cut && free){ free=null; trail.length=0; }
+    let p;
+    if(!free){ th+=w*dt; p=new T.Vector3(Rr*Math.cos(th),0,-Rr*Math.sin(th)); line.visible=true; fArrow.visible=true;
+      line.geometry.setFromPoints([new T.Vector3(),p]);
+      fArrow.position.copy(p); fArrow.setDirection(p.clone().negate().normalize()); fArrow.setLength(0.9,0.22,0.14);
+      vArrow.position.copy(p); vArrow.setDirection(new T.Vector3(-Math.sin(th),0,-Math.cos(th))); vArrow.setLength(1.1,0.22,0.14);
+      hud.innerHTML=`<span>String intact: centripetal pull (blue) bends the path</span><span>orange = direction the ball wants to go</span>`;
+    } else { ft+=dt; free.p.addScaledVector(free.v,dt); p=free.p; line.visible=false; fArrow.visible=false; vArrow.position.copy(p);
+      hud.innerHTML=`<span class="warn">String cut: no centripetal force</span><span>ball travels in a straight line (tangent)</span>`;
+      if(ft>2.6){ state.cut=false; const b=$('[data-act="cut"]',host); if(b) b.textContent="Cut the string"; } }
+    ball.position.copy(p);
+    trail.push(p.clone()); if(trail.length>90) trail.shift(); trG.setFromPoints(trail);
+  }};
+},
+disc(ctx){
+  const T=THREE,{root,state,host}=ctx; state.w??=1.4;
+  const hud=$(".hud",host);
+  const disc=new T.Group(); root.add(disc);
+  const plate=new T.Mesh(new T.CylinderGeometry(2.5,2.5,0.1,72),mat("steel")); plate.position.y=-0.05; disc.add(plate);
+  const bladeM=mat("accent");
+  for(let i=0;i<6;i++){ const b=new T.Mesh(new T.BoxGeometry(2.25,0.32,0.06),bladeM); const a=i*Math.PI/3; b.position.set(1.375*Math.cos(a),0.16,-1.375*Math.sin(a)); b.rotation.y=a; disc.add(b); }
+  const hub=new T.Mesh(new T.CylinderGeometry(0.22,0.22,0.36,24),mat("dark")); hub.position.y=0.18; disc.add(hub);
+  const mA=new T.Mesh(new T.SphereGeometry(0.09,12,10),mat("blue")); mA.position.set(2.35*Math.cos(0.5),0.06,-2.35*Math.sin(0.5)); disc.add(mA);
+  const mB=new T.Mesh(new T.SphereGeometry(0.09,12,10),mat("blue")); mB.position.set(0.9*Math.cos(0.5),0.06,-0.9*Math.sin(0.5)); disc.add(mB);
+  const ballM=mat("accent",0x2f74b5); const ball=new T.Mesh(new T.SphereGeometry(0.15,24,16),ballM); root.add(ball);
+  const trail=[]; const trG=new T.BufferGeometry(); root.add(new T.Line(trG,new T.LineBasicMaterial({color:0x2f74b5,transparent:true,opacity:.6})));
+  let ang=0, r=0.35, rv=0, free=null; const off=0.13; const col=new T.Color();
+  function reset(){ r=0.35; rv=0; free=null; trail.length=0; }
+  state.reset=reset;
+  return {update(dt){
+    const w=state.w; ang+=w*dt; disc.rotation.y=ang;
+    let p, speed;
+    if(!free){ rv+=w*w*r*dt; r+=rv*dt; const a=ang-off/Math.max(r,.3); // trailing side of blade 0
+      p=new T.Vector3(r*Math.cos(a),0.15,-r*Math.sin(a)); speed=Math.hypot(w*r,rv);
+      if(r>2.5){ const t=new T.Vector3(-Math.sin(a),0,-Math.cos(a)).multiplyScalar(w*r), rd=new T.Vector3(Math.cos(a),0,-Math.sin(a)).multiplyScalar(rv); free={p:p.clone(),v:t.add(rd),t:0}; }
+    } else { free.t+=dt; free.p.addScaledVector(free.v,dt); p=free.p; speed=free.v.length(); if(free.t>1.6) reset(); }
+    ball.position.copy(p); lerpColor(col,speed/5,CBLUE,CORANGE); ballM.color.copy(col);
+    trail.push(p.clone()); if(trail.length>120) trail.shift(); trG.setFromPoints(trail);
+    hud.innerHTML=`<span>Ball distance from centre: ${free?"left the disc":(r).toFixed(2)+" m"}</span><span>Ball speed: ${speed.toFixed(2)} m/s</span><span>Rim marker A ${(w*2.35).toFixed(2)} m/s · inner marker B ${(w*0.9).toFixed(2)} m/s</span>`;
+  }};
+},
+impeller(ctx){ return buildImpeller(ctx,{}); },
+multistage(ctx){
+  const T=THREE,{root,state,host}=ctx; state.casing??=true;
+  const hud=$(".hud",host);
+  const g=new T.Group(); root.add(g);
+  const xs=[-1.65,-0.55,0.55,1.65];
+  const shaft=new T.Mesh(new T.CylinderGeometry(0.12,0.12,6.2,24),mat("dark")); shaft.rotation.z=Math.PI/2; g.add(shaft);
+  const rotor=new T.Group(); g.add(rotor);
+  const impM=mat("accent"); impM.transparent=true; impM.opacity=.55;
+  xs.forEach(x=>{ const d=new T.Mesh(new T.CylinderGeometry(0.95,0.95,0.16,48),impM); d.rotation.z=Math.PI/2; d.position.x=x; rotor.add(d);
+    for(let i=0;i<10;i++){ const b=new T.Mesh(new T.BoxGeometry(0.26,0.6,0.04),mat("steel")); const a=i*Math.PI/5; b.position.set(x,0.62*Math.cos(a),0.62*Math.sin(a)); b.rotation.x=-a; rotor.add(b);} });
+  const diaM=mat("glass",0x8fb6dc); diaM.opacity=.25;
+  xs.forEach((x,k)=>{ if(k<3){ const r=new T.Mesh(new T.RingGeometry(0.22,1.5,60),diaM); r.rotation.y=Math.PI/2; r.position.x=x+0.55; g.add(r);} });
+  const casM=mat("glass",0xa9c6e4); casM.opacity=.14;
+  const cas=new T.Mesh(new T.CylinderGeometry(1.62,1.62,5.4,64,1,true),casM); cas.rotation.z=Math.PI/2; g.add(cas);
+  const noz1=new T.Mesh(new T.CylinderGeometry(0.42,0.42,1.2,32,1,true),casM); noz1.position.set(-2.55,2.1,0); g.add(noz1);
+  const noz2=new T.Mesh(new T.CylinderGeometry(0.35,0.35,1.2,32,1,true),casM); noz2.position.set(2.55,2.1,0); g.add(noz2);
+  // path in (x,r)
+  const pts=[[-2.55,2.7],[-2.55,1.25],[-2.25,0.5],[xs[0]-0.25,0.3]];
+  xs.forEach((x,k)=>{ pts.push([x-0.04,0.32],[x,0.95],[x+0.04,1.4]); if(k<3) pts.push([x+0.33,1.48],[x+0.5,1.2],[x+0.5,0.42],[xs[k+1]-0.25,0.3]); else pts.push([x+0.45,1.45],[2.55,1.3],[2.55,2.7]); });
+  const seg=[]; let L=0; for(let i=0;i<pts.length-1;i++){ const a=pts[i],b=pts[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]); seg.push({a,b,l,s0:L}); L+=l; }
+  function at(s){ let i=seg.findIndex(q=>s<=q.s0+q.l); if(i<0) i=seg.length-1; const q=seg[i],f=(s-q.s0)/q.l; return [q.a[0]+(q.b[0]-q.a[0])*f, q.a[1]+(q.b[1]-q.a[1])*f, i]; }
+  const N=340, inst=new T.InstancedMesh(new T.SphereGeometry(1,8,6),new T.MeshStandardMaterial({roughness:.5}),N); g.add(inst);
+  const P=[]; for(let i=0;i<N;i++) P.push({s:Math.random()*L,ph:Math.random()*Math.PI*2,j:(Math.random()-.5)*0.25});
+  const col=new T.Color(), dm=new T.Object3D();
+  const presses=[14.7,20.6,28.8,40.3,56.5];
+  hud.innerHTML=`<span>Colour = pressure: blue low → red high</span><span>${presses.map(p=>p).join(" → ")} psia</span>`;
+  return {update(dt){
+    rotor.rotation.x+=2.2*dt; cas.visible=state.casing; noz1.visible=noz2.visible=state.casing;
+    for(let i=0;i<N;i++){ const p=P[i]; const [x0,r0,si]=at(p.s); const q=seg[si];
+      const inImp = q.a[1]<0.4 && q.b[1]>0.9; const spd = inImp?1.5:(q.b[1]>q.a[1]+0.3||q.a[1]>q.b[1]+0.3?0.9:0.6);
+      p.s+=spd*dt; if(p.s>=L){ p.s=0; }
+      if(inImp) p.ph+=2.2*dt;
+      const nozzle = Math.abs(x0)>2.4 && r0>1.2;
+      let x=x0,y,z; if(nozzle){ y=r0; z=p.j; x=x0+p.j*0.6; } else { const ph = (si<3)? (Math.PI/2*(1-Math.min(1,p.s/ (seg[3].s0))) + p.ph*Math.min(1,p.s/seg[3].s0)) : p.ph; y=r0*Math.cos(ph); z=r0*Math.sin(ph); if(si>=seg.length-3){ y=Math.abs(y); } }
+      // stage pressure index
+      let pi=0; xs.forEach(xx=>{ if(x0>xx-0.02 && !(si<3)) pi+= (x0>xx+0.04?1:(r0-0.32)/0.63*0.6); });
+      if(x0>xs[3]+0.04) pi=4;
+      const t=Math.min(1,pi/4); if(t<.5) lerpColor(col,t*2,CBLUE,CORANGE); else lerpColor(col,(t-.5)*2,CORANGE,CRED);
+      dm.position.set(x,y,z); const sc=0.05; dm.scale.set(sc,sc,sc); dm.updateMatrix(); inst.setMatrixAt(i,dm.matrix); inst.setColorAt(i,col);
+    }
+    inst.instanceMatrix.needsUpdate=true; inst.instanceColor.needsUpdate=true;
+  }};
+},
+axial(ctx){
+  const T=THREE,{root,state,host}=ctx; state.w??=2.4;
+  const hud=$(".hud",host);
+  const g=new T.Group(); root.add(g);
+  const X0=-2.6,X1=2.6; const drumR=x=>0.55+0.22*(x-X0)/(X1-X0), casR=x=>1.35-0.25*(x-X0)/(X1-X0);
+  const drum=new T.Mesh(new T.CylinderGeometry(drumR(X1),drumR(X0),X1-X0,48),mat("dark")); drum.rotation.z=Math.PI/2; drum.rotation.y=0; drum.scale.y=1; g.add(drum); drum.rotation.z=-Math.PI/2;
+  const shaft=new T.Mesh(new T.CylinderGeometry(0.16,0.16,6.6,20),mat("dark")); shaft.rotation.z=Math.PI/2; g.add(shaft);
+  const casM=mat("glass",0xa9c6e4); casM.opacity=.16; const cas=new T.Mesh(new T.CylinderGeometry(casR(X1),casR(X0),X1-X0,64,1,true),casM); cas.rotation.z=-Math.PI/2; g.add(cas);
+  const rotor=new T.Group(); g.add(rotor);
+  const rM=mat("accent"), sM=mat("steel");
+  const rows=[]; for(let k=0;k<6;k++){ rows.push({x:-2.2+k*0.8,rot:true}); if(k<5) rows.push({x:-1.8+k*0.8,rot:false}); }
+  rows.forEach(rw=>{ const r0=drumR(rw.x)+0.02, r1=casR(rw.x)-0.03, h=r1-r0, rm=(r0+r1)/2; const n=rw.rot?18:20;
+    const geo=new T.BoxGeometry(0.22,h,0.025);
+    for(let i=0;i<n;i++){ const pv=new T.Group(); pv.rotation.x=i*Math.PI*2/n; const b=new T.Mesh(geo,rw.rot?rM:sM); b.position.y=rm; b.rotation.y=rw.rot?0.6:-0.6; pv.add(b); pv.position.x=rw.x; (rw.rot?rotor:g).add(pv);} });
+  const N=320, inst=new T.InstancedMesh(new T.SphereGeometry(1,8,6),new T.MeshStandardMaterial({roughness:.5}),N); g.add(inst);
+  const P=[]; for(let i=0;i<N;i++) P.push({x:-3.2+Math.random()*6.4,ph:Math.random()*Math.PI*2,f:Math.random()});
+  const col=new T.Color(), dm=new T.Object3D();
+  hud.innerHTML=`<span>Orange = rotor rows (on shaft, spin)</span><span>Grey = stator rows (on casing, fixed)</span><span>Particles crowd together → pressure rises</span>`;
+  return {update(dt){
+    const w=state.w; rotor.rotation.x+=w*dt; const sf=w/2.4;
+    for(let i=0;i<N;i++){ const p=P[i]; const fr=Math.max(0,Math.min(1,(p.x-X0)/(X1-X0)));
+      p.x+=(1.25-0.75*fr)*dt*sf; if(p.x>3.2){ p.x=-3.2; p.ph=Math.random()*Math.PI*2; }
+      const inside=p.x>X0&&p.x<X1; const x=Math.max(X0,Math.min(X1,p.x));
+      const r0=drumR(x)+0.05, r1=casR(x)-0.05, r=r0+(r1-r0)*p.f;
+      if(inside){ const k=((p.x+2.2)/0.8)%1; if(k<0.25) p.ph+=0.9*w*dt*0.3; }
+      dm.position.set(p.x, r*Math.cos(p.ph), r*Math.sin(p.ph)); const sc=0.042; dm.scale.set(sc,sc,sc); dm.updateMatrix(); inst.setMatrixAt(i,dm.matrix);
+      if(fr<.5) lerpColor(col,fr*2,CBLUE,CORANGE); else lerpColor(col,(fr-.5)*2,CORANGE,CRED); inst.setColorAt(i,col);
+    }
+    inst.instanceMatrix.needsUpdate=true; inst.instanceColor.needsUpdate=true;
+  }};
+},
+casings(ctx){
+  const T=THREE,{root,state,host}=ctx; state.mode??="h"; state.open??=false;
+  const hud=$(".hud",host);
+  const L=4.4, r=1.25;
+  function rotorBundle(){ const b=new T.Group(); const s=new T.Mesh(new T.CylinderGeometry(0.11,0.11,L+1.6,20),mat("dark")); s.rotation.z=Math.PI/2; b.add(s);
+    for(let i=0;i<5;i++){ const d=new T.Mesh(new T.CylinderGeometry(0.85,0.85,0.2,40),mat("accent")); d.rotation.z=Math.PI/2; d.position.x=-1.6+i*0.8; b.add(d);} return b; }
+  const caseM=mat("steel",0x9aabba); caseM.side=T.DoubleSide;
+  const jointM=new T.MeshBasicMaterial({color:0xff6a1a});
+  // horizontal
+  const H=new T.Group(); root.add(H);
+  const top=new T.Group(), bot=new T.Group(); H.add(top,bot);
+  const half=(t0)=>{ const gg=new T.CylinderGeometry(r,r,L,56,1,true,t0,Math.PI); gg.rotateZ(Math.PI/2); return gg; };
+  top.add(new T.Mesh(half(0),caseM)); bot.add(new T.Mesh(half(Math.PI),caseM));
+  const capG=(t0,x)=>{ const gg=new T.RingGeometry(0.13,r,48,1,t0,Math.PI); gg.rotateY(Math.PI/2); gg.translate(x,0,0); return gg; };
+  top.add(new T.Mesh(capG(0,L/2),caseM),new T.Mesh(capG(0,-L/2),caseM)); bot.add(new T.Mesh(capG(Math.PI,L/2),caseM),new T.Mesh(capG(Math.PI,-L/2),caseM));
+  [1,-1].forEach(sg=>{ const ft=new T.Mesh(new T.BoxGeometry(L,0.08,0.32),caseM); ft.position.set(0,0.04,sg*(r+0.14)); top.add(ft); const fb=ft.clone(); fb.position.y=-0.04; bot.add(fb);
+    const j=new T.Mesh(new T.BoxGeometry(L,0.02,0.34),jointM); j.position.set(0,0,sg*(r+0.14)); H.add(j);
+    for(let i=0;i<9;i++){ const bolt=new T.Mesh(new T.CylinderGeometry(0.04,0.04,0.22,8),mat("dark")); bolt.position.set(-L/2+0.25+i*(L-0.5)/8,0.06,sg*(r+0.2)); top.add(bolt);} });
+  const n1=new T.Mesh(new T.CylinderGeometry(0.35,0.35,0.7,24),caseM); n1.position.set(-1.3,r+0.2,0); top.add(n1); const n2=n1.clone(); n2.position.x=1.3; top.add(n2);
+  const hRotor=rotorBundle(); H.add(hRotor);
+  // vertical (barrel)
+  const V=new T.Group(); root.add(V);
+  const barrel=new T.Mesh(new T.CylinderGeometry(r,r,L,56,1,true),caseM); barrel.rotation.z=Math.PI/2; V.add(barrel);
+  const endA=new T.Mesh(new T.CylinderGeometry(r+0.12,r+0.12,0.22,56),caseM); endA.rotation.z=Math.PI/2; endA.position.x=-L/2-0.05; V.add(endA);
+  const cover=new T.Group(); V.add(cover); const cv=new T.Mesh(new T.CylinderGeometry(r+0.12,r+0.12,0.26,56),caseM); cv.rotation.z=Math.PI/2; cover.add(cv);
+  for(let i=0;i<14;i++){ const a=i/14*Math.PI*2; const bolt=new T.Mesh(new T.CylinderGeometry(0.04,0.04,0.32,8),mat("dark")); bolt.rotation.z=Math.PI/2; bolt.position.set(0,(r+0.02)*Math.cos(a),(r+0.02)*Math.sin(a)); cover.add(bolt);}
+  cover.position.x=L/2+0.08;
+  const jA=new T.Mesh(new T.TorusGeometry(r+0.02,0.025,8,64),jointM); jA.rotation.y=Math.PI/2; jA.position.x=L/2-0.04; V.add(jA);
+  const jB=jA.clone(); jB.position.x=-L/2+0.06; V.add(jB);
+  const vn1=new T.Mesh(new T.CylinderGeometry(0.33,0.33,0.7,24),caseM); vn1.position.set(-1.3,r+0.2,0); V.add(vn1); const vn2=vn1.clone(); vn2.position.x=1.3; V.add(vn2);
+  const vRotor=rotorBundle(); V.add(vRotor);
+  const diaStack=new T.Mesh(new T.CylinderGeometry(1.05,1.05,L-0.4,40,1,true),(()=>{const m=mat("glass",0x8fb6dc);m.opacity=.3;return m;})()); diaStack.rotation.z=Math.PI/2; vRotor.add(diaStack);
+  let u=0;
+  return {update(dt){
+    H.visible=state.mode==="h"; V.visible=state.mode==="v";
+    u+= (state.open?1:-1)*dt*0.7; u=Math.max(0,Math.min(1,u));
+    const e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+    top.position.y=e*2.1; hRotor.rotation.x+=state.open?0:1.5*dt; vRotor.rotation.x+=state.open?0:1.5*dt;
+    const ec=Math.min(1,e*2), eb=Math.max(0,e*2-1);
+    cover.position.x=L/2+0.08+ec*1.2; vRotor.position.x=eb*3.6;
+    hud.innerHTML= state.mode==="h"
+      ? `<span>Joint (orange): runs the full length on both sides</span><span>${state.open?"Top half lifted: every part reachable":"Two halves bolted at shaft height"}</span>`
+      : `<span>Joints (orange): only the two end rings</span><span>${state.open?"Cover pulled, bundle withdrawn from the barrel":"Barrel sealed by bolted end covers"}</span>`;
+  }};
+},
+imptypes(ctx){
+  const T=THREE,{root,state,host}=ctx; state.type??="open";
+  const g=new T.Group(); root.add(g);
+  const bM=mat("accent"), pM=mat("steel");
+  const bs=bladeShape(0.32,1.55,1.0,0.04); const bg=new T.ExtrudeGeometry(bs,{depth:0.5,bevelEnabled:false});
+  for(let i=0;i<11;i++){ const m=new T.Mesh(bg,bM); m.rotation.z=i*Math.PI*2/11; g.add(m);}
+  const hub=new T.Mesh(new T.CylinderGeometry(0.2,0.36,0.75,28),mat("dark")); hub.rotation.x=Math.PI/2; hub.position.z=0.25; g.add(hub);
+  const back=new T.Mesh(new T.CylinderGeometry(1.58,1.58,0.08,72),pM); back.rotation.x=Math.PI/2; back.position.z=-0.04; g.add(back);
+  const shroudG=new T.RingGeometry(0.62,1.58,72,1); const shroud=new T.Mesh(shroudG,(()=>{const m=mat("steel",0xb7c5d2);m.side=T.DoubleSide;return m;})()); shroud.position.z=0.5; g.add(shroud);
+  const eye=new T.Mesh(new T.CylinderGeometry(0.62,0.62,0.18,48,1,true),shroud.material); eye.rotation.x=Math.PI/2; eye.position.z=0.59; g.add(eye);
+  g.rotation.x=-0.25;
+  return {update(dt){ g.rotation.z+=1.0*dt; back.visible=state.type!=="open"; shroud.visible=eye.visible=state.type==="enclosed"; }};
+},
+bearings(ctx){
+  const T=THREE,{root,state,host}=ctx; state.journal??=false; state.thrust??=false;
+  const hud=$(".hud",host);
+  const rot=new T.Group(); root.add(rot);
+  const shaft=new T.Mesh(new T.CylinderGeometry(0.2,0.2,5.2,32),mat("steel")); shaft.rotation.z=Math.PI/2; rot.add(shaft);
+  const imp=new T.Mesh(new T.CylinderGeometry(0.95,0.95,0.26,48),mat("accent")); imp.rotation.z=Math.PI/2; imp.position.x=-0.3; rot.add(imp);
+  const mark=new T.Mesh(new T.BoxGeometry(0.28,0.1,0.1),mat("dark")); mark.position.set(-0.3,0.9,0); rot.add(mark);
+  const collar=new T.Mesh(new T.CylinderGeometry(0.55,0.55,0.14,40),mat("dark")); collar.rotation.z=Math.PI/2; collar.position.x=1.45; rot.add(collar);
+  // journal bearings (static)
+  const J=new T.Group(); root.add(J);
+  const padM=mat("blue",0x3c7fc0); const oilM=new T.MeshBasicMaterial({color:0xf2b233,transparent:true,opacity:.45});
+  [-2.0,2.15].forEach(x=>{ const hs=new T.Mesh(new T.CylinderGeometry(0.42,0.42,0.42,40,1,true),(()=>{const m=mat("steel",0x7d8d9c);m.side=T.DoubleSide;return m;})()); hs.rotation.z=Math.PI/2; hs.position.x=x; J.add(hs);
+    for(let i=0;i<4;i++){ const a=i*Math.PI/2+Math.PI/4; const p=new T.Mesh(new T.BoxGeometry(0.4,0.07,0.22),padM); p.position.set(x,0.29*Math.cos(a),0.29*Math.sin(a)); p.rotation.x=-a; J.add(p);}
+    const film=new T.Mesh(new T.CylinderGeometry(0.235,0.235,0.4,32,1,true),oilM); film.rotation.z=Math.PI/2; film.position.x=x; J.add(film);
+    const ped=new T.Mesh(new T.BoxGeometry(0.4,0.9,0.8),mat("dark")); ped.position.set(x,-0.85,0); J.add(ped); });
+  const TH=new T.Group(); root.add(TH);
+  [-1,1].forEach(s=>{ for(let i=0;i<6;i++){ const a=i*Math.PI/3; const sh=new T.Mesh(new T.BoxGeometry(0.08,0.22,0.3),padM); sh.position.set(1.45+s*0.13,0.4*Math.cos(a),0.4*Math.sin(a)); sh.rotation.x=-a; TH.add(sh);} });
+  const thh=new T.Mesh(new T.CylinderGeometry(0.75,0.75,0.5,40,1,true),(()=>{const m=mat("glass",0x9fb4c8);m.opacity=.25;return m;})()); thh.rotation.z=Math.PI/2; thh.position.x=1.45; TH.add(thh);
+  const aArr=new T.ArrowHelper(new T.Vector3(1,0,0),new T.Vector3(2.9,0,0),0.9,0xe0631f,0.25,0.16); root.add(aArr);
+  const rArr=new T.ArrowHelper(new T.Vector3(0,1,0),new T.Vector3(-2.7,0.3,0),0.7,0x2f74b5,0.22,0.14); root.add(rArr);
+  let ax=0, rx=0;
+  return {update(dt,t){
+    J.visible=state.journal; TH.visible=state.thrust;
+    const tA=state.thrust?0:0.28*Math.sin(t*2.4), wr=state.journal?0:0.17;
+    ax+= (tA-ax)*Math.min(1,dt*6); rx+=(wr-rx)*Math.min(1,dt*4);
+    rot.position.set(ax, rx*Math.cos(t*7), rx*Math.sin(t*7));
+    rot.rotation.x+=6*dt;
+    aArr.visible=!state.thrust; rArr.visible=!state.journal;
+    aArr.setDirection(new T.Vector3(Math.sign(Math.cos(t*2.4))||1,0,0));
+    hud.innerHTML=`<span class="ok">Rotation: free (wanted)</span><span class="${state.thrust?"ok":"warn"}">Axial / thrust: ${state.thrust?"stopped by thrust bearing":"free, rotor shuttles end to end"}</span><span class="${state.journal?"ok":"warn"}">Radial: ${state.journal?"stopped by journal bearings":"free, shaft whirls off-centre"}</span>`;
+  }};
+},
+overspeed(ctx){
+  const T=THREE,{root,state,host}=ctx; state.speed??=100; state.tripped??=false;
+  const hud=$(".hud",host);
+  const g=new T.Group(); root.add(g);
+  const disc=new T.Group(); g.add(disc);
+  const dM=mat("steel",0xaab9c7); dM.transparent=true; dM.opacity=.55;
+  const body=new T.Mesh(new T.CylinderGeometry(1.1,1.1,0.6,64),dM); body.rotation.x=Math.PI/2; disc.add(body);
+  const bore=new T.Mesh(new T.BoxGeometry(1.1,0.22,0.24),mat("dark",0x2a3540)); bore.position.x=0.55; disc.add(bore);
+  const weight=new T.Mesh(new T.CylinderGeometry(0.11,0.11,0.36,20),mat("accent")); weight.rotation.z=Math.PI/2; disc.add(weight);
+  const coil=[]; for(let i=0;i<=120;i++){ const f=i/120; coil.push(new T.Vector3(f,0.09*Math.cos(f*Math.PI*16),0.09*Math.sin(f*Math.PI*16))); }
+  const spring=new T.Line(new T.BufferGeometry().setFromPoints(coil),new T.LineBasicMaterial({color:0x2f74b5})); disc.add(spring);
+  const shaftL=new T.Mesh(new T.CylinderGeometry(0.35,0.35,2.2,32),mat("dark")); shaftL.rotation.x=Math.PI/2; shaftL.position.z=-1.3; g.add(shaftL);
+  // trip arm at angle -90deg (below)
+  const arm=new T.Group(); arm.position.set(0.25,-1.55,0.15); g.add(arm);
+  const armBar=new T.Mesh(new T.BoxGeometry(1.4,0.08,0.12),mat("blue")); armBar.position.x=0.7; arm.add(armBar);
+  const piv=new T.Mesh(new T.CylinderGeometry(0.07,0.07,0.3,12),mat("dark")); piv.rotation.x=Math.PI/2; arm.add(piv);
+  // valve
+  const valve=new T.Group(); valve.position.set(2.5,-1.0,0); g.add(valve);
+  const vb=new T.Mesh(new T.BoxGeometry(0.9,0.9,0.6),(()=>{const m=mat("glass",0x9fb4c8);m.opacity=.35;return m;})()); valve.add(vb);
+  const plug=new T.Mesh(new T.CylinderGeometry(0.22,0.22,0.3,24),mat("accent")); valve.add(plug);
+  const stem=new T.Mesh(new T.CylinderGeometry(0.04,0.04,1.0,8),mat("dark")); stem.position.y=0.6; valve.add(stem);
+  const pipeM=mat("glass",0x9fb4c8); pipeM.opacity=.25; const pipe=new T.Mesh(new T.CylinderGeometry(0.16,0.16,2.6,20,1,true),pipeM); pipe.rotation.z=Math.PI/2; pipe.position.set(2.5,-1.0,0); g.add(pipe);
+  const N=24, steam=new T.InstancedMesh(new T.SphereGeometry(0.06,8,6),new T.MeshStandardMaterial({color:0xdde7f0,transparent:true,opacity:.85}),N); g.add(steam);
+  const sx=[]; for(let i=0;i<N;i++) sx.push(Math.random()*2.6-1.3);
+  const dm=new T.Object3D(); let ang=0, wr=0.42, hit=false, plugY=0.3, armA=0;
+  state.reset=()=>{ state.tripped=false; hit=false; state.speed=100; wr=0.42; };
+  return {update(dt){
+    const sp=state.speed; const w=sp/100*3.2; ang+=w*dt; disc.rotation.z=ang;
+    const want = (sp>=110||hit)?1.24:0.42; wr+=(want-wr)*Math.min(1,dt*8);
+    weight.position.x=wr; spring.scale.x=Math.max(0.05,wr-0.18); spring.position.x=0;
+    const wa=ang%(Math.PI*2); const tipX=Math.cos(ang)*wr, tipY=Math.sin(ang)*wr;
+    if(!hit && wr>1.15 && tipY<-1.0 && tipX>0.1 && tipX<1.2){ hit=true; state.tripped=true; }
+    if(hit){ armA+=( -0.5-armA)*Math.min(1,dt*10); state.speed=Math.max(0,sp-28*dt); const sl=$('[data-act="speed"]',host); if(sl) { sl.value=Math.round(state.speed); sl.disabled=true; } }
+    else armA+=(0-armA)*Math.min(1,dt*6);
+    arm.rotation.z=armA;
+    const py = hit? -0.05 : 0.3; plugY+=(py-plugY)*Math.min(1,dt*8); plug.position.y=plugY; stem.position.y=plugY+0.55;
+    for(let i=0;i<N;i++){ if(!hit || sx[i]<-0.2) sx[i]+=dt*(hit? (sx[i]<-0.25?0:1.8):1.8); if(sx[i]>1.3) sx[i]=-1.3; if(hit&&sx[i]>-0.25&&sx[i]<0) sx[i]=-0.25;
+      dm.position.set(2.5+sx[i],-1.0+((i*37)%7-3)*0.025,((i*13)%5-2)*0.03); dm.scale.setScalar(hit&&sx[i]>0?0.001:1); dm.updateMatrix(); steam.setMatrixAt(i,dm.matrix); }
+    steam.instanceMatrix.needsUpdate=true;
+    hud.innerHTML=`<span>Turbine speed: ${Math.round(state.speed)}% of rated · trip set at 110%</span><span class="${hit?"warn":(sp>=110?"warn":"ok")}">${hit?"TRIPPED: weight hit trip arm, steam valve closed":sp>=110?"Overspeed! weight flying out…":"Weight held in by spring"}</span><span>Steam valve: ${hit?"CLOSED":"open"}</span>`;
+  }};
+}
+};
+
+/* =========================================================
+   2D / SVG VISUALS
+   ========================================================= */
+function setupCanvas(cv, ar){ const fit=()=>{ const w=cv.clientWidth||400, h=w*ar, d=Math.min(2,window.devicePixelRatio||1); cv.width=w*d; cv.height=h*d; cv.style.height=h+"px"; const c=cv.getContext("2d"); c.setTransform(d,0,0,d,0,0); cv._w=w; cv._h=h; }; fit(); if(window.ResizeObserver) new ResizeObserver(fit).observe(cv); return cv.getContext("2d"); }
+function whenVisible(el, start, stop){ new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?start():stop()),{rootMargin:"100px"}).observe(el); }
+function loopFn(fn){ let raf=0,last=0,on=false; const f=t=>{ if(!on) return; const dt=Math.min(.05,(t-last)/1000||0.016); last=t; fn(dt); raf=requestAnimationFrame(f); }; return {start(){ if(on) return; on=true; last=performance.now(); raf=requestAnimationFrame(f); }, stop(){ on=false; cancelAnimationFrame(raf); }}; }
+
+const VIZ2D={
+energy(m,fig){
+  m.innerHTML=`<div style="padding:12px 14px 0"><canvas class="c2d" aria-label="Particles flowing in a pipe"></canvas></div>
+  <div class="vcontrols"><label for="en-v">Flow speed <input id="en-v" type="range" min="0" max="100" value="30"></label><button class="btn small" id="en-w">Compressor does work (+ energy)</button><button class="btn small" id="en-r">Reset</button></div>
+  <div class="vcap" id="en-cap"></div>`;
+  const cv=$("canvas",m), c=setupCanvas(cv,0.48); let total=100, vshare=.3; const parts=[...Array(60)].map(()=>({x:Math.random(),y:Math.random()}));
+  const sl=$("#en-v",m), cap=$("#en-cap",m);
+  const upd=()=>{ vshare=sl.value/100; const pv=total*(1-vshare), vv=total*vshare; cap.innerHTML=`Total energy <b>${total.toFixed(0)}</b> = pressure <b>${pv.toFixed(0)}</b> + velocity <b>${vv.toFixed(0)}</b>. ${vshare<.05?"Gas is static: all of its energy is pressure.":total>100?"Work was added, so the total grew. The split between pressure and velocity can still move.":"No work done: moving the slider only trades pressure for velocity; the total never changes."}`; };
+  sl.oninput=upd; $("#en-w",m).onclick=()=>{ total=Math.min(200,total+35); upd(); }; $("#en-r",m).onclick=()=>{ total=100; sl.value=30; upd(); }; upd();
+  const L=loopFn(dt=>{
+    const W=cv._w,H=cv._h; c.clearRect(0,0,W,H);
+    const top=H*0.08, ph=H*0.46, bx=W*0.04, bw=W*0.92;
+    c.fillStyle=COL["surface-2"]; c.strokeStyle=COL.line; c.lineWidth=1.5; c.beginPath(); c.roundRect?c.roundRect(bx,top,bw,ph,ph/2):c.rect(bx,top,bw,ph); c.fill(); c.stroke();
+    const pv=total*(1-vshare)/100, vv=total*vshare/100;
+    parts.forEach(p=>{ p.x+=dt*(0.02+vv*0.9); if(p.x>1) p.x-=1; const jit=(1-vshare)*0.004*(Math.random()-.5);
+      const spread=0.85/(0.6+pv*0.5); const yy=0.5+(p.y-0.5)*Math.min(.85,spread);
+      c.fillStyle=COL.steel; c.beginPath(); c.arc(bx+10+p.x*(bw-20), top+ph*yy+jit*ph, 3+pv*1.6, 0, 7); c.fill();
+      if(vv>.15){ c.strokeStyle=COL.accent; c.globalAlpha=.5; c.beginPath(); c.moveTo(bx+10+p.x*(bw-20),top+ph*yy); c.lineTo(bx+10+p.x*(bw-20)-vv*26,top+ph*yy); c.stroke(); c.globalAlpha=1; } });
+    // bars
+    const by=top+ph+H*0.12, bh=H*0.13, full=bw*0.98; const scale=full/200;
+    c.font="600 11px "+getComputedStyle(document.body).getPropertyValue("--f-mono"); c.fillStyle=COL.muted; c.fillText("ENERGY",bx,by-6);
+    c.fillStyle=COL.steel; c.fillRect(bx,by,total*(1-vshare)*scale,bh); c.fillStyle=COL.accent; c.fillRect(bx+total*(1-vshare)*scale,by,total*vshare*scale,bh);
+    c.strokeStyle=COL.ink; c.setLineDash([4,4]); c.beginPath(); c.moveTo(bx+100*scale,by-4); c.lineTo(bx+100*scale,by+bh+4); c.stroke(); c.setLineDash([]);
+    c.fillStyle=COL.ink; c.fillText("pressure",bx+4,by+bh+16); c.fillStyle=COL.accent; c.fillText("velocity",bx+Math.max(70,total*(1-vshare)*scale+4),by+bh+16);
+    c.fillStyle=COL.muted; c.fillText("starting total",bx+100*scale+6,by-6);
+  });
+  whenVisible(fig,L.start,L.stop);
+},
+rcalc(m){
+  m.innerHTML=`<div class="calc"><div class="row">
+    <label for="rc-s">Suction gauge (psig)<input id="rc-s" type="number" step="0.1" value="0"></label>
+    <label for="rc-d">Discharge gauge (psig)<input id="rc-d" type="number" step="0.1" value="58.8"></label>
+    <label for="rc-a">Atmosphere (psi)<input id="rc-a" type="number" step="0.1" value="14.7"></label></div>
+    <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><span class="label">Ratio of compression</span><span class="big" id="rc-r">5.00</span></div>
+    <div class="steps" id="rc-steps"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-ex="0,58.8">Book: 0 → 58.8 psig</button><button class="btn small" data-ex="5.3,45.3">Book: 20 → 60 psia</button><button class="btn small" data-ex="20,20">Equal pressures</button></div>
+    <p class="vcap" style="padding:0" id="rc-note"></p></div>`;
+  const s=$("#rc-s",m),d=$("#rc-d",m),a=$("#rc-a",m);
+  const calc=()=>{ const A=+a.value||0, P1=(+s.value||0)+A, P2=(+d.value||0)+A; const R=P1>0?P2/P1:NaN; const g=(+s.value||0)!==0?((+d.value||0)/(+s.value)):NaN;
+    $("#rc-r",m).textContent=isFinite(R)?R.toFixed(2):"–";
+    $("#rc-steps",m).innerHTML=`P₁ = ${(+s.value).toFixed(1)} + ${A.toFixed(1)} = <b>${P1.toFixed(1)} psia</b><br>P₂ = ${(+d.value).toFixed(1)} + ${A.toFixed(1)} = <b>${P2.toFixed(1)} psia</b><br>R = ${P2.toFixed(1)} ÷ ${P1.toFixed(1)} = <b>${isFinite(R)?R.toFixed(2):"undefined"}</b>`;
+    $("#rc-note",m).innerHTML= R<=1? "R ≤ 1 means no compression is happening: during compression discharge is always higher, so R is always greater than 1." : `Using gauge numbers directly would give ${isFinite(g)?"<b>"+g.toFixed(2)+"</b>, which is wrong":"a division by zero"}. Always add the atmosphere first.`; };
+  [s,d,a].forEach(i=>i.oninput=calc); $$("[data-ex]",m).forEach(b=>b.onclick=()=>{ const [x,y]=b.dataset.ex.split(","); s.value=x; d.value=y; a.value=14.7; calc(); }); calc();
+},
+curve(m,fig){
+  m.innerHTML=`<div class="svgbox"><svg viewBox="0 0 520 330" role="img" aria-label="Head versus capacity curve with surge line"></svg></div>
+  <div class="vcontrols"><label for="cv-h">Head the system demands <input id="cv-h" type="range" min="95" max="108" step="0.5" value="100"></label><span class="mono" id="cv-val">100%</span></div>
+  <div class="vcap" id="cv-cap"></div>`;
+  const svg=$("svg",m); const X=c=>60+(c-40)/(110-40)*440, Y=h=>285-(h-80)/(120-80)*255;
+  const curve=[[48,105.2],[50,105],[60,104.6],[70,104],[80,103.2],[90,102],[100,100],[110,96]];
+  const capAt=h=>{ for(let i=curve.length-1;i>0;i--){ const [c1,h1]=curve[i-1],[c2,h2]=curve[i]; if(h<=h1&&h>=h2) return c1+(c2-c1)*(h1-h)/(h1-h2);} return h>105?null:110; };
+  let grid=""; for(let c=40;c<=110;c+=10) grid+=`<line x1="${X(c)}" y1="${Y(80)}" x2="${X(c)}" y2="${Y(120)}" stroke="var(--line)"/><text x="${X(c)}" y="${Y(80)+18}" text-anchor="middle" font-size="11" fill="var(--muted)">${c}</text>`;
+  for(let h=80;h<=120;h+=10) grid+=`<line x1="${X(40)}" y1="${Y(h)}" x2="${X(110)}" y2="${Y(h)}" stroke="var(--line)"/><text x="${X(40)-8}" y="${Y(h)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${h}</text>`;
+  svg.innerHTML=`${grid}
+   <text x="${X(75)}" y="322" text-anchor="middle" font-size="11" fill="var(--muted)">% OF RATED CAPACITY</text>
+   <text x="16" y="${Y(100)}" font-size="11" fill="var(--muted)" transform="rotate(-90 16 ${Y(100)})" text-anchor="middle">% RATED HEAD</text>
+   <line x1="${X(41.5)}" y1="${Y(88)}" x2="${X(58.5)}" y2="${Y(122)}" stroke="var(--bad)" stroke-width="2" stroke-dasharray="7 6" clip-path="url(#clp)"/>
+   <clipPath id="clp"><rect x="${X(40)}" y="${Y(120)}" width="440" height="255"/></clipPath>
+   <text x="${X(52.5)}" y="${Y(116)}" font-size="12" font-weight="700" fill="var(--bad)">SURGE</text>
+   <polyline points="${curve.map(([c,h])=>X(c)+","+Y(h)).join(" ")}" fill="none" stroke="var(--steel)" stroke-width="3"/>
+   <text x="${X(74)}" y="${Y(105.6)}" font-size="11" fill="var(--steel)">RATED RPM</text>
+   <circle cx="${X(100)}" cy="${Y(100)}" r="7" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+   <text x="${X(100)+10}" y="${Y(100)+20}" font-size="11" fill="var(--muted)">100% point</text>
+   <line id="hl" x1="${X(40)}" x2="${X(110)}" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 4"/>
+   <circle id="op" r="8" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>
+   <g id="pipe"><rect x="${X(78)}" y="${Y(119)}" width="190" height="26" rx="13" fill="var(--surface-2)" stroke="var(--line)"/><g id="dots"></g><text x="${X(78)}" y="${Y(119)-6}" font-size="10.5" fill="var(--muted)">discharge flow</text></g>`;
+  const dots=$("#dots",svg); let dh=""; for(let i=0;i<9;i++) dh+=`<circle r="4" cy="${Y(119)+13}" fill="var(--steel)"/>`; dots.innerHTML=dh;
+  const sl=$("#cv-h",m), op=$("#op",svg), hl=$("#hl",svg), cap=$("#cv-cap",m); let ph=0, surge=false;
+  const upd=()=>{ const h=+sl.value; $("#cv-val",m).textContent=h+"%"; const c=capAt(h); surge=c==null;
+    hl.setAttribute("y1",Y(h)); hl.setAttribute("y2",Y(h));
+    if(!surge){ op.setAttribute("cx",X(c)); op.setAttribute("cy",Y(h)); op.setAttribute("fill","var(--accent)");
+      cap.innerHTML=`System needs <b>${h}%</b> head → compressor delivers <b>${c.toFixed(0)}%</b> capacity. ${h<=100?"Comfortable, far from surge.":h<104?"Higher resistance, less flow: the point creeps toward the surge line.":"Close to surge. A little more discharge pressure and flow will stop."}`; }
+    else cap.innerHTML=`<b style="color:var(--bad)">Surge.</b> ${h}% exceeds the maximum head (105%). Flow stops, gas rushes back from the system, pressure drops, flow restarts… over and over, with severe vibration.`; };
+  sl.oninput=upd; upd();
+  const L=loopFn(dt=>{ ph+=dt; const h=+sl.value, c=capAt(h);
+    const dd=$$("circle",dots); const x0=X(78)+10, w=170;
+    dd.forEach((d,i)=>{ let f; if(!surge) f=((i/9)+ph*(c/100)*0.5)%1; else f=0.5+0.42*Math.sin(ph*9+i*0.3)*(i%2?1:-1)*0.5+0.2*Math.sin(ph*9); d.setAttribute("cx",x0+Math.max(0,Math.min(1,f))*w); d.setAttribute("fill",surge?"var(--bad)":"var(--steel)"); });
+    if(surge){ const j=Math.sin(ph*28)*3; op.setAttribute("cx",X(50)+j*2+Math.sin(ph*5)*14); op.setAttribute("cy",Y(105)+j); op.setAttribute("fill","var(--bad)"); }
+  });
+  whenVisible(fig,L.start,L.stop);
+},
+labyrinth(m,fig){
+  m.innerHTML=`<div style="padding:12px 14px 0"><canvas class="c2d" aria-label="Gas flow through labyrinth seal"></canvas></div>
+  <div class="vcontrols"><button class="btn small" data-mode="low" aria-pressed="true">Straight · low velocity</button><button class="btn small" data-mode="high" aria-pressed="false">Straight · high velocity</button><button class="btn small" data-mode="inter" aria-pressed="false">Interlocking</button></div>
+  <div class="vcap" id="lb-cap"></div>`;
+  const cv=$("canvas",m), c=setupCanvas(cv,0.5); let mode="low"; const cap=$("#lb-cap",m);
+  const caps={low:"Gas squeezes under each tooth, slows and <b>swirls</b> in the cavity. The turbulence resists flow, so only a little leaks through. Some leakage always remains.",high:"At high velocity much of the gas <b>skips straight</b> under the teeth without turning into the cavities. Leakage rises: a straight labyrinth is less effective here.",inter:"Teeth on the shaft <b>interlock</b> with the seal teeth. There is no straight path, every parcel must change direction, so resistance is highest and leakage lowest."};
+  $$("[data-mode]",m).forEach(b=>b.onclick=()=>{ mode=b.dataset.mode; $$("[data-mode]",m).forEach(x=>x.setAttribute("aria-pressed",x===b)); cap.innerHTML=caps[mode]; P.forEach(reset); leak=0; tt=0; }); cap.innerHTML=caps.low;
+  const P=[...Array(70)].map(()=>({})); function reset(p){ p.x=-0.05-Math.random()*0.25; p.y=0.5+Math.random()*0.4; p.st=0; p.sw=0; p.cav=-1; p.t=0; }
+  P.forEach(p=>{reset(p); p.x=Math.random()*0.9;}); let leak=0, tt=0;
+  const teeth=[0.25,0.4,0.55,0.7];
+  const L=loopFn(dt=>{
+    const W=cv._w,H=cv._h; c.clearRect(0,0,W,H); tt+=dt;
+    const gy=H*0.62, top=H*0.2, x0=W*0.12, x1=W*0.88, X=f=>x0+(x1-x0)*f;
+    c.fillStyle=COL.muted; c.globalAlpha=.25; c.fillRect(X(0.18),top-30,X(0.77)-X(0.18),30); c.globalAlpha=1;
+    c.fillStyle=COL.ink; teeth.forEach(t=>{ c.beginPath(); c.moveTo(X(t)-8,top); c.lineTo(X(t)+8,top); c.lineTo(X(t)+1.5,gy-6); c.lineTo(X(t)-1.5,gy-6); c.closePath(); c.fill(); });
+    c.fillRect(X(0.18),top-4,X(0.77)-X(0.18),6);
+    c.fillStyle=COL.steel; c.globalAlpha=.35; c.fillRect(0,gy,W,H-gy); c.globalAlpha=1;
+    if(mode==="inter"){ c.fillStyle=COL.steel; [0.325,0.475,0.625].forEach(t=>{ c.beginPath(); c.moveTo(X(t)-7,gy); c.lineTo(X(t)+7,gy); c.lineTo(X(t)+1.5,top+(gy-top)*0.35); c.lineTo(X(t)-1.5,top+(gy-top)*0.35); c.closePath(); c.fill(); }); }
+    c.font="600 11px ui-monospace,monospace"; c.fillStyle=COL.muted; c.fillText("HIGH PRESSURE",6,top-10); c.textAlign="right"; c.fillText("LOW PRESSURE",W-6,top-10); c.textAlign="left"; c.fillText("SHAFT",8,gy+16);
+    const gapY=gy-4;
+    P.forEach(p=>{ const fast=mode==="high";
+      let vx = fast?0.32:0.16;
+      // zone index between teeth
+      if(p.x<teeth[0]-0.02){ p.x+=vx*dt; p.y+=( (gapY-top)/(gy-top)*0 +0.92 - p.y)*dt*2; }
+      else if(p.x>teeth[3]+0.02){ p.x+=vx*dt*1.2; }
+      else {
+        const k=teeth.findIndex((t,i)=>p.x>=t-0.02 && (i===3||p.x<teeth[i+1]-0.02));
+        const inCav = k>=0 && k<3 && p.x>teeth[k]+0.02 && p.x<teeth[k+1]-0.02;
+        if(inCav && p.cav!==k){ p.cav=k; p.sw = mode==="inter"? 1.6 : fast? (Math.random()<0.75?0:0.9) : (Math.random()<0.85?1.2+Math.random()*0.8:0.3); p.ang=Math.PI*0.5; }
+        if(inCav && p.sw>0){ const cx=(teeth[k]+teeth[k+1])/2, rw=(teeth[k+1]-teeth[k])*0.32; p.ang+=dt*(fast?7:4.5); p.sw-=dt*(fast?1.2:0.55); p.x=cx+Math.cos(p.ang+Math.PI)*rw*(mode==="inter"?0.6:1); p.y=0.55+Math.sin(p.ang)*0.32*(mode==="inter"?0.6:1); if(p.sw<=0){ p.x=Math.max(p.x,cx+0.001);} }
+        else { p.x+=vx*dt*(fast?1:0.8); p.y+=(0.95-p.y)*dt*6; }
+      }
+      if(p.x>1.05){ leak++; reset(p); }
+      const yy=top+(gy-top)*Math.min(.97,p.y);
+      c.fillStyle= p.sw>0? COL.steel : COL.accent; c.beginPath(); c.arc(X(p.x),yy,3,0,7); c.fill();
+    });
+    c.fillStyle=COL.ink; c.font="600 12px ui-monospace,monospace"; c.textAlign="right"; c.fillText(`leak rate ≈ ${(leak/Math.max(tt,1)).toFixed(1)} parcels/s`,W-6,H-8); c.textAlign="left";
+  });
+  whenVisible(fig,L.start,L.stop);
+},
+drum(m,fig){
+  m.innerHTML=`<div class="svgbox"><svg viewBox="0 0 520 330" role="img" aria-label="Axial forces on a compressor rotor"></svg></div>
+  <div class="vcontrols"><button class="btn small" id="dr-on" aria-pressed="true">Balancing drum fitted</button><button class="btn small" id="dr-plug" aria-pressed="false">Plug the balance line</button></div>
+  <div class="vcap" id="dr-cap"></div>`;
+  const svg=$("svg",m); let on=true, plug=false;
+  const draw=()=>{
+    const drumF = on? (plug?0.15:0.85) : 0; const impF=1; const net=impF-drumF; const load=Math.abs(net);
+    const sc=150; const cx=260;
+    svg.innerHTML=`
+      <rect x="40" y="70" width="440" height="120" rx="12" fill="var(--surface-2)" stroke="var(--line)"/>
+      <text x="52" y="62" font-size="11" fill="var(--muted)">SUCTION END</text><text x="468" y="62" font-size="11" text-anchor="end" fill="var(--muted)">DISCHARGE END</text>
+      <rect x="20" y="124" width="480" height="12" fill="var(--muted)" opacity=".6"/>
+      ${[110,170,230,290,350].map(x=>`<rect x="${x}" y="84" width="16" height="92" rx="3" fill="var(--accent)"/>`).join("")}
+      ${on?`<rect x="398" y="104" width="44" height="52" rx="4" fill="var(--steel)"/><text x="420" y="172" font-size="10.5" text-anchor="middle" fill="var(--ink)">drum</text>
+      <path d="M442 104 L442 30 L70 30 L70 74" fill="none" stroke="${plug?"var(--bad)":"var(--steel)"}" stroke-width="3" stroke-dasharray="${plug?"4 5":"0"}"/>
+      <text x="256" y="24" font-size="11" text-anchor="middle" fill="${plug?"var(--bad)":"var(--steel)"}">balance line → suction ${plug?"(PLUGGED)":""}</text>`:""}
+      <g transform="translate(0,214)">
+        <text x="${cx-6}" y="0" text-anchor="end" font-size="11" fill="var(--muted)">Impeller thrust (toward suction)</text>
+        <line x1="${cx}" y1="16" x2="${cx-impF*sc+10}" y2="16" stroke="var(--accent)" stroke-width="7" marker-end="url(#ah1)"/>
+        ${on?`<text x="${cx+6}" y="44" font-size="11" fill="var(--muted)">Drum force (toward discharge)</text><line x1="${cx}" y1="58" x2="${cx+Math.max(1,drumF*sc-10)}" y2="58" stroke="var(--steel)" stroke-width="7" marker-end="url(#ah2)"/>`:""}
+        <text x="40" y="94" font-size="12" font-weight="700" fill="${load>0.5?"var(--bad)":"var(--good)"}">Load on thrust bearing: ${Math.round(load*100)}%</text>
+        <rect x="290" y="84" width="190" height="12" rx="6" fill="var(--line)"/><rect x="290" y="84" width="${190*load}" height="12" rx="6" fill="${load>0.5?"var(--bad)":"var(--good)"}"/>
+      </g>
+      <defs><marker id="ah1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--accent)"/></marker><marker id="ah2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--steel)"/></marker></defs>`;
+    $("#dr-cap",m).innerHTML = !on? "Without a drum the whole axial thrust (discharge pressure pushing the rotor toward suction) lands on the thrust bearing. Fine for small, low-pressure machines only."
+      : plug? "<b style='color:var(--bad)'>Balance line plugged.</b> The drum's outer face is no longer held at suction pressure, its counter-force collapses and the thrust bearing is overloaded. It may fail."
+      : "Drum at the discharge end: discharge pressure on its inner face, suction pressure (via the balance line) on its outer face. The difference pushes toward discharge and cancels most of the impeller thrust.";
+    $("#dr-on",m).setAttribute("aria-pressed",on); $("#dr-plug",m).setAttribute("aria-pressed",plug); $("#dr-plug",m).disabled=!on;
+  };
+  $("#dr-on",m).onclick=()=>{ on=!on; if(!on) plug=false; draw(); }; $("#dr-plug",m).onclick=()=>{ plug=!plug; draw(); }; draw();
+},
+oil(m,fig){
+  m.innerHTML=`<div class="svgbox"><svg viewBox="0 0 520 300" role="img" aria-label="Oil circulation schematic"></svg></div>
+  <div class="vcontrols"><button class="btn small" id="oil-start">Startup (shaft not turning)</button><button class="btn small" id="oil-run">Normal running</button><button class="btn small" id="oil-fail">Main pump fails</button><button class="btn small" id="oil-clog">Filter clogs, no backup</button></div>
+  <div class="vcap" id="oil-cap"></div>`;
+  const svg=$("svg",m);
+  svg.innerHTML=`<style>.flow{stroke-dasharray:8 8;animation:fl 0.8s linear infinite}@keyframes fl{to{stroke-dashoffset:-16}}@media (prefers-reduced-motion: reduce){.flow{animation:none}}</style>
+   <rect x="30" y="230" width="150" height="46" rx="8" fill="var(--surface-2)" stroke="var(--line)"/><text x="105" y="258" text-anchor="middle" font-size="12" fill="var(--ink)">OIL RESERVOIR</text>
+   <g id="pm"><circle cx="70" cy="160" r="22" fill="var(--surface-2)" stroke="var(--line)" stroke-width="2"/><text x="70" y="164" text-anchor="middle" font-size="10" fill="var(--ink)">MAIN</text></g>
+   <g id="pa"><circle cx="150" cy="160" r="22" fill="var(--surface-2)" stroke="var(--line)" stroke-width="2"/><text x="150" y="164" text-anchor="middle" font-size="10" fill="var(--ink)">AUX</text></g>
+   <rect x="220" y="40" width="80" height="36" rx="6" fill="var(--surface-2)" stroke="var(--line)"/><text x="260" y="62" text-anchor="middle" font-size="11" fill="var(--ink)">COOLER</text>
+   <rect x="330" y="40" width="80" height="36" rx="6" fill="var(--surface-2)" stroke="var(--line)" id="filt"/><text x="370" y="62" text-anchor="middle" font-size="11" fill="var(--ink)">FILTER</text>
+   <rect x="330" y="200" width="160" height="60" rx="8" fill="var(--surface-2)" stroke="var(--line)"/><text x="410" y="226" text-anchor="middle" font-size="11" fill="var(--ink)">COMPRESSOR</text><text x="410" y="244" text-anchor="middle" font-size="10" fill="var(--muted)">bearing · bearing</text>
+   <circle cx="450" cy="120" r="16" fill="var(--surface-2)" stroke="var(--line)" id="trip"/><text x="450" y="148" text-anchor="middle" font-size="9.5" fill="var(--muted)">LOW-P TRIP</text>
+   <path id="f1" d="M70 230 L70 182" fill="none" stroke="var(--steel)" stroke-width="4"/>
+   <path id="f2" d="M150 230 L150 182" fill="none" stroke="var(--steel)" stroke-width="4"/>
+   <path id="f3" d="M70 138 L70 58 L220 58 M150 138 L150 58" fill="none" stroke="var(--steel)" stroke-width="4"/>
+   <path id="f4" d="M300 58 L330 58" fill="none" stroke="var(--steel)" stroke-width="4"/>
+   <path id="f5" d="M410 58 L450 58 L450 104 M450 136 L450 200" fill="none" stroke="var(--steel)" stroke-width="4"/>
+   <path id="f6" d="M330 245 L180 252" fill="none" stroke="var(--steel)" stroke-width="4"/>
+   <text id="pg" x="460" y="90" font-size="11" fill="var(--ink)"></text>`;
+  const set=(main,aux,flow,clog,msg,trip)=>{ ["pm","pa"].forEach((id,i)=>{ const on=i?aux:main; $(`#${id} circle`,svg).setAttribute("stroke",on?"var(--good)":"var(--line)"); $(`#${id} circle`,svg).setAttribute("fill",on?"var(--good-soft)":"var(--surface-2)"); });
+    $("#f1",svg).classList.toggle("flow",main); $("#f2",svg).classList.toggle("flow",aux); ["f3","f4","f6"].forEach(id=>$("#"+id,svg).classList.toggle("flow",flow)); $("#f5",svg).classList.toggle("flow",flow&&!clog);
+    ["f1","f2","f3","f4","f5","f6"].forEach(id=>$("#"+id,svg).setAttribute("stroke", (id==="f1"&&!main)||(id==="f2"&&!aux)||(!flow&&id!=="f1"&&id!=="f2")||(clog&&id==="f5") ? "var(--line)":"var(--steel)"));
+    $("#filt",svg).setAttribute("stroke",clog?"var(--bad)":"var(--line)"); $("#trip",svg).setAttribute("fill",trip?"var(--bad)":"var(--surface-2)"); $("#pg",svg).textContent=trip?"oil P low":"oil P ok"; $("#pg",svg).setAttribute("fill",trip?"var(--bad)":"var(--good)");
+    $("#oil-cap",m).innerHTML=msg; };
+  const S={start:()=>set(false,true,true,false,"<b>Startup.</b> A shaft-driven main pump gives nothing while the shaft is still. The separately driven <b>auxiliary pump</b> (prelube) feeds the bearings until operating speed.",false),
+    run:()=>set(true,false,true,false,"<b>Normal running.</b> Reservoir → main pump → cooler (oil must not be too hot or too cold) → filter → bearings → back to the reservoir.",false),
+    fail:()=>set(false,true,true,false,"<b>Main pump fails.</b> Pressure dips, the alarm warns, and the <b>auxiliary pump</b> takes over so oil keeps flowing. That is why there are two pumps, two coolers and two filters.",false),
+    clog:()=>set(true,false,true,true,"<b>Filter clogged.</b> Oil can't reach the bearings, pressure falls and the <b>pressure-operated low-oil trip</b> stops the compressor before the bearings seize. Normally you'd switch to the spare filter.",true)};
+  $("#oil-start",m).onclick=S.start; $("#oil-run",m).onclick=S.run; $("#oil-fail",m).onclick=S.fail; $("#oil-clog",m).onclick=S.clog; S.run();
+},
+series(m){
+  m.innerHTML=`<div class="svgbox"><svg viewBox="0 0 520 250" role="img" aria-label="Series and parallel compressor arrangements"></svg></div>
+  <div class="vcontrols"><button class="btn small" id="sp-s" aria-pressed="true">Series</button><button class="btn small" id="sp-p" aria-pressed="false">Parallel</button><button class="btn small" id="sp-x" aria-pressed="false">Parallel: B's pressure drops</button></div>
+  <div class="vcap" id="sp-cap"></div>`;
+  const svg=$("svg",m);
+  const box=(x,lab,col="var(--surface-2)")=>`<rect x="${x}" y="140" width="130" height="70" rx="8" fill="${col}" stroke="var(--line)"/><text x="${x+65}" y="180" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">${lab}</text>`;
+  const st=`<style>.fl{stroke-dasharray:8 8;animation:fl2 .7s linear infinite}.rv{stroke-dasharray:8 8;animation:fl2 .35s linear infinite reverse}@keyframes fl2{to{stroke-dashoffset:-16}}@media (prefers-reduced-motion: reduce){.fl,.rv{animation:none}}</style>`;
+  const draw=mode=>{
+    $$("#sp-s,#sp-p,#sp-x",m).forEach(b=>b.setAttribute("aria-pressed",b.id==="sp-"+mode));
+    if(mode==="s"){ svg.innerHTML=st+box(90,"A")+box(300,"B")+`
+      <path class="fl" d="M120 40 L120 140" stroke="var(--steel)" stroke-width="5" fill="none"/>
+      <path class="fl" d="M190 140 L190 80 L330 80 L330 140" stroke="var(--accent)" stroke-width="5" fill="none"/>
+      <path class="fl" d="M400 140 L400 40" stroke="var(--bad)" stroke-width="5" fill="none"/>
+      <text x="120" y="30" text-anchor="middle" font-size="11" fill="var(--muted)">suction 14.7 psia</text><text x="260" y="70" text-anchor="middle" font-size="11" fill="var(--muted)">A's discharge = B's suction</text><text x="400" y="30" text-anchor="middle" font-size="11" fill="var(--muted)">higher pressure out</text>
+      <text x="260" y="238" text-anchor="middle" font-size="12" fill="var(--ink)">R total ≈ R(A) × R(B)  ·  same flow, more head</text>`;
+      $("#sp-cap",m).innerHTML="<b>Series</b>: the discharge of A feeds the suction of B, so B starts from a higher pressure. Use series to increase <b>head (pressure)</b>."; }
+    else { const bad=mode==="x"; svg.innerHTML=st+box(90,"A")+box(300,"B",bad?"var(--bad-soft)":"var(--surface-2)")+`
+      <path class="fl" d="M40 40 L40 110 L150 110 L150 140 M40 110 L360 110 L360 140" stroke="var(--steel)" stroke-width="5" fill="none"/>
+      <path class="fl" d="M190 140 L190 120 M190 120 L190 60 L470 60 L470 20" stroke="var(--accent)" stroke-width="5" fill="none"/>
+      <path class="${bad?"rv":"fl"}" d="M400 140 L400 60" stroke="${bad?"var(--bad)":"var(--accent)"}" stroke-width="5" fill="none"/>
+      <rect x="180" y="84" width="20" height="18" rx="3" fill="var(--surface)" stroke="var(--ink)"/><text x="206" y="98" font-size="10" fill="var(--muted)">check</text>
+      <rect x="390" y="84" width="20" height="18" rx="3" fill="${bad?"var(--ink)":"var(--surface)"}" stroke="var(--ink)"/><text x="416" y="98" font-size="10" fill="var(--muted)">check</text>
+      <text x="470" y="14" text-anchor="end" font-size="11" fill="var(--muted)">common discharge line</text>
+      <text x="260" y="238" text-anchor="middle" font-size="12" fill="${bad?"var(--bad)":"var(--ink)"}">${bad?"B below line pressure → check valve shuts, B surges unless its bypass opens":"same head, flows add up → more capacity"}</text>`;
+      $("#sp-cap",m).innerHTML= bad? "If B's discharge pressure falls below A's, gas would flow back into B. The <b>check valve</b> stops backflow, but B can still <b>surge</b> at low flow, so its bypass or vent sits between its discharge and the check valve." : "<b>Parallel</b>: both discharge into the same line, so capacities add. Discharge pressures must match, and each line has a <b>check valve</b>."; }
+  };
+  $("#sp-s",m).onclick=()=>draw("s"); $("#sp-p",m).onclick=()=>draw("p"); $("#sp-x",m).onclick=()=>draw("x"); draw("s");
+},
+startup(m,fig){
+  m.innerHTML=`<div class="svgbox"><svg viewBox="0 0 520 320" role="img" aria-label="Startup path on head-capacity map"></svg></div>
+  <div class="vcontrols"><button class="btn small" id="su-t" aria-pressed="true">Turbine-driven</button><button class="btn small" id="su-m" aria-pressed="false">Motor-driven</button><button class="btn small" id="su-d" aria-pressed="false">Shutdown</button><button class="btn small primary" id="su-play">Play</button></div>
+  <ol class="vcap" id="su-steps" style="margin:0;padding-left:34px;display:grid;gap:4px"></ol>`;
+  const svg=$("svg",m); const O=[60,280], W=420, H=240;
+  const pt=(c,h)=>[O[0]+c*W,O[1]-h*H];
+  const arc=s=>{ const p=[]; for(let i=0;i<=30;i++){ const c=s*0.92*Math.sin(i/30*Math.PI/2)+0.0, h=s*s*(1-Math.pow(i/30,2.2))*0.95+0.0; p.push(pt(0.18*s+c*0.82,h*0.88+0.04)); } return p; };
+  const toD=a=>"M"+a.map(p=>p.map(v=>v.toFixed(1)).join(" ")).join(" L");
+  const SP={t:{path:[[0.02,0.02],[0.55,0.06],[0.86,0.33],[0.7,0.72]],steps:["Open suction valve; open discharge valve (check valve stays shut, held by system pressure); open bypass or vent.","Start the turbine. With the bypass open, gas recirculates at low head: path runs along the bottom.","Point 2: operating speed reached on the 100% speed line.","Slowly close the bypass: head builds until it opens the check valve. Point 3, stable. Put bypass on automatic."]},
+      m:{path:[[0.02,0.02],[0.86,0.02],[0.88,0.34],[0.7,0.72]],steps:["Throttle the suction valve, open discharge valve, bypass/vent open: minimum gas load so the motor can reach speed quickly.","Start the motor and bring it to full speed fast (avoid burnout). Low head, along the bottom.","Point 2: at speed. Slowly open the suction valve.","Pressure builds, the check valve opens: point 3. Put bypass/vent on automatic."]},
+      d:{path:[[0.7,0.72],[0.42,0.38],[0.18,0.12],[0.02,0.02]],steps:["Start at point 3, normal operation.","No fixed discharge pressure: as the driver slows, flow and head fall together.","The path stays right of the surge line, so there is no surge risk.","Point 1: stopped. Into a FIXED-pressure system, open the vent/bypass first or the trapped gas surges the machine."]}};
+  let mode="t", raf=0;
+  const base=()=>{ const surge=toD([pt(0.02,0.02),pt(0.12,0.4),pt(0.25,0.78),pt(0.33,0.95)]);
+    return `<line x1="${O[0]}" y1="${O[1]}" x2="${O[0]+W}" y2="${O[1]}" stroke="var(--muted)"/><line x1="${O[0]}" y1="${O[1]}" x2="${O[0]}" y2="${O[1]-H-10}" stroke="var(--muted)"/>
+    <text x="${O[0]+W/2}" y="${O[1]+26}" text-anchor="middle" font-size="11" fill="var(--muted)">CAPACITY →</text><text x="22" y="${O[1]-H/2}" font-size="11" fill="var(--muted)" transform="rotate(-90 22 ${O[1]-H/2})" text-anchor="middle">HEAD (R) →</text>
+    ${[0.8,0.9,1].map((s,i)=>{ const a=[]; for(let k=0;k<=24;k++){ const f=k/24; const c=0.2+ (0.62+0.22*s)*Math.sin(f*Math.PI/2)*s*1.05, h=(0.95*s*s)*(1-f*f*0.95); a.push(pt(Math.min(0.98,c),h)); } return `<path d="${toD(a)}" fill="none" stroke="var(--line)" stroke-width="2"/><text x="${a[9][0]+4}" y="${a[9][1]-6}" font-size="10" fill="var(--muted)">${Math.round(s*100)}% speed</text>`; }).join("")}
+    <path d="${surge}" fill="none" stroke="var(--bad)" stroke-width="2" stroke-dasharray="6 5"/><text x="${pt(0.2,0.62)[0]-50}" y="${pt(0.2,0.62)[1]}" font-size="11" font-weight="700" fill="var(--bad)">SURGE</text>
+    <path d="${toD([pt(0.97,0.1),pt(0.88,0.5),pt(0.82,0.8)])}" fill="none" stroke="var(--steel)" stroke-width="1.5" stroke-dasharray="3 4"/><text x="${pt(0.88,0.86)[0]}" y="${pt(0.88,0.86)[1]}" font-size="10" fill="var(--steel)">capacity limit</text>`; };
+  const render=(prog)=>{ const s=SP[mode]; const pp=s.path.map(p=>pt(p[0],p[1]));
+    let pts=[pp[0]], segs=pp.length-1, f=prog*segs, k=Math.min(segs-1,Math.floor(f)), r=f-k;
+    for(let i=1;i<=k;i++) pts.push(pp[i]); const cur=[pp[k][0]+(pp[k+1][0]-pp[k][0])*r, pp[k][1]+(pp[k+1][1]-pp[k][1])*r]; pts.push(cur);
+    svg.innerHTML=base()+`<path d="${toD(pp)}" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".35"/><path d="${toD(pts)}" fill="none" stroke="var(--accent)" stroke-width="3.5"/>`+
+      pp.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="11" fill="var(--surface)" stroke="var(--ink)"/><text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">${mode==="d"?["3","","","1"][i]:["1","","2","3"][i]}</text>`).filter((_,i)=>mode==="d"?(i===0||i===3):i!==1).join("")+
+      `<circle cx="${cur[0]}" cy="${cur[1]}" r="7" fill="var(--accent)"/>`;
+    const steps=$("#su-steps",m); const active=Math.min(s.steps.length-1,Math.floor(prog*s.steps.length*0.999));
+    steps.innerHTML=s.steps.map((t,i)=>`<li style="color:${i===active?"var(--ink)":"var(--muted)"};${i===active?"font-weight:600":""}">${t}</li>`).join(""); };
+  const play=()=>{ cancelAnimationFrame(raf); const t0=performance.now(), dur=reduced?600:6000; const f=t=>{ const p=Math.min(1,(t-t0)/dur); render(p); if(p<1) raf=requestAnimationFrame(f); }; raf=requestAnimationFrame(f); };
+  const pick=k=>{ mode=k; ["t","m","d"].forEach(x=>$("#su-"+x,m).setAttribute("aria-pressed",x===k)); render(1); };
+  $("#su-t",m).onclick=()=>pick("t"); $("#su-m",m).onclick=()=>pick("m"); $("#su-d",m).onclick=()=>pick("d"); $("#su-play",m).onclick=play; pick("t");
+}
+};
+
+/* =========================================================
+   MOUNT VISUALS
+   ========================================================= */
+function btn(label,attrs=""){ return `<button class="btn small" ${attrs}>${label}</button>`; }
+$$("figure.viz").forEach(fig=>{
+  const k=fig.dataset.viz, m=$(".vmount",fig);
+  if(VIZ2D[k]){ VIZ2D[k](m,fig); return; }
+  m.innerHTML=stageHTML();
+  const s=fig._state={};
+  const ctl=document.createElement("div"); ctl.className="vcontrols"; const cap=document.createElement("div"); cap.className="vcap";
+  let opts={};
+  if(k==="string"){ opts={az:0.4,el:0.85,dist:8.5};
+    ctl.innerHTML=btn("Cut the string",'data-act="cut"');
+    ctl.querySelector("button").onclick=e=>{ s.cut=!s.cut; e.target.textContent=s.cut?"Re-attach":"Cut the string"; };
+    cap.innerHTML="Seen from above. <b>Blue arrow</b>: centripetal pull from the string. <b>Orange arrow</b>: the straight-line direction the ball is trying to go at that instant. Cut the string and the ball follows the orange arrow, not a bigger circle."; }
+  if(k==="disc"){ opts={az:0.3,el:0.9,dist:8};
+    ctl.innerHTML=`<label for="dsk-w">Disc speed <input id="dsk-w" type="range" min="0.6" max="2.4" step="0.1" value="1.4"></label>`+btn("Drop a new ball",'data-act="drop"');
+    $("input",ctl).oninput=e=>s.w=+e.target.value; $('[data-act="drop"]',ctl).onclick=()=>s.reset&&s.reset();
+    cap.innerHTML="The blade pushes the ball around; nothing pulls it inward, so it slides <b>outward</b> along the blade, speeding up (blue → orange), and leaves the rim on a straight line. Markers A (rim) and B (inside) show the rim moves fastest."; }
+  if(k==="impeller"){ opts={az:0.62,el:0.42,dist:10.8,target:[0.2,0.4,0]};
+    ctl.innerHTML=`<label for="imp-w">Impeller speed <input id="imp-w" type="range" min="0.4" max="3" step="0.1" value="1.7"></label>`+["eye","impeller","diffuser","volute"].map(x=>btn(x[0].toUpperCase()+x.slice(1),`data-focus="${x}" aria-pressed="false"`)).join("")+btn("Hide shroud",'data-act="shroud"');
+    $("input",ctl).oninput=e=>s.speed=+e.target.value;
+    const capTxt={none:"Each dot is a parcel of gas. <b>Colour = velocity</b> (blue slow → orange fast). <b>Size = pressure</b>. Tap a part to highlight it.",eye:"<b>Eye.</b> Gas arrives axially, slow and at low pressure. Accelerating gas away from here leaves a low-pressure area that draws more gas in.",impeller:"<b>Impeller.</b> Blades whirl the gas outward. Velocity (colour) and pressure (size) both rise; maximum velocity at the blade tips.",diffuser:"<b>Diffuser.</b> Larger radius, longer path, no blades. The gas slows (turns blue) and its pressure rises (dots grow).",volute:"<b>Volute.</b> The widening spiral collects the gas and continues converting velocity into pressure before the discharge."};
+    const setCap=()=>cap.innerHTML=capTxt[s.focus||"none"];
+    $$("[data-focus]",ctl).forEach(b=>b.onclick=()=>{ s.focus = s.focus===b.dataset.focus?"none":b.dataset.focus; $$("[data-focus]",ctl).forEach(x=>x.setAttribute("aria-pressed",x.dataset.focus===s.focus)); setCap(); });
+    $('[data-act="shroud"]',ctl).onclick=e=>{ s.shroud=!(s.shroud??true); e.target.textContent=s.shroud?"Hide shroud":"Show shroud"; };
+    setCap();
+    m.insertAdjacentHTML("afterbegin",`<div class="legend"><span><i style="background:linear-gradient(90deg,#2e7bdb,#ff7320)"></i>velocity: slow → fast</span><span>dot size: pressure</span></div>`); }
+  if(k==="multistage"){ opts={az:0.35,el:0.3,dist:10.5,target:[0,0.5,0]};
+    ctl.innerHTML=btn("Hide casing",'data-act="cas"'); $("button",ctl).onclick=e=>{ s.casing=!(s.casing??true); e.target.textContent=s.casing?"Hide casing":"Show casing"; };
+    cap.innerHTML="Four impellers on one shaft. Gas goes <b>out</b> through each impeller and diffuser, turns in the <b>return passage</b>, comes back <b>in</b> to the next eye. Colour shifts blue → red as each stage adds pressure. Pressures shown are illustrative (R ≈ 1.4 per stage)."; }
+  if(k==="axial"){ opts={az:0.9,el:0.35,dist:9};
+    ctl.innerHTML=`<label for="ax-w">Rotor speed <input id="ax-w" type="range" min="0.6" max="4" step="0.1" value="2.4"></label>`; $("input",ctl).oninput=e=>s.w=+e.target.value;
+    cap.innerHTML="Gas moves <b>parallel to the shaft</b>. Each rotor row adds velocity and pressure; the stator row after it slows the gas (diffuser) and steers it into the next rotor. The annulus narrows toward discharge, so the gas is squeezed into less volume."; }
+  if(k==="casings"){ opts={az:0.7,el:0.45,dist:9.5,target:[0.6,0.4,0]};
+    ctl.innerHTML=btn("Horizontally split",'data-m="h" aria-pressed="true"')+btn("Vertically split (barrel)",'data-m="v" aria-pressed="false"')+`<button class="btn small primary" data-act="open">Open for maintenance</button>`;
+    $$("[data-m]",ctl).forEach(b=>b.onclick=()=>{ s.mode=b.dataset.m; s.open=false; $('[data-act="open"]',ctl).textContent="Open for maintenance"; $$("[data-m]",ctl).forEach(x=>x.setAttribute("aria-pressed",x===b)); });
+    $('[data-act="open"]',ctl).onclick=e=>{ s.open=!s.open; e.target.textContent=s.open?"Close it up":"Open for maintenance"; };
+    cap.innerHTML="Orange marks every joint the gas could escape through. Compare how long the joints are, and how much work it takes to reach the rotor."; }
+  if(k==="imptypes"){ opts={az:0.5,el:0.25,dist:6.2};
+    const info={open:"<b>Open.</b> Blades only, no side plates. High heads, single-stage compressors only. Gas flow least controlled.",semi:"<b>Semi-enclosed.</b> Blades on one back plate. Large flow, single-stage, or the first stage of a multi-stage machine.",enclosed:"<b>Enclosed.</b> Blades between back plate and shroud. Gas in at the eye, out at the rim. Mainly multi-stage; flow most controlled."};
+    ctl.innerHTML=[["open","Open"],["semi","Semi-enclosed"],["enclosed","Enclosed"]].map(([v,l],i)=>btn(l,`data-t="${v}" aria-pressed="${i===0}"`)).join("");
+    $$("[data-t]",ctl).forEach(b=>b.onclick=()=>{ s.type=b.dataset.t; $$("[data-t]",ctl).forEach(x=>x.setAttribute("aria-pressed",x===b)); cap.innerHTML=info[s.type]; }); cap.innerHTML=info.open; }
+  if(k==="bearings"){ opts={az:0.55,el:0.35,dist:8.5};
+    ctl.innerHTML=btn("Add journal bearings",'data-b="journal" aria-pressed="false"')+btn("Add thrust bearing",'data-b="thrust" aria-pressed="false"');
+    $$("[data-b]",ctl).forEach(b=>b.onclick=()=>{ const kk=b.dataset.b; s[kk]=!s[kk]; b.setAttribute("aria-pressed",s[kk]); b.textContent=(s[kk]?"Remove ":"Add ")+(kk==="journal"?"journal bearings":"thrust bearing"); });
+    cap.innerHTML="Unsupported, the rotor <b>shuttles end-to-end</b> (axial thrust, orange arrow) and <b>whirls off-centre</b> (radial, blue arrow). Add the bearings one at a time: blue pads, amber oil film, a thrust collar between shoes."; }
+  if(k==="overspeed"){ opts={az:0.12,el:0.12,dist:7.8,target:[0.8,-0.35,0],auto:0};
+    ctl.innerHTML=`<label for="os-s">Turbine speed <input id="os-s" data-act="speed" type="range" min="0" max="120" value="100"></label>`+btn("Reset trip",'data-act="reset"');
+    $("input",ctl).oninput=e=>s.speed=+e.target.value; $('[data-act="reset"]',ctl).onclick=()=>{ s.reset&&s.reset(); const sl=$("input",ctl); sl.disabled=false; sl.value=100; };
+    cap.innerHTML="Push the speed past <b>110%</b>. The weight's centrifugal tendency beats the spring, it flies out, strikes the <b>trip arm</b>, and the spring-loaded <b>steam valve</b> slams shut."; }
+  fig.appendChild(ctl); fig.appendChild(cap);
+  mount3D(fig, ctx=>BUILD[k](ctx), opts);
+});
+// hero
+mount3D($("#hero3d"), ctx=>{ ctx.state.speed=1.5; return buildImpeller(ctx,{n:200}); }, {az:0.62,el:0.42,dist:10.2,target:[0.2,0.45,0],auto:0.1});
+</script>
+</body>
+</html>
