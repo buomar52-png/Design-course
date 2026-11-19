@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الأهداف — نهاري</title>
+<!-- ريل «الأهداف» بالقالب النهاري بدون مربعات، بلا عنوان ولا ترقيم. يُولَّد من tools/build.py -->
+<style>
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-500.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-600.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-700.ttf") format("truetype"); font-weight: 700; }
+  /* القالب ٣ — النهاري بدون مربعات */
+  :root {
+    --bg: #f3f5f4; --ink: #151718; --muted: #7b8386; --teal: #1b7a9c; --teal-line: #4a93b0;
+    --green: #b5dc55; --hl: #d2ee94; --card: #ffffff;
+    --card-edge: rgba(215, 225, 228, .9); --card-shadow: rgba(30, 60, 70, .08); --handle: #9aa1a4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #1d2124; font-family: "Plex Ar", system-ui, sans-serif; color: var(--ink); overflow: hidden;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #viewport { position: relative; flex: 1; width: 100%; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 50% 50%; background: var(--bg); overflow: hidden; }
+  body.render { background: var(--bg); display: block; }
+  body.render #viewport { position: fixed; inset: 0; }
+  body.render #stage { left: 0; top: 0; transform: none !important; }
+  body.render #controls { display: none; }
+
+  .glow { position: absolute; inset: -160px; pointer-events: none; }
+  #glow-a { background: radial-gradient(circle at calc(100% - 160px) 160px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 270px, rgba(140, 196, 220, 0) 660px); }
+  #glow-b { background: radial-gradient(circle at 160px calc(100% - 160px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 270px, rgba(205, 232, 150, 0) 680px); }
+
+  .scene { position: absolute; inset: 0; --p: 0%;
+           -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
+                   mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
+  .scene.out { -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
+                       mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
+  .scene.live { -webkit-mask-image: none; mask-image: none; }
+  /* day tide: a band of soft morning light */
+  #tide { position: absolute; left: -10%; right: -10%; height: 520px; top: 0; pointer-events: none; opacity: 0;
+          background: radial-gradient(ellipse 60% 46% at 50% 50%, rgba(255, 255, 255, .95), rgba(255, 255, 255, .5) 45%, transparent 72%),
+                      radial-gradient(ellipse 50% 30% at 50% 50%, rgba(181, 220, 85, .35), transparent 70%),
+                      radial-gradient(ellipse 80% 50% at 50% 50%, rgba(140, 196, 220, .25), transparent 70%); filter: blur(14px); }
+
+  .c { position: absolute; left: 0; right: 0; text-align: center; }
+  .line { display: block; white-space: nowrap; }
+  .k { display: inline-block; }
+  .acc { color: var(--teal); }
+  .mark { background-image: linear-gradient(var(--hl), var(--hl)); background-repeat: no-repeat; background-position: 100% 86%; background-size: 0% 38%; padding: 0 8px; }
+  .glass { position: absolute; left: 80px; right: 80px; border-radius: 42px; background: var(--card); padding: 44px 46px 48px; text-align: center;
+           box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
+  .glass .gl { display: block; white-space: nowrap; }
+  .pillrow { position: absolute; left: 0; right: 0; text-align: center; }
+  .pill { display: inline-block; padding: 14px 48px 22px; border-radius: 999px; font-weight: 600; white-space: nowrap; background: var(--teal); color: #fff; }
+  .pill.ghost { background: transparent; color: var(--muted); border: 4px dashed var(--teal-line); position: relative; }
+  .strike { position: absolute; left: 30px; right: 30px; top: 52%; height: 8px; border-radius: 8px; background: #d9534f; transform: scaleX(0); transform-origin: 100% 50%; }
+  .refchip { position: absolute; left: 0; right: 0; text-align: center; font-size: 40px; color: var(--muted); }
+  .icon { position: absolute; left: 50%; }
+  .icon svg, .mini svg { width: 100%; height: 100%; overflow: visible; }
+  .mini { position: absolute; border-radius: 40px; background: #fff; padding: 18px;
+          box-shadow: 0 10px 0 -4px var(--card-edge), 0 24px 50px var(--card-shadow); }
+  #send { position: absolute; left: 110px; top: 1300px; width: 96px; height: 96px; }
+  .dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .dot i, .dot b { position: absolute; inset: 0; border-radius: 50%; }
+  .dot b { background: rgba(181, 220, 85, .35); }
+  .dot i { inset: 7px; background: var(--green); }
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: var(--handle); letter-spacing: .5px; }
+
+  #safe { display: none; pointer-events: none; } #safe.on { display: block; }
+  #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
+  #controls { width: min(760px, 100%); padding: 12px 16px 16px; display: flex; gap: 12px; align-items: center; color: #e8ecee; font-size: 15px; direction: ltr; }
+  #controls button { font: inherit; color: inherit; background: #2f3539; border: 1px solid #454c51; border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+  #controls input[type=range] { flex: 1; accent-color: #b5dc55; min-width: 60px; }
+  #time { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="glow" id="glow-a"></div>
+    <div class="glow" id="glow-b"></div>
+    <div class="dot" id="dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
+
+    <!-- ===== S1 (0s) ===== -->
+    <section class="scene" id="s1" data-start="0">
+      <div class="icon " style="top:250px;width:360px;height:360px;margin-left:-180px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="0.0" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M30 60 Q30 46 44 46 H156 Q170 46 170 60 V162 Q170 176 156 176 H44 Q30 176 30 162 Z"/>
+        <path class="draw" data-draw="0.25" stroke="var(--teal)" stroke-width="7" d="M30 82 H170"/><path class="draw" data-draw="0.3" stroke="var(--teal)" stroke-width="8" d="M70 32 V58"/><path class="draw" data-draw="0.3" stroke="var(--teal)" stroke-width="8" d="M130 32 V58"/>
+        <g data-pop="0.5"><rect x="48" y="100" width="22" height="22" rx="6" fill="#d7dfe1"/><rect x="78" y="100" width="22" height="22" rx="6" fill="#d7dfe1"/><rect x="108" y="100" width="22" height="22" rx="6" fill="#d7dfe1"/><rect x="138" y="100" width="22" height="22" rx="6" fill="#d7dfe1"/><rect x="48" y="134" width="22" height="22" rx="6" fill="#d7dfe1"/><rect x="78" y="134" width="22" height="22" rx="6" fill="#d7dfe1"/><rect x="108" y="134" width="22" height="22" rx="6" fill="#d7dfe1"/><rect x="138" y="134" width="22" height="22" rx="6" fill="#d7dfe1"/></g>
+        <rect data-pop="1.01" x="48" y="100" width="22" height="22" rx="6" fill="#b5dc55"/>
+        <rect data-pop="2.39" x="45" y="131" width="118" height="28" rx="9" fill="#b5dc55"/>
+        <rect data-pop="3.73" x="42" y="94" width="124" height="68" rx="12" fill="none" stroke="var(--teal)" stroke-width="5"/></svg></div>
+      <div class="c" style="top:700px;font-size:84px;font-weight:500;" data-in="0.0" data-fx="up"><span class="line kline " data-t="0.0,0.12,0.27">قبل أن تخطّطَ</span></div>
+      <div class="c" style="top:830px;font-size:104px;font-weight:700;" data-in="0.85" data-fx="up"><span class="line kline " data-t="1.01,1.47,2.39">ليومِك، أو <span class="acc">لشهرِك</span>،</span></div>
+      <div class="c" style="top:970px;font-size:104px;font-weight:700;" data-in="2.8" data-fx="up"><span class="line kline " data-t="2.93,3.73">أو <span class="acc">لسنتِك</span></span></div>
+    </section>
+
+    <!-- ===== S2 (4.2s) ===== -->
+    <section class="scene" id="s2" data-start="4.2">
+      <div class="icon " style="top:250px;width:360px;height:360px;margin-left:-180px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path data-fill="5.36" fill="#b5dc55" fill-opacity="0" d="M100 30 C66 30 44 56 44 86 C44 108 56 122 70 134 C76 140 78 146 78 154 H122 C122 146 124 140 130 134 C144 122 156 108 156 86 C156 56 134 30 100 30 Z"/>
+        <path class="draw" data-draw="4.15" stroke="var(--teal)" stroke-width="7" d="M100 30 C66 30 44 56 44 86 C44 108 56 122 70 134 C76 140 78 146 78 154 H122 C122 146 124 140 130 134 C144 122 156 108 156 86 C156 56 134 30 100 30 Z"/><path class="draw" data-draw="4.45" stroke="var(--teal)" stroke-width="7" d="M84 168 H116"/><path class="draw" data-draw="4.550000000000001" stroke="var(--teal)" stroke-width="7" d="M90 182 H110"/>
+        <path class="draw" data-draw="4.6000000000000005" stroke="var(--teal-line)" stroke-width="5" d="M90 154 V120 Q100 108 110 120 V154"/>
+        <g data-pop="5.5600000000000005" stroke="#b5dc55" stroke-width="7"><path d="M100 14 V2"/><path d="M40 30 L30 20"/><path d="M160 30 L170 20"/><path d="M22 86 H8"/><path d="M178 86 H192"/></g></svg></div>
+      <div class="c" style="top:700px;font-size:84px;font-weight:500;" data-in="4.1" data-fx="up"><span class="line kline " data-t="4.28,4.64,4.76">ضعْ في بالِك</span></div>
+      <div class="c" style="top:820px;font-size:170px;font-weight:700;line-height:1.2;" data-in="4.95" data-fx="big"><span class="line kline " data-t="5.08,5.36">أمورًا <span class="acc">أهمَّ</span></span></div>
+      <div class="c" style="top:1050px;font-size:84px;font-weight:500;" data-in="5.6" data-fx="up"><span class="line kline " data-t="5.70,5.86,6.04">من هذه الأشياء</span></div>
+    </section>
+
+    <!-- ===== S3 (6.75s) ===== -->
+    <section class="scene" id="s3" data-start="6.75">
+      <div class="icon " style="top:190px;width:330px;height:330px;margin-left:-165px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle class="draw" data-draw="6.7" cx="96" cy="104" r="74" stroke="var(--teal)" stroke-width="7"/>
+        <circle class="draw" data-draw="6.8500000000000005" cx="96" cy="104" r="48" stroke="var(--teal-line)" stroke-width="6"/>
+        <circle data-fill="13.66" cx="96" cy="104" r="22" fill="#b5dc55" fill-opacity="0" stroke="var(--teal)" stroke-width="6"/>
+        <g data-shoot="13.26" stroke="var(--ink)" stroke-width="7">
+          <path d="M98 102 L176 24"/><path d="M176 24 H196 M176 24 V4"/><path d="M162 38 H182 M162 38 V18"/></g></svg></div>
+      <div class="c" style="top:570px;font-size:96px;font-weight:600;" data-in="6.65" data-fx="up"><span class="line kline " data-t="6.80,7.18">وهي <span class="acc">الأهداف</span></span></div>
+      <div class="c" style="top:710px;font-size:68px;font-weight:500;" data-in="8.45" data-fx="up"><span class="line kline " data-t="8.60,8.88,9.24,9.50">التي تسعى إليها، ومطالبُك</span></div>
+      <div class="c" style="top:810px;font-size:68px;font-weight:500;" data-in="10.05" data-fx="up"><span class="line kline " data-t="10.18,10.46,11.00,11.15">التي تتحرّك من أجلها</span></div>
+      <div class="c" style="top:940px;font-size:68px;font-weight:500;" data-in="11.5" data-fx="up"><span class="line kline " data-t="11.62,12.22,12.62,12.92,13.12">وأهمُّ شيءٍ في هذه المطالب</span></div>
+      <div class="c" style="top:1050px;font-size:140px;font-weight:700;line-height:1.2;" data-in="13.5" data-fx="big"><span class="line kline " data-t="13.66,13.94">رضا <span class="acc">الله</span></span></div>
+      <div class="c" style="top:1250px;font-size:68px;font-weight:500;" data-in="13.95" data-fx="up"><span class="line kline " data-t="14.08,14.30">عزّ وجلّ</span></div>
+    </section>
+
+    <!-- ===== S4 (14.72s) ===== -->
+    <section class="scene" id="s4" data-start="14.72">
+      <div class="icon " style="top:230px;width:340px;height:340px;margin-left:-170px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="14.68" stroke="var(--teal)" stroke-width="7" d="M40 178 V96 Q40 38 100 26 Q160 38 160 96 V178"/>
+        <path class="draw" data-draw="14.879999999999999" stroke="var(--teal-line)" stroke-width="5" d="M66 178 V108 Q66 70 100 58 Q134 70 134 108 V178"/>
+        <path class="draw" data-draw="14.629999999999999" stroke="var(--teal)" stroke-width="7" d="M24 178 H176"/>
+        <path class="draw" data-draw="15.08" stroke="var(--teal-line)" stroke-width="4" d="M100 58 V84"/>
+        <path data-pop="18.31" d="M86 86 H114 L108 108 Q100 116 92 108 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="5"/>
+        <g data-pop="19.35" stroke="#b5dc55" stroke-width="5"><path d="M100 126 V140"/><path d="M80 118 L72 128"/><path d="M120 118 L128 128"/></g></svg></div>
+      <div class="c" style="top:650px;font-size:84px;font-weight:600;" data-in="14.6" data-fx="up"><span class="line kline " data-t="14.77,16.07,16.59">وعندك أهدافٌ <span class="acc">عباديّة</span></span></div>
+      <div class="c" style="top:800px;font-size:76px;font-weight:500;" data-in="17.0" data-fx="up"><span class="line kline " data-t="17.13,17.75,18.19,18.31">أولًا: التركيزُ على <span class="mark" data-mark="18.4">الفرائض</span></span></div>
+      <div class="pillrow" style="top:940px;font-size:76px" data-in="18.6" data-fx="pill"><span class="pill "><span class="kline" data-t="18.77,19.35">ثمّ النوافل</span></span></div>
+    </section>
+
+    <!-- ===== S5 (20.0s) ===== -->
+    <section class="scene" id="s5" data-start="20.0">
+      <div class="icon " style="top:200px;width:300px;height:300px;margin-left:-150px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="19.95" stroke="var(--teal)" stroke-width="7" d="M14 176 H186"/>
+        <g data-pop="21.44"><rect x="28" y="140" width="144" height="30" rx="7" fill="var(--bg)" stroke="var(--teal)" stroke-width="6"/><path d="M50 140 V170" stroke="var(--teal)" stroke-width="5"/><path d="M68 155 H154" stroke="var(--teal)" stroke-width="4"/></g><g data-pop="23.55"><rect x="40" y="104" width="124" height="30" rx="7" fill="var(--bg)" stroke="var(--teal-line)" stroke-width="6"/><path d="M62 104 V134" stroke="var(--teal-line)" stroke-width="5"/><path d="M80 119 H146" stroke="var(--teal-line)" stroke-width="4"/></g><g data-pop="26.25"><rect x="50" y="68" width="104" height="30" rx="7" fill="var(--bg)" stroke="var(--teal)" stroke-width="6"/><path d="M72 68 V98" stroke="var(--teal)" stroke-width="5"/><path d="M90 83 H136" stroke="var(--teal)" stroke-width="4"/></g>
+        <g data-pop="26.85" stroke="#b5dc55" stroke-width="7"><path d="M100 50 V20"/><path d="M86 34 L100 20 L114 34"/></g></svg></div>
+      <div class="c" style="top:570px;font-size:72px;font-weight:500;" data-in="19.9" data-fx="up"><span class="line kline " data-t="20.03,20.36,20.46,20.84,21.16">وتضعُ لك أهدافًا أخرى، مثلًا:</span></div>
+      <div class="pillrow" style="top:690px;font-size:72px" data-in="21.3" data-fx="pill"><span class="pill "><span class="kline" data-t="21.44,21.72">حفظُ القرآن</span></span></div>
+      <div class="c" style="top:840px;font-size:72px;font-weight:500;" data-in="22.15" data-fx="up"><span class="line kline " data-t="22.30,23.55,24.99,25.67">أو دراسةُ <span class="acc">علومِ الفقه</span></span></div>
+      <div class="c" style="top:950px;font-size:72px;font-weight:500;" data-in="25.95" data-fx="up"><span class="line kline " data-t="26.11,26.25,26.53,26.73,26.91">أو أيِّ علمٍ من العلوم</span></div>
+      <div class="c" style="top:1090px;font-size:92px;font-weight:700;" data-in="27.25" data-fx="up"><span class="line kline " data-t="27.41,27.97,28.25,28.63">فهذه كلُّها <span class="mark" data-mark="28.7">مطالبُ عالية</span></span></div>
+    </section>
+
+    <!-- ===== S6 (28.92s) ===== -->
+    <section class="scene" id="s6" data-start="28.92">
+      <div class="icon " style="top:190px;width:300px;height:300px;margin-left:-150px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><path class="draw" data-draw="28.9" stroke="var(--teal-line)" stroke-width="5" d="M100 100 L40 50"/><path class="draw" data-draw="29.0" stroke="var(--teal-line)" stroke-width="5" d="M100 100 L160 50"/><path class="draw" data-draw="29.099999999999998" stroke="var(--teal-line)" stroke-width="5" d="M100 100 L34 140"/><path class="draw" data-draw="29.2" stroke="var(--teal-line)" stroke-width="5" d="M100 100 L166 140"/><path class="draw" data-draw="29.299999999999997" stroke="var(--teal-line)" stroke-width="5" d="M100 100 L100 176"/><path class="draw" data-draw="33.12" stroke="var(--teal-line)" stroke-width="4" d="M40 50 L14 20"/><path class="draw" data-draw="33.239999999999995" stroke="var(--teal-line)" stroke-width="4" d="M40 50 L64 14"/><path class="draw" data-draw="33.36" stroke="var(--teal-line)" stroke-width="4" d="M160 50 L186 20"/><path class="draw" data-draw="33.48" stroke="var(--teal-line)" stroke-width="4" d="M160 50 L136 14"/><path class="draw" data-draw="33.599999999999994" stroke="var(--teal-line)" stroke-width="4" d="M34 140 L8 170"/><path class="draw" data-draw="33.72" stroke="var(--teal-line)" stroke-width="4" d="M166 140 L192 170"/><circle data-pop="29.2" cx="40" cy="50" r="12" fill="var(--bg)" stroke="var(--teal)" stroke-width="5"/><circle data-pop="29.3" cx="160" cy="50" r="12" fill="var(--bg)" stroke="var(--teal)" stroke-width="5"/><circle data-pop="29.4" cx="34" cy="140" r="12" fill="var(--bg)" stroke="var(--teal)" stroke-width="5"/><circle data-pop="29.5" cx="166" cy="140" r="12" fill="var(--bg)" stroke="var(--teal)" stroke-width="5"/><circle data-pop="29.599999999999998" cx="100" cy="176" r="12" fill="var(--bg)" stroke="var(--teal)" stroke-width="5"/><circle data-pop="36.38" cx="14" cy="20" r="9" fill="#b5dc55"/><circle data-pop="36.46" cx="64" cy="14" r="9" fill="#b5dc55"/><circle data-pop="36.54" cx="186" cy="20" r="9" fill="#b5dc55"/><circle data-pop="36.620000000000005" cx="136" cy="14" r="9" fill="#b5dc55"/><circle data-pop="36.7" cx="8" cy="170" r="9" fill="#b5dc55"/><circle data-pop="36.78" cx="192" cy="170" r="9" fill="#b5dc55"/><circle data-pop="28.9" cx="100" cy="100" r="18" fill="var(--teal)"/></svg></div>
+      <div class="c" style="top:560px;font-size:84px;font-weight:600;" data-in="28.8" data-fx="up"><span class="line kline " data-t="28.95,29.28,30.14">وأيضًا الأهدافُ <span class="acc">الشخصيّة</span></span></div>
+      <div class="c" style="top:690px;font-size:68px;font-weight:500;" data-in="30.5" data-fx="up"><span class="line kline " data-t="30.68,30.86,31.18,31.52">لكلّ واحدٍ أهدافٌ شخصيّة</span></div>
+      <div class="c" style="top:800px;font-size:68px;font-weight:500;" data-in="31.8" data-fx="up"><span class="line kline " data-t="31.92,32.22,33.12,33.74,33.88">والمهمّ: كلّما توسّعتَ في الأهداف</span></div>
+      <div class="c" style="top:910px;font-size:68px;font-weight:500;" data-in="34.1" data-fx="up"><span class="line kline " data-t="34.24,34.82,34.96">ستكتشف أنّ الموضوع</span></div>
+      <div class="c" style="top:1030px;font-size:140px;font-weight:700;line-height:1.2;" data-in="36.2" data-fx="big"><span class="line kline " data-t="36.38,36.84">كبيرٌ <span class="acc">ومتشعّب</span></span></div>
+    </section>
+
+    <!-- ===== S7 (38.12s) ===== -->
+    <section class="scene" id="s7" data-start="38.12">
+      <div class="icon " style="top:230px;width:340px;height:340px;margin-left:-170px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><g data-swing="43.7">
+        <path data-pop="40.58" d="M100 104 L100 34 A70 70 0 0 1 170 104 Z" fill="var(--teal-line)"/><path data-pop="40.93" d="M100 104 L170 104 A70 70 0 0 1 100 174 Z" fill="#b5dc55"/><path data-pop="41.28" d="M100 104 L100 174 A70 70 0 0 1 30 104 Z" fill="#d2ee94"/>
+        <circle class="draw" data-draw="38.1" cx="100" cy="104" r="70" stroke="var(--teal)" stroke-width="7"/>
+        <path class="draw" data-draw="38.5" stroke="var(--ink)" stroke-width="6" d="M100 104 V54"/><path class="draw" data-draw="38.6" stroke="var(--ink)" stroke-width="6" d="M100 104 L132 120"/></g></svg></div>
+      <div class="c" style="top:670px;font-size:84px;font-weight:600;" data-in="38.0" data-fx="up"><span class="line kline " data-t="38.15,38.30,39.05,39.30,39.80">ولا يكفي أن أقسّمَ يومي</span></div>
+      <div class="c" style="top:800px;font-size:84px;font-weight:500;" data-in="40.4" data-fx="up"><span class="line kline " data-t="40.58,42.53">بتقسيمٍ فيه</span></div>
+      <div class="c" style="top:930px;font-size:120px;font-weight:700;line-height:1.2;" data-in="42.75" data-fx="big"><span class="line kline " data-t="42.89,43.36,43.58">شيءٌ من <span class="acc">السذاجة</span></span></div>
+    </section>
+
+    <!-- ===== S8 (44.7s) ===== -->
+    <section class="scene" id="s8" data-start="44.7">
+      <div class="icon " style="top:220px;width:320px;height:320px;margin-left:-160px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="44.66" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M24 44 H176 L118 112 V166 L82 184 V112 Z"/>
+        <circle data-pop="44.959999999999994" cx="48" cy="24" r="11" fill="var(--teal-line)"/><circle data-pop="45.059999999999995" cx="82" cy="14" r="11" fill="#b5dc55"/><circle data-pop="45.16" cx="118" cy="22" r="11" fill="var(--teal)"/><circle data-pop="45.25999999999999" cx="152" cy="12" r="11" fill="#d2ee94"/><circle data-pop="46.81" cx="100" cy="140" r="11" fill="#b5dc55"/></svg></div>
+      <div class="c" style="top:620px;font-size:80px;font-weight:500;" data-in="44.6" data-fx="up"><span class="line kline " data-t="44.74,44.95,45.08,46.00,46.18">أو أن تقتصرَ على نوعٍ</span></div>
+      <div class="c" style="top:740px;font-size:80px;font-weight:600;" data-in="46.65" data-fx="up"><span class="line kline " data-t="46.81,47.31,47.47"><span class="acc">معيّنٍ</span> من الأهداف</span></div>
+      <div class="pillrow" style="top:890px;font-size:72px" data-in="48.1" data-fx="pill"><span class="pill "><span class="kline" data-t="48.31">كالتجارة</span></span></div>
+      <div class="pillrow" style="top:1020px;font-size:72px" data-in="48.8" data-fx="pill"><span class="pill "><span class="kline" data-t="48.97,49.27">أو القراءة</span></span></div>
+      <div class="c" style="top:1160px;font-size:68px;font-weight:500;" data-in="50.3" data-fx="up"><span class="line kline " data-t="50.47,50.65">أو غيرِهما</span></div>
+    </section>
+
+    <!-- ===== S9 (51.4s) ===== -->
+    <section class="scene" id="s9" data-start="51.4">
+      <div class="icon " style="top:180px;width:290px;height:290px;margin-left:-145px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path data-fill="52.83" fill="#b5dc55" fill-opacity="0" d="M70 58 H130 L122 150 H78 Z"/>
+        <circle class="draw" data-draw="51.35" cx="100" cy="22" r="9" stroke="var(--teal)" stroke-width="6"/>
+        <path class="draw" data-draw="51.45" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M78 58 L88 36 H112 L122 58 Z"/>
+        <path class="draw" data-draw="51.6" stroke="var(--teal)" stroke-width="7" d="M70 58 H130 L122 150 H78 Z"/><path class="draw" data-draw="51.800000000000004" stroke="var(--teal-line)" stroke-width="4" d="M100 58 V150"/><path class="draw" data-draw="51.85" stroke="var(--teal-line)" stroke-width="4" d="M74 104 H126"/>
+        <path class="draw" data-draw="51.9" stroke="var(--teal)" stroke-width="7" d="M84 150 H116 L108 172 H92 Z"/>
+        <g data-pop="53.03" stroke="#b5dc55" stroke-width="7"><path d="M40 104 H22"/><path d="M160 104 H178"/><path d="M50 60 L38 48"/><path d="M150 60 L162 48"/><path d="M52 150 L40 162"/><path d="M148 150 L160 162"/></g></svg></div>
+      <div class="c" style="top:520px;font-size:84px;font-weight:600;" data-in="51.3" data-fx="up"><span class="line kline " data-t="51.43,51.75,52.15,52.83">لكن هناك <span class="acc">مبادئُ نبويّة</span></span></div>
+      <div class="c" style="top:650px;font-size:68px;font-weight:500;" data-in="53.1" data-fx="up"><span class="line kline " data-t="53.23,53.61,54.17,54.83">النبيُّ ﷺ علّمنا إيّاها</span></div>
+      <div class="c" style="top:760px;font-size:68px;font-weight:500;" data-in="55.55" data-fx="up"><span class="line kline " data-t="55.68,55.82,56.34">إذا استمررنا عليها</span></div>
+      <div class="c" style="top:870px;font-size:68px;font-weight:500;" data-in="56.8" data-fx="up"><span class="line kline " data-t="56.96,57.20,57.46,57.82">نستطيع أن نجمع بين</span></div>
+      <div class="c" style="top:990px;font-size:96px;font-weight:700;" data-in="57.9" data-fx="up"><span class="line kline " data-t="58.06,58.64,59.08,59.22">أكبرِ قدرٍ من الأهداف</span></div>
+      <div class="c" style="top:1130px;font-size:130px;font-weight:700;line-height:1.2;" data-in="59.7" data-fx="big"><span class="line kline " data-t="59.86"><span class="acc">والطموح</span></span></div>
+    </section>
+
+    <!-- ===== S10 (60.3s) ===== -->
+    <section class="scene" id="s10" data-start="60.3">
+      <div class="icon " style="top:170px;width:280px;height:280px;margin-left:-140px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g data-drip="64.3"><path d="M100 6 Q109 20 109 26 A9 9 0 0 1 91 26 Q91 20 100 6 Z" fill="var(--teal-line)"/><path d="M86 6 Q95 20 95 26 A9 9 0 0 1 77 26 Q77 20 86 6 Z" fill="var(--teal-line)"/><path d="M114 6 Q123 20 123 26 A9 9 0 0 1 105 26 Q105 20 114 6 Z" fill="var(--teal-line)"/></g>
+        <path data-fill="66.77" d="M56 112 H144 L140 166 Q138 174 126 174 H74 Q62 174 60 166 Z" fill="#b5dc55" fill-opacity="0"/>
+        <path class="draw" data-draw="60.25" stroke="var(--teal)" stroke-width="7" d="M48 74 H152 L140 166 Q138 178 126 178 H74 Q62 178 60 166 Z"/><path class="draw" data-draw="60.55" stroke="var(--teal)" stroke-width="6" d="M152 96 Q178 96 178 120 Q178 144 146 146"/></svg></div>
+      <div class="c" style="top:520px;font-size:76px;font-weight:500;" data-in="60.2" data-fx="up"><span class="line kline " data-t="60.32,60.65,61.07,61.27">ومن أبسطِ هذه المبادئ</span></div>
+      <div class="c" style="top:630px;font-size:76px;font-weight:600;" data-in="62.2" data-fx="up"><span class="line kline " data-t="62.33,62.70,62.94">حديثُ النبيِّ ﷺ:</span></div>
+      <div class="glass" style="top:780px" data-in="63.85" data-fx="card"><div class="quote" style="font-size:84px;font-weight:600;line-height:1.55"><span class="line kline gl" data-t="64.30,64.74,65.26,65.38">«أَحَبُّ الْأَعْمَالِ إِلَى اللَّهِ</span><span class="line kline gl" data-t="65.64,66.18,66.77"><span class="mark" data-mark="65.7">أَدْوَمُهَا</span> وَإِنْ قَلَّ»</span></div></div>
+      <div class="refchip" style="top:1150px" data-in="66.75" data-fx="chip"><span>[متفق عليه]</span></div>
+    </section>
+
+    <!-- ===== S11 (67.15s) ===== -->
+    <section class="scene" id="s11" data-start="67.15">
+      <div class="icon " style="top:220px;width:330px;height:330px;margin-left:-165px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="67.1" stroke="var(--teal)" stroke-width="7" d="M100 46 V170"/><path class="draw" data-draw="67.19999999999999" stroke="var(--teal)" stroke-width="7" d="M64 176 H136"/>
+        <circle data-pop="67.3" cx="100" cy="40" r="10" fill="#b5dc55"/>
+        <g data-tilt="67.5,71.25"><path class="draw" data-draw="67.39999999999999" stroke="var(--teal)" stroke-width="7" d="M34 62 H166"/><path d="M34 62 L16 112 M34 62 L52 112" stroke="var(--teal-line)" stroke-width="4"/><path d="M8 112 H60 Q34 136 8 112 Z" fill="var(--bg)" stroke="var(--teal)" stroke-width="6"/><path d="M166 62 L148 112 M166 62 L184 112" stroke="var(--teal-line)" stroke-width="4"/><path d="M140 112 H192 Q166 136 140 112 Z" fill="var(--bg)" stroke="var(--teal)" stroke-width="6"/></g></svg></div>
+      <div class="c" style="top:650px;font-size:80px;font-weight:600;" data-in="67.05" data-fx="up"><span class="line kline " data-t="67.17,67.86,68.20,68.52">وكذلك قولُ النبيِّ ﷺ:</span></div>
+      <div class="glass" style="top:800px" data-in="69.15" data-fx="card"><div class="quote" style="font-size:96px;font-weight:600;line-height:1.55"><span class="line kline gl" data-t="69.44,70.16,70.32">«اكْلَفُوا مِنَ الْأَعْمَالِ</span><span class="line kline gl" data-t="71.04,71.25"><span class="mark" data-mark="71.3">مَا تُطِيقُونَ»</span></span></div></div>
+    </section>
+
+    <!-- ===== S12 (72.05s) ===== -->
+    <section class="scene" id="s12" data-start="72.05">
+      <div class="icon " style="top:220px;width:320px;height:320px;margin-left:-160px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="72.0" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M100 74 C80 62 52 60 26 66 V154 C52 148 80 150 100 162 C120 150 148 148 174 154 V66 C148 60 120 62 100 74 Z"/>
+        <path class="draw" data-draw="72.25" stroke="var(--teal)" stroke-width="5" d="M100 74 V162"/>
+        <g stroke="var(--teal-line)" stroke-width="4">
+          <path class="draw" data-draw="72.4" stroke="var(--teal-line)" stroke-width="4" d="M86 94 C70 86 54 85 40 88"/><path class="draw" data-draw="72.47" stroke="var(--teal-line)" stroke-width="4" d="M86 112 C70 104 54 103 40 106"/>
+          <path class="draw" data-draw="72.4" stroke="var(--teal-line)" stroke-width="4" d="M114 94 C130 86 146 85 160 88"/><path class="draw" data-draw="72.47" stroke="var(--teal-line)" stroke-width="4" d="M114 112 C130 104 146 103 160 106"/></g>
+        <g stroke="#b5dc55" stroke-width="6" data-pop="72.7"><path d="M100 48 V30"/><path d="M74 54 L64 40"/><path d="M126 54 L136 40"/></g></svg></div>
+      <div class="c" style="top:640px;font-size:80px;font-weight:600;" data-in="71.95" data-fx="up"><span class="line kline " data-t="72.09,72.75,73.05,73.19,73.41">وكذلك قولُ الله عزّ وجلّ:</span></div>
+      <div class="glass" style="top:790px" data-in="73.5" data-fx="card"><div class="quote" style="font-size:96px;font-weight:600;line-height:1.55"><span class="line kline gl" data-t="73.75,73.95,74.41,74.51">﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا</span><span class="line kline gl" data-t="75.05,75.25">إِلَّا <span class="mark" data-mark="75.3">وُسْعَهَا﴾</span></span></div></div>
+      <div class="refchip" style="top:1150px" data-in="75.3" data-fx="chip"><span>[البقرة: ٢٨٦]</span></div>
+    </section>
+
+    <!-- ===== S13 (75.68s) ===== -->
+    <section class="scene" id="s13" data-start="75.68">
+      <div class="icon " style="top:200px;width:300px;height:300px;margin-left:-150px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="75.64" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M14 176 L76 72 L106 118 L128 92 L186 176 Z"/>
+        <path class="draw" data-draw="76.04" stroke="var(--teal-line)" stroke-width="5" d="M60 100 L76 112 L92 98"/>
+        <path class="draw" data-draw="80.03" stroke="var(--ink)" stroke-width="6" d="M76 72 V22"/>
+        <path data-pop="80.33" d="M78 24 L120 36 L78 50 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="4"/></svg></div>
+      <div class="c" style="top:570px;font-size:76px;font-weight:500;" data-in="75.6" data-fx="up"><span class="line kline " data-t="75.71,76.04,76.30,76.64,76.76,77.04">قد يظنّ البعضُ أنّ هذه الآية</span></div>
+      <div class="pillrow" style="top:690px;font-size:72px" data-in="77.3" data-fx="pill"><span class="pill ghost"><span class="kline" data-t="77.46,77.58">في التخفيف</span><i class="strike" data-strike="78.2"></i></span></div>
+      <div class="c" style="top:850px;font-size:76px;font-weight:500;" data-in="78.0" data-fx="up"><span class="line kline " data-t="78.16,78.43,78.71">لكنّ هذه الآية</span></div>
+      <div class="pillrow" style="top:970px;font-size:80px" data-in="79.0" data-fx="pill"><span class="pill "><span class="kline" data-t="79.15,79.47,80.23,80.33">تُؤخذ حتى في العزائم</span></span></div>
+    </section>
+
+    <!-- ===== S14 (80.92s) ===== -->
+    <section class="scene" id="s14" data-start="80.92">
+      <div class="icon " style="top:190px;width:290px;height:290px;margin-left:-145px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="80.88" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M48 40 Q40 40 40 50 V176 Q40 186 50 186 H150 Q160 186 160 176 V50 Q160 40 152 40"/>
+        <rect data-pop="81.13" x="76" y="28" width="48" height="24" rx="8" fill="var(--teal)"/>
+        <rect x="58" y="76" width="24" height="24" rx="6" stroke="var(--teal-line)" stroke-width="5"/><path class="draw" data-draw="81.28" stroke="var(--teal-line)" stroke-width="5" d="M96 88 H144"/><path class="draw" data-draw="82.53" stroke="#b5dc55" stroke-width="8" d="M60 86 L70 98 L90 72"/><rect x="58" y="112" width="24" height="24" rx="6" stroke="var(--teal-line)" stroke-width="5"/><path class="draw" data-draw="81.38" stroke="var(--teal-line)" stroke-width="5" d="M96 124 H144"/><path class="draw" data-draw="85.4" stroke="#b5dc55" stroke-width="8" d="M60 122 L70 134 L90 108"/><rect x="58" y="148" width="24" height="24" rx="6" stroke="var(--teal-line)" stroke-width="5"/><path class="draw" data-draw="81.48" stroke="var(--teal-line)" stroke-width="5" d="M96 160 H144"/><path class="draw" data-draw="86.91" stroke="#b5dc55" stroke-width="8" d="M60 158 L70 170 L90 144"/></svg></div>
+      <div class="c" style="top:540px;font-size:72px;font-weight:500;" data-in="80.85" data-fx="up"><span class="line kline " data-t="80.95,81.17,81.45,81.60,81.70,81.81">وأنّ المرءَ لا بدّ أن يعرفَ</span></div>
+      <div class="c" style="top:650px;font-size:72px;font-weight:500;" data-in="82.05" data-fx="up"><span class="line kline " data-t="82.19,82.53,83.14,83.90">مدى <span class="acc">قدرتِه</span>، ومدى الإمكانات</span></div>
+      <div class="c" style="top:760px;font-size:72px;font-weight:500;" data-in="84.7" data-fx="up"><span class="line kline " data-t="84.86,85.40">الموجودة عنده</span></div>
+      <div class="c" style="top:890px;font-size:130px;font-weight:700;line-height:1.2;" data-in="85.8" data-fx="big"><span class="line kline " data-t="85.95,86.91">ويضعَ <span class="acc">أهدافَه</span></span></div>
+      <div class="c" style="top:1100px;font-size:100px;font-weight:600;" data-in="87.4" data-fx="up"><span class="line kline " data-t="87.55,88.20"><span class="mark" data-mark="88.3">وفقًا لذلك</span></span></div>
+      <svg id="send" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"><path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/></svg>
+    </section>
+
+
+    <div id="tide"></div>
+    <div id="handle">@abdulla_7amdan</div>
+    <div id="safe" style="position:absolute;inset:0">
+      <div style="left:0;right:0;top:0;height:220px"></div>
+      <div style="left:0;right:0;bottom:0;height:380px"></div>
+      <div style="right:0;width:140px;top:1040px;bottom:380px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ تشغيل</button>
+  <input type="range" id="scrub" min="0" max="40" step="0.01" value="0">
+  <span id="time"></span>
+  <button id="soundBtn" title="تشغيل مع الصوت">🔊</button>
+  <button id="safeBtn">Safe zone</button>
+</div>
+<audio id="voice" src="audio/voice-clean.m4a" preload="auto"></audio>
+
+<script src="gsap.min.js"></script>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  const END = 91.47;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const lines = $$('.kline').map(el => {
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(p => {
+          if (!p) return;
+          if (/^\s+$/.test(p)) return frag.appendChild(document.createTextNode(p));
+          const s = document.createElement('span'); s.className = 'k'; s.textContent = p; frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+    walk(el);
+    return { el, ws: $$('.k', el), times: el.dataset.t.split(',').map(Number) };
+  });
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const scenes = $$('.scene'), starts = scenes.map(s => +s.dataset.start);
+  scenes.forEach((s, i) => gsap.set(s, { '--p': i === 0 ? '130%' : '0%' }));
+  gsap.set(scenes[0], { className: 'scene live' });
+
+  const wordIn = (w, at) => tl.fromTo(w, { y: 56, opacity: 0, filter: 'blur(12px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6 }, at);
+  const bigIn  = (w, at) => tl.fromTo(w, { y: 80, opacity: 0, scale: 0.86, filter: 'blur(26px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' }, at);
+  const FX = {
+    card: (el, at) => tl.fromTo(el, { y: 150, opacity: 0, rotation: -1.2 }, { y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, at),
+    pill: (el, at) => tl.fromTo(el.firstElementChild, { y: 40, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, at),
+    chip: (el, at) => tl.fromTo(el.firstElementChild, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, at),
+  };
+
+  /* «مدّ ضوئي» — continuous: the light descends as the next idea's first word is spoken */
+  const TIDE = 0.95;
+  const tide = (prev, next, a) => {
+    const t0 = a - 0.18;
+    tl.set(prev, { className: 'scene out', '--p': '0%' }, t0)
+      .set(next, { className: 'scene', '--p': '0%' }, t0)
+      .to([prev, next], { '--p': '130%', duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to($$(':scope > *', prev), { y: 40, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
+      .fromTo('#tide', { y: -520, opacity: 0 }, { y: 1920, duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to('#tide', { opacity: 1, duration: TIDE * 0.35, ease: 'sine.out' }, t0)
+      .to('#tide', { opacity: 0, duration: TIDE * 0.4, ease: 'sine.in' }, t0 + TIDE * 0.6)
+      .set(next, { className: 'scene live' }, t0 + TIDE)
+      .set(prev, { autoAlpha: 0 }, t0 + TIDE);
+  };
+
+  tl.fromTo('#glow-a', { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0)
+    .fromTo('#glow-b', { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0.1)
+    .to('#glow-a', { x: -70, y: 60, duration: END, ease: 'sine.inOut' }, 0)
+    .to('#glow-b', { x: 70, y: -50, duration: END, ease: 'sine.inOut' }, 0)
+    .fromTo('#handle', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 0.5)
+    .fromTo('#dot', { scale: 0 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' }, 0.1)
+    .fromTo('#dot b', { scale: 1, opacity: 1 }, { scale: 2.4, opacity: 0, duration: 1.4, ease: 'sine.out', repeat: Math.floor(END / 1.4) - 1 }, 0.7);
+
+  scenes.forEach((S, i) => {
+    const a = starts[i];
+    if (i > 0) tide(scenes[i - 1], S, a);
+    $$('[data-in]', S).forEach(el => { if (FX[el.dataset.fx]) FX[el.dataset.fx](el, +el.dataset.in); });
+    $$('[data-mark]', S).forEach(m => tl.to(m, { backgroundSize: '100% 38%', duration: 0.5, ease: 'power2.inOut' }, +m.dataset.mark));
+    const ic = $('.icon', S);
+    if (ic) tl.fromTo(ic, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5 }, a - 0.12);
+    if (i === scenes.length - 1) tl.to($$(':scope > *', S), { scale: 1.025, duration: END - a - 0.6, ease: 'sine.inOut', transformOrigin: '50% 40%' }, a + 0.5);
+  });
+
+  /* ---- icon motion ---- */
+  $$('.icon path.draw, .icon circle.draw').forEach(p => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
+  $$('.icon [data-draw]').forEach(p => tl.to(p, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, +p.dataset.draw));
+  $$('.icon [data-pop]').forEach(g => tl.fromTo(g, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(2.4)' }, +g.dataset.pop));
+  $$('.icon [data-rise]').forEach(g => tl.fromTo(g, { y: 46, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' }, +g.dataset.rise)
+      .to(g, { y: -4, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, +g.dataset.rise + 1.1));
+  $$('.icon [data-wave]').forEach(g => [...g.children].forEach((w, k) =>
+      tl.fromTo(w, { opacity: 0.35, scaleY: 0.35, transformOrigin: '50% 100%' }, { opacity: 1, scaleY: 1, duration: 0.28, ease: 'sine.inOut', yoyo: true, repeat: 9 }, +g.dataset.wave + k * 0.09)));
+  $$('.icon [data-fill]').forEach(p => tl.to(p, { attr: { 'fill-opacity': 0.9 }, duration: 0.7, ease: 'power2.out' }, +p.dataset.fill));
+  $$('.icon').forEach(ic => { const r = ic.querySelector('[data-beat]'); if (r) {      // heartbeat once the heart is full
+      const t = +r.dataset.beat;
+      [0, 0.55].forEach(d => tl.to(ic, { keyframes: { scale: [1, 1.08, 1, 1.04, 1] }, duration: 0.45, ease: 'none' }, t + d)); } });
+  if (document.getElementById('send'))                   // share icon flies in at the end
+    tl.fromTo('#send', { x: -140, y: 140, opacity: 0, rotation: -25 }, { x: 0, y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, 88.75)
+      .to('#send', { x: 10, y: -10, duration: 0.45, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 88.75 + 0.9);
+
+  $$('.icon [data-shoot]').forEach(g => tl.fromTo(g, { x: 110, y: -110, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.4, ease: 'power4.in' }, +g.dataset.shoot)
+      .to(g.closest('.icon'), { keyframes: { x: [0, -10, 6, 0] }, duration: 0.35, ease: 'none' }, +g.dataset.shoot + 0.4));
+  $$('.icon [data-tilt]').forEach(g => { const [t, lv] = g.dataset.tilt.split(',').map(Number);
+      gsap.set(g, { svgOrigin: '100 62' });
+      tl.fromTo(g, { rotation: -16 }, { rotation: 12, duration: 1.0, ease: 'sine.inOut' }, t)
+        .to(g, { rotation: -8, duration: 0.9, ease: 'sine.inOut' }, t + 1.0)
+        .to(g, { rotation: 5, duration: 0.8, ease: 'sine.inOut' }, t + 1.9)
+        .to(g, { rotation: 0, duration: 0.7, ease: 'back.out(2)' }, lv); });
+  $$('.icon [data-drip]').forEach(g => [...g.children].forEach((w, k) =>
+      tl.fromTo(w, { y: 0, opacity: 0 }, { keyframes: { y: [0, 40, 90], opacity: [0, 1, 0] }, duration: 0.7, ease: 'power1.in', repeat: 2, repeatDelay: 0.2 }, +g.dataset.drip + k * 0.3)));
+  $$('.icon [data-swing]').forEach(g => { gsap.set(g, { svgOrigin: '100 104' });
+      tl.to(g, { keyframes: { rotation: [0, -14, 10, -6, 3, 0] }, duration: 1.2, ease: 'none' }, +g.dataset.swing); });
+  $$('[data-strike]').forEach(s => tl.to(s, { scaleX: 1, duration: 0.45, ease: 'power2.inOut' }, +s.dataset.strike)
+      .to(s.closest('.pillrow'), { opacity: 0.45, duration: 0.4 }, +s.dataset.strike + 0.3));
+
+  /* recap: the four blessings gather, then glow together on «فضلٌ ورحمة» */
+  $$('.mini').forEach((m, k) => {
+    const t = +m.dataset.mini;
+    tl.fromTo(m, { y: 120, opacity: 0, scale: 0.6, rotation: (k - 1.5) * 8 }, { y: 0, opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.7)' }, t)
+      .to(m, { boxShadow: '0 0 0 6px rgba(181,220,85,.9), 0 24px 60px rgba(181,220,85,.45)', duration: 0.5, ease: 'power2.out' }, 15.05 + k * 0.12)
+      .to(m, { y: -10, duration: 0.6, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 15.05 + k * 0.12);
+  });
+
+  /* words appear when they are spoken */
+  lines.forEach(L => {
+    const big = L.el.closest('[data-fx="big"]');
+    L.ws.forEach((w, i) => {
+      const t = L.times[Math.min(i, L.times.length - 1)] + Math.max(0, i - L.times.length + 1) * 0.12;
+      big ? bigIn(w, t - 0.12) : wordIn(w, t - 0.06);
+    });
+  });
+
+  tl.eventCallback('onUpdate', sync);
+  tl.to({}, { duration: 0.001 }, END - 0.001);
+
+  const stage = $('#stage'), vp = $('#viewport'), voice = $('#voice');
+  const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
+  if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
+  window.__duration = END;
+  window.__scenes = Object.fromEntries(starts.map((s, i) => ['s' + (i + 1), s]).concat([['end', END]]));
+  window.__seek = t => { tl.seek(t, false); };
+  window.__ready = document.fonts.ready.then(() => true);
+
+  const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
+  let withSound = false;
+  scrub.max = END;
+  function sync() { scrub.value = tl.time(); time.textContent = `${tl.time().toFixed(2)} / ${END.toFixed(1)}`; }
+  sync();
+  tl.eventCallback('onComplete', () => { playBtn.textContent = '↺ إعادة'; voice.pause(); });
+  const play = () => { if (withSound) { voice.currentTime = tl.time(); voice.play().catch(() => {}); } tl.play(); };
+  const pause = () => { tl.pause(); voice.pause(); };
+  playBtn.onclick = () => {
+    if (tl.progress() >= 1) { tl.seek(0); play(); } else if (tl.paused()) play(); else pause();
+    playBtn.textContent = tl.paused() ? '▶ تشغيل' : '❚❚ إيقاف';
+  };
+  $('#soundBtn').onclick = () => { withSound = !withSound; $('#soundBtn').style.opacity = withSound ? 1 : .5; if (!tl.paused()) { voice.currentTime = tl.time(); withSound ? voice.play() : voice.pause(); } };
+  $('#soundBtn').style.opacity = .5;
+  scrub.oninput = () => { pause(); tl.seek(+scrub.value); playBtn.textContent = '▶ تشغيل'; sync(); };
+  $('#safeBtn').onclick = () => $('#safe').classList.toggle('on');
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+  if (params.has('t')) tl.seek(+params.get('t'));
+  else if (!params.has('render')) window.__ready.then(() => { tl.play(); playBtn.textContent = '❚❚ إيقاف'; });
+})();
+</script>
+</body>
+</html>
