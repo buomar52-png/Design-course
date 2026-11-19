@@ -48,13 +48,15 @@
   .k { display: inline-block; }
   .acc { color: var(--teal); }
   .mark { background-image: linear-gradient(var(--hl), var(--hl)); background-repeat: no-repeat; background-position: 100% 86%; background-size: 0% 38%; padding: 0 8px; }
-  .glass { position: absolute; left: 80px; right: 80px; border-radius: 42px; background: var(--card); padding: 44px 46px 48px; text-align: center;
+  .glass { position: absolute; left: 50px; right: 50px; border-radius: 48px; background: var(--card); padding: 58px 40px 44px; text-align: center;
            box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
   .glass .gl { display: block; white-space: nowrap; }
   .pillrow { position: absolute; left: 0; right: 0; text-align: center; }
   .pill { display: inline-block; padding: 14px 48px 22px; border-radius: 999px; font-weight: 600; white-space: nowrap; background: var(--teal); color: #fff; }
   .pill.ghost { background: transparent; color: var(--muted); border: 4px dashed var(--teal-line); position: relative; }
   .strike { position: absolute; left: 30px; right: 30px; top: 52%; height: 8px; border-radius: 8px; background: #d9534f; transform: scaleX(0); transform-origin: 100% 50%; }
+  .cardref { margin-top: 26px; font-size: 44px; font-weight: 500; color: var(--muted); }
+  .cardref span { display: inline-block; }
   .refchip { position: absolute; left: 0; right: 0; text-align: center; font-size: 40px; color: var(--muted); }
   .icon { position: absolute; left: 50%; }
   .icon svg, .mini svg { width: 100%; height: 100%; overflow: visible; }
@@ -220,14 +222,16 @@
 
     <!-- ===== S11 (56.38s) ===== -->
     <section class="scene" id="s11" data-start="56.38">
-      <div class="icon " style="top:170px;width:280px;height:280px;margin-left:-140px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <g data-drip="59.04"><path d="M100 6 Q109 20 109 26 A9 9 0 0 1 91 26 Q91 20 100 6 Z" fill="var(--teal-line)"/><path d="M86 6 Q95 20 95 26 A9 9 0 0 1 77 26 Q77 20 86 6 Z" fill="var(--teal-line)"/><path d="M114 6 Q123 20 123 26 A9 9 0 0 1 105 26 Q105 20 114 6 Z" fill="var(--teal-line)"/></g>
-        <path data-fill="61.4" d="M56 112 H144 L140 166 Q138 174 126 174 H74 Q62 174 60 166 Z" fill="#b5dc55" fill-opacity="0"/>
-        <path class="draw" data-draw="56.34" stroke="var(--teal)" stroke-width="7" d="M48 74 H152 L140 166 Q138 178 126 178 H74 Q62 178 60 166 Z"/><path class="draw" data-draw="56.64" stroke="var(--teal)" stroke-width="6" d="M152 96 Q178 96 178 120 Q178 144 146 146"/></svg></div>
+      <div class="icon " style="top:140px;width:340px;height:340px;margin-left:-170px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g data-drip="59.04"><path d="M100 0 Q108 12 108 18 A8 8 0 0 1 92 18 Q92 12 100 0 Z" fill="var(--teal-line)"/><path d="M100 0 Q108 12 108 18 A8 8 0 0 1 92 18 Q92 12 100 0 Z" fill="var(--teal-line)"/><path d="M100 0 Q108 12 108 18 A8 8 0 0 1 92 18 Q92 12 100 0 Z" fill="var(--teal-line)"/></g>
+        <path class="draw" data-draw="59.6" stroke="var(--teal)" stroke-width="7" d="M100 150 V124"/><path class="draw" data-draw="60.5" stroke="var(--teal)" stroke-width="7" d="M100 124 V98"/><path class="draw" data-draw="61.3" stroke="var(--teal)" stroke-width="7" d="M100 98 V74"/>
+        <path data-pop="59.85" d="M100 132 Q74 126 64 102 Q92 104 100 132 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="4"/>
+        <path data-pop="60.75" d="M100 108 Q126 102 136 78 Q108 80 100 108 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="4"/>
+        <circle data-pop="61.599999999999994" cx="100" cy="66" r="13" fill="#d2ee94" stroke="var(--teal)" stroke-width="5"/>
+        <path class="draw" data-draw="56.34" stroke="var(--teal)" stroke-width="7" fill="var(--bg)" d="M56 150 H144 L134 188 H66 Z"/><path class="draw" data-draw="56.49" stroke="var(--teal)" stroke-width="8" d="M50 150 H150"/></svg></div>
       <div class="c" style="top:520px;font-size:76px;font-weight:500;" data-in="56.3" data-fx="up"><span class="line kline " data-t="56.43,56.58,56.94,57.08">ومن أبسطِ هذه المبادئ</span></div>
       <div class="c" style="top:630px;font-size:76px;font-weight:600;" data-in="57.4" data-fx="up"><span class="line kline " data-t="57.56,57.86,58.12">حديثُ النبيِّ ﷺ:</span></div>
-      <div class="glass" style="top:780px" data-in="58.75" data-fx="card"><div class="quote" style="font-size:84px;font-weight:600;line-height:1.55"><span class="line kline gl" data-t="59.04,59.58,60.08,60.24">«أَحَبُّ الْأَعْمَالِ إِلَى اللَّهِ</span><span class="line kline gl" data-t="60.60,61.29,61.50"><span class="mark" data-mark="60.7">أَدْوَمُهَا</span> وَإِنْ قَلَّ»</span></div></div>
-      <div class="refchip" style="top:1150px" data-in="61.55" data-fx="chip"><span>[متفق عليه]</span></div>
+      <div class="glass" style="top:800px" data-in="58.75" data-fx="card"><div class="quote" style="font-size:100px;font-weight:600;line-height:1.6"><span class="line kline gl" data-t="59.04,59.58,60.08,60.24">«أَحَبُّ الْأَعْمَالِ إِلَى اللَّهِ</span><span class="line kline gl" data-t="60.60,61.29,61.50"><span class="mark" data-mark="60.7">أَدْوَمُهَا</span> وَإِنْ قَلَّ»</span></div><div class="cardref" data-in="61.55" data-fx="chip"><span>[متفق عليه]</span></div></div>
     </section>
 
     <!-- ===== S12 (61.94s) ===== -->
@@ -237,8 +241,7 @@
         <circle data-pop="62.1" cx="100" cy="40" r="10" fill="#b5dc55"/>
         <g data-tilt="62.3,65.73"><path class="draw" data-draw="62.199999999999996" stroke="var(--teal)" stroke-width="7" d="M34 62 H166"/><path d="M34 62 L16 112 M34 62 L52 112" stroke="var(--teal-line)" stroke-width="4"/><path d="M8 112 H60 Q34 136 8 112 Z" fill="var(--bg)" stroke="var(--teal)" stroke-width="6"/><path d="M166 62 L148 112 M166 62 L184 112" stroke="var(--teal-line)" stroke-width="4"/><path d="M140 112 H192 Q166 136 140 112 Z" fill="var(--bg)" stroke="var(--teal)" stroke-width="6"/></g></svg></div>
       <div class="c" style="top:650px;font-size:80px;font-weight:600;" data-in="61.85" data-fx="up"><span class="line kline " data-t="61.99,62.39,62.67,62.95">وكذلك قولُ النبيِّ ﷺ:</span></div>
-      <div class="glass" style="top:800px" data-in="63.65" data-fx="card"><div class="quote" style="font-size:96px;font-weight:600;line-height:1.55"><span class="line kline gl" data-t="63.93,64.61,64.83">«اكْلَفُوا مِنَ الْأَعْمَالِ</span><span class="line kline gl" data-t="65.57,65.73"><span class="mark" data-mark="65.8">مَا تُطِيقُونَ»</span></span></div></div>
-      <div class="refchip" style="top:1170px" data-in="65.85" data-fx="chip"><span>[رواه البخاري]</span></div>
+      <div class="glass" style="top:790px" data-in="63.65" data-fx="card"><div class="quote" style="font-size:108px;font-weight:600;line-height:1.6"><span class="line kline gl" data-t="63.93,64.61,64.83">«اكْلَفُوا مِنَ الْأَعْمَالِ</span><span class="line kline gl" data-t="65.57,65.73"><span class="mark" data-mark="65.8">مَا تُطِيقُونَ»</span></span></div><div class="cardref" data-in="65.85" data-fx="chip"><span>[رواه البخاري]</span></div></div>
     </section>
 
     <!-- ===== S13 (66.38s) ===== -->
@@ -251,8 +254,7 @@
           <path class="draw" data-draw="66.74000000000001" stroke="var(--teal-line)" stroke-width="4" d="M114 94 C130 86 146 85 160 88"/><path class="draw" data-draw="66.81" stroke="var(--teal-line)" stroke-width="4" d="M114 112 C130 104 146 103 160 106"/></g>
         <g stroke="#b5dc55" stroke-width="6" data-pop="67.04"><path d="M100 48 V30"/><path d="M74 54 L64 40"/><path d="M126 54 L136 40"/></g></svg></div>
       <div class="c" style="top:640px;font-size:80px;font-weight:600;" data-in="66.3" data-fx="up"><span class="line kline " data-t="66.43,66.93,67.17,67.33,67.61">وكذلك قولُ الله عزّ وجلّ:</span></div>
-      <div class="glass" style="top:790px" data-in="67.8" data-fx="card"><div class="quote" style="font-size:96px;font-weight:600;line-height:1.55"><span class="line kline gl" data-t="68.05,68.31,69.07,69.27">﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا</span><span class="line kline gl" data-t="69.97,70.19">إِلَّا <span class="mark" data-mark="70.25">وُسْعَهَا﴾</span></span></div></div>
-      <div class="refchip" style="top:1150px" data-in="70.3" data-fx="chip"><span>[البقرة: ٢٨٦]</span></div>
+      <div class="glass" style="top:780px" data-in="67.8" data-fx="card"><div class="quote" style="font-size:108px;font-weight:600;line-height:1.6"><span class="line kline gl" data-t="68.05,68.31,69.07,69.27">﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا</span><span class="line kline gl" data-t="69.97,70.19">إِلَّا <span class="mark" data-mark="70.25">وُسْعَهَا﴾</span></span></div><div class="cardref" data-in="70.3" data-fx="chip"><span>[البقرة: ٢٨٦]</span></div></div>
     </section>
 
     <!-- ===== S14 (70.68s) ===== -->

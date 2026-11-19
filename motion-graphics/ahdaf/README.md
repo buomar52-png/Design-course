@@ -13,7 +13,7 @@
 - قمع يمرّ منه نوع واحد من الأهداف.
 - فانوس يضيء عند «مبادئ نبويّة».
 - كرات تتأرجح فوق صينية عند «لا يستطيع أن يجمع».
-- قطرات تملأ كوبًا عند «أدومها وإن قلّ».
+- شتلة تكبر مع كل قطرة عند «أدومها وإن قلّ».
 - ميزان يتأرجح ثم يستقرّ عند «ما تطيقون».
 - مصحف مع الآية ﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا﴾.
 - «للتخفيف» يُشطب، ثم يُرفع العلم على القمّة عند «العزائم».
@@ -36,7 +36,10 @@ S=../../.claude/skills/carousel-to-reel/scripts
 node $S/render.js . --audio audio/voice-clean.m4a
 ```
 
-### تنظيف الصوت (للإعادة)
+### الصوت (للإعادة)
+معالجة «استوديو»: إزالة الضوضاء بشبكة عصبية (RNNoise)، ومعادلة صوتية تعطي دفئًا ووضوحًا، وضغط خفيف، وبوابة تجعل الوقفات صامتة تمامًا.
+بعدها التنظيف المعتاد بنفس القصّات، فيبقى التزامن كما هو.
 ```bash
-python3 $S/clean_voice.py audio/voice-original.m4a transcript.json audio
+ffmpeg -i audio/voice-original.m4a -ac 1 -ar 48000 -af "$(cat tools/studio-chain.txt)" -c:a pcm_s16le /tmp/studio.wav
+python3 $S/clean_voice.py /tmp/studio.wav transcript.json audio --no-denoise --reuse-cuts audio/timing.json
 ```

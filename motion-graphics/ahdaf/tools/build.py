@@ -20,8 +20,9 @@ def pill(top, fs, text, t, at, cls="", strike=None):
 def ref(top, text, at):
     return f'      <div class="refchip" style="top:{top}px" data-in="{at}" data-fx="chip"><span>{text}</span></div>\n'
 def mark(text, at): return f'<span class="mark" data-mark="{at}">{text}</span>'
-def card(top, at, inner):
-    return f'      <div class="glass" style="top:{top}px" data-in="{at}" data-fx="card">{inner}</div>\n'
+def card(top, at, inner, src=None, src_at=None):
+    sr = f'<div class="cardref" data-in="{src_at}" data-fx="chip"><span>{src}</span></div>' if src else ""
+    return f'      <div class="glass" style="top:{top}px" data-in="{at}" data-fx="card">{inner}{sr}</div>\n'
 def icon(top, size, svg, cls=""):
     return f'      <div class="icon {cls}" style="top:{top}px;width:{size}px;height:{size}px;margin-left:-{size // 2}px">{svg}</div>\n'
 def scene(i, start, body):
@@ -114,13 +115,15 @@ def ic_lantern(t, lit):
         {d("M84 150 H116 L108 172 H92 Z", t + 0.55)}
         <g data-pop="{lit + 0.2}" stroke="{G}" stroke-width="7"><path d="M40 104 H22"/><path d="M160 104 H178"/><path d="M50 60 L38 48"/><path d="M150 60 L162 48"/><path d="M52 150 L40 162"/><path d="M148 150 L160 162"/></g>''')
 
-def ic_cup(t, drip, full):
-    cup = "M48 74 H152 L140 166 Q138 178 126 178 H74 Q62 178 60 166 Z"
-    drops = "".join(f'<path d="M{x} 6 Q{x + 9} 20 {x + 9} 26 A9 9 0 0 1 {x - 9} 26 Q{x - 9} 20 {x} 6 Z" fill="{TL}"/>' for x in (100, 86, 114))
+def ic_sprout(t, drip, g1, g2, g3):
+    drops = "".join(f'<path d="M{x} 0 Q{x + 8} 12 {x + 8} 18 A8 8 0 0 1 {x - 8} 18 Q{x - 8} 12 {x} 0 Z" fill="{TL}"/>' for x in (100, 100, 100))
     return SVG.format(f'''
         <g data-drip="{drip}">{drops}</g>
-        <path data-fill="{full}" d="M56 112 H144 L140 166 Q138 174 126 174 H74 Q62 174 60 166 Z" fill="{G}" fill-opacity="0"/>
-        {d(cup, t)}{d("M152 96 Q178 96 178 120 Q178 144 146 146", t + 0.3, T, 6)}''')
+        {d("M100 150 V124", g1, T, 7)}{d("M100 124 V98", g2, T, 7)}{d("M100 98 V74", g3, T, 7)}
+        <path data-pop="{g1 + 0.25}" d="M100 132 Q74 126 64 102 Q92 104 100 132 Z" fill="{G}" stroke="{T}" stroke-width="4"/>
+        <path data-pop="{g2 + 0.25}" d="M100 108 Q126 102 136 78 Q108 80 100 108 Z" fill="{G}" stroke="{T}" stroke-width="4"/>
+        <circle data-pop="{g3 + 0.3}" cx="100" cy="66" r="13" fill="#d2ee94" stroke="{T}" stroke-width="5"/>
+        {d("M56 150 H144 L134 188 H66 Z", t, fill="var(--bg)")}{d("M50 150 H150", t + 0.15, T, 8)}''')
 
 def ic_scale(t, level):
     pan = lambda x: (f'<path d="M{x} 62 L{x - 18} 112 M{x} 62 L{x + 18} 112" stroke="{TL}" stroke-width="4"/>'
@@ -244,29 +247,26 @@ S.append(scene(10, 48.48,
   c(1160, 130, 700, kl(A("والطموح"), "55.91"), 55.75, "big", 1.2)))
 # 11 — أحب الأعمال إلى الله أدومها وإن قل
 S.append(scene(11, 56.38,
-  icon(170, 280, ic_cup(56.34, 59.04, 61.40)) +
+  icon(140, 340, ic_sprout(56.34, 59.04, 59.6, 60.5, 61.3)) +
   c(520, 76, 500, kl("ومن أبسطِ هذه المبادئ", "56.43,56.58,56.94,57.08"), 56.3) +
   c(630, 76, 600, kl("حديثُ النبيِّ ﷺ:", "57.56,57.86,58.12"), 57.4) +
-  card(780, 58.75, '<div class="quote" style="font-size:84px;font-weight:600;line-height:1.55">'
+  card(800, 58.75, '<div class="quote" style="font-size:100px;font-weight:600;line-height:1.6">'
        + kl("«أَحَبُّ الْأَعْمَالِ إِلَى اللَّهِ", "59.04,59.58,60.08,60.24", "gl")
-       + kl(mark("أَدْوَمُهَا", 60.7) + " وَإِنْ قَلَّ»", "60.60,61.29,61.50", "gl") + '</div>') +
-  ref(1150, "[متفق عليه]", 61.55)))
+       + kl(mark("أَدْوَمُهَا", 60.7) + " وَإِنْ قَلَّ»", "60.60,61.29,61.50", "gl") + '</div>', "[متفق عليه]", 61.55)))
 # 12 — اكلفوا من الأعمال ما تطيقون
 S.append(scene(12, 61.94,
   icon(220, 330, ic_scale(61.9, 65.73)) +
   c(650, 80, 600, kl("وكذلك قولُ النبيِّ ﷺ:", "61.99,62.39,62.67,62.95"), 61.85) +
-  card(800, 63.65, '<div class="quote" style="font-size:96px;font-weight:600;line-height:1.55">'
+  card(790, 63.65, '<div class="quote" style="font-size:108px;font-weight:600;line-height:1.6">'
        + kl("«اكْلَفُوا مِنَ الْأَعْمَالِ", "63.93,64.61,64.83", "gl")
-       + kl(mark("مَا تُطِيقُونَ»", 65.8), "65.57,65.73", "gl") + '</div>') +
-  ref(1170, "[رواه البخاري]", 65.85)))
+       + kl(mark("مَا تُطِيقُونَ»", 65.8), "65.57,65.73", "gl") + '</div>', "[رواه البخاري]", 65.85)))
 # 13 — لا يكلف الله نفسًا إلا وسعها
 S.append(scene(13, 66.38,
   icon(220, 320, ic_book(66.34)) +
   c(640, 80, 600, kl("وكذلك قولُ الله عزّ وجلّ:", "66.43,66.93,67.17,67.33,67.61"), 66.3) +
-  card(790, 67.8, '<div class="quote" style="font-size:96px;font-weight:600;line-height:1.55">'
+  card(780, 67.8, '<div class="quote" style="font-size:108px;font-weight:600;line-height:1.6">'
        + kl("﴿لَا يُكَلِّفُ اللَّهُ نَفْسًا", "68.05,68.31,69.07,69.27", "gl")
-       + kl("إِلَّا " + mark("وُسْعَهَا﴾", 70.25), "69.97,70.19", "gl") + '</div>') +
-  ref(1150, "[البقرة: ٢٨٦]", 70.3)))
+       + kl("إِلَّا " + mark("وُسْعَهَا﴾", 70.25), "69.97,70.19", "gl") + '</div>', "[البقرة: ٢٨٦]", 70.3)))
 # 14 — ليست للتخفيف فقط، بل في العزائم
 S.append(scene(14, 70.68,
   icon(200, 300, ic_peak(70.64, 74.92)) +
@@ -335,13 +335,15 @@ HTML = r'''<!doctype html>
   .k { display: inline-block; }
   .acc { color: var(--teal); }
   .mark { background-image: linear-gradient(var(--hl), var(--hl)); background-repeat: no-repeat; background-position: 100% 86%; background-size: 0% 38%; padding: 0 8px; }
-  .glass { position: absolute; left: 80px; right: 80px; border-radius: 42px; background: var(--card); padding: 44px 46px 48px; text-align: center;
+  .glass { position: absolute; left: 50px; right: 50px; border-radius: 48px; background: var(--card); padding: 58px 40px 44px; text-align: center;
            box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
   .glass .gl { display: block; white-space: nowrap; }
   .pillrow { position: absolute; left: 0; right: 0; text-align: center; }
   .pill { display: inline-block; padding: 14px 48px 22px; border-radius: 999px; font-weight: 600; white-space: nowrap; background: var(--teal); color: #fff; }
   .pill.ghost { background: transparent; color: var(--muted); border: 4px dashed var(--teal-line); position: relative; }
   .strike { position: absolute; left: 30px; right: 30px; top: 52%; height: 8px; border-radius: 8px; background: #d9534f; transform: scaleX(0); transform-origin: 100% 50%; }
+  .cardref { margin-top: 26px; font-size: 44px; font-weight: 500; color: var(--muted); }
+  .cardref span { display: inline-block; }
   .refchip { position: absolute; left: 0; right: 0; text-align: center; font-size: 40px; color: var(--muted); }
   .icon { position: absolute; left: 50%; }
   .icon svg, .mini svg { width: 100%; height: 100%; overflow: visible; }
