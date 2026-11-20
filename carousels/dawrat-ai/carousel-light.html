@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>دورة الذكاء الاصطناعي — نهاري</title>
+<style>
+@font-face{font-family:"Orn";src:url(f/amiri-quran-arabic-400-normal.woff2);unicode-range:U+FD3E-FD3F,U+FDFA,U+FDFD}
+@font-face{font-family:"PlexLat";src:url(f/plex-r.ttf);font-weight:400;unicode-range:U+0000-00FF}
+@font-face{font-family:"PlexLat";src:url(f/plex-sb.ttf);font-weight:600 700;unicode-range:U+0000-00FF}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-300-normal.woff2);font-weight:300}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-400-normal.woff2);font-weight:400}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-600-normal.woff2);font-weight:600}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-700-normal.woff2);font-weight:700}
+
+:root{
+  --bg:#f4f6f5; --bg2:#ffffff; --line:rgba(14,44,58,.055);
+  --text:#0f1316; --muted:#5f6970; --dim:#8a939a;
+  --blue:#1a7d9e; --sky:#65bdd5; --lime:#c4e773; --limeD:#4d7410; --olive:#c4e773; --card:#ffffff; --border:#e2e7ea; --soft:#3a4249;
+}
+@page{size:1080px 1350px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:"Orn","PlexLat","Plex",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+
+.slide{
+  width:1080px;height:1350px;position:relative;overflow:hidden;page-break-after:always;
+  background:
+    radial-gradient(circle 620px at 100% 0%, rgba(101,189,213,.20), transparent 70%),
+    radial-gradient(circle 560px at 0% 100%, rgba(196,231,115,.22), transparent 70%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    var(--bg);
+  display:flex;flex-direction:column;padding:120px 110px 0;
+}
+.slide:last-child{page-break-after:auto}
+
+/* header */
+.head{display:flex;align-items:center;gap:18px;font-size:28px;font-weight:500;color:var(--muted)}
+.head::before{content:"";width:5px;height:40px;background:var(--blue);border-radius:3px}
+.count{margin-inline-start:auto;font-size:24px;color:var(--dim);font-weight:400;letter-spacing:.04em}
+
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px}
+
+p.t{font-size:58px;line-height:1.75;font-weight:400;text-align:right}
+p.t + p.t{margin-top:28px}
+p.s{font-size:44px;line-height:1.8;font-weight:400;color:var(--soft)}
+b{font-weight:700;color:var(--blue)}
+.lime{color:var(--text);font-weight:700;background:linear-gradient(transparent 56%,rgba(196,231,115,.85) 56%,rgba(196,231,115,.85) 90%,transparent 90%);padding:0 4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+.tag{align-self:flex-start;display:inline-block;background:var(--lime);color:#1c2806;
+  font-size:40px;font-weight:700;padding:10px 30px 16px;border-radius:12px;margin-bottom:56px}
+
+.verse{text-align:center;margin:64px 0 0}
+.verse .v{font-size:56px;line-height:1.95;font-weight:500;color:var(--text)}
+.verse .br{color:var(--blue);font-size:60px}
+.verse .ref{margin-top:14px;font-size:28px;color:var(--muted)}
+
+.note{margin-top:70px;background:var(--card);border:1px solid var(--border);border-radius:28px;padding:44px 52px;box-shadow:0 8px 0 0 #e3e9ec}
+.note .lbl{font-size:28px;color:var(--blue);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.note .lbl::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--lime)}
+.note p{font-size:44px;line-height:1.7}
+.note .src{font-size:26px;color:var(--muted);margin-top:18px}
+
+.hadith{margin-top:60px;border-inline-start:6px solid #9fcb3c;padding:16px 44px 20px;background:linear-gradient(270deg,rgba(196,231,115,.28),rgba(196,231,115,0));border-radius:0 18px 18px 0}
+.hadith p{font-size:52px;line-height:1.85;font-weight:500}
+.hadith .ref{font-size:28px;color:var(--muted);margin-top:12px}
+
+.foot{height:120px;display:flex;align-items:center;justify-content:center;font-family:"PlexLat";font-size:26px;color:var(--dim);letter-spacing:.02em;position:relative}
+.swipe{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:12px;font-family:"Plex";font-size:24px;color:var(--muted)}
+.swipe svg{width:40px;height:40px}
+.send{position:absolute;left:0;top:50%;transform:translateY(-55%);width:84px;height:84px}
+
+/* cover */
+.cover .body{justify-content:flex-start;padding-top:40px;padding-bottom:40px}
+.cover .kicker{font-size:34px;color:var(--lime);font-weight:600;margin-bottom:10px}
+.cover h1{font-size:176px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+.cover h1 span{color:var(--blue)}
+.cover .rule{width:140px;height:6px;background:var(--blue);border-radius:3px;margin:46px 0 46px}
+.cover .sub{font-size:50px;line-height:1.7;color:#c9cdd2;font-weight:400}
+.ring{position:absolute;left:-250px;bottom:150px;width:600px;height:600px;transform:rotate(180deg)}
+
+.cover h1.ct{font-size:112px;line-height:1.45;font-weight:700}
+.cover h1.ct span{font-size:170px;line-height:1.15;color:var(--blue);display:inline-block;margin:6px 0}
+.cover h1.ct em{display:block;margin-top:-6px;font-style:normal;font-size:52px;font-weight:500;color:var(--muted)}
+.big-q{font-size:200px;line-height:1;color:var(--blue);opacity:.18;font-family:"Plex";position:absolute;top:150px;left:100px}
+.ice{position:absolute;left:60px;bottom:150px;width:420px;height:420px}
+.kk{display:inline-block;align-self:flex-start;font-size:32px;font-weight:600;color:#1c2806;background:var(--lime);padding:8px 26px 14px;border-radius:999px;margin-bottom:30px}
+.cv2 h1{font-size:116px;line-height:1.3;font-weight:700}
+.cv2 h1 span{color:var(--blue)}
+.cv2 .sub{font-size:40px;color:var(--soft);margin-top:24px;line-height:1.6}
+.ax{display:flex;flex-direction:column;gap:24px;margin-top:40px}
+.axi{display:flex;gap:30px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:28px;padding:30px 38px 34px;box-shadow:0 8px 0 0 #e3e9ec}
+.axi .n{font-family:"PlexLat";font-weight:600;font-size:30px;color:var(--blue);background:rgba(101,189,213,.16);border-radius:16px;min-width:74px;height:74px;display:flex;align-items:center;justify-content:center;flex:none}
+.axi .h{font-size:44px;font-weight:700;line-height:1.4}
+.axi .h i{font-style:normal;font-family:"PlexLat";font-weight:400;font-size:26px;color:var(--muted)}
+.axi .d{font-size:32px;line-height:1.65;color:var(--soft);margin-top:6px}
+.outs{display:flex;gap:22px;margin-top:40px}
+.out{flex:1;background:var(--card);border:1px solid var(--border);border-radius:26px;padding:30px 20px;text-align:center;box-shadow:0 8px 0 0 #e3e9ec}
+.out svg{width:84px;height:84px}
+.out p{font-size:34px;font-weight:700;margin-top:12px;line-height:1.4}
+.cta{margin-top:70px;background:var(--text);color:#fff;border-radius:34px;padding:44px 48px;display:flex;align-items:center;justify-content:space-between}
+.cta p{font-size:54px;font-weight:700;line-height:1.4}
+.cta p span{color:var(--lime)}
+.cta svg{width:90px;height:90px;flex:none}
+</style>
+</head>
+<body>
+
+<!-- 1 Cover -->
+<section class="slide cover cv2">
+  <svg class="ice" viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="104" r="86" stroke="#1a7d9e" stroke-opacity=".14" stroke-width="1" stroke-dasharray="2 6"/>
+    <path d="M100 30 C106 78 122 94 170 100 C122 106 106 122 100 170 C94 122 78 106 30 100 C78 94 94 78 100 30 Z" fill="#1a7d9e" fill-opacity=".08" stroke="#1a7d9e" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M156 34 C158 48 162 52 176 54 C162 56 158 60 156 74 C154 60 150 56 136 54 C150 52 154 48 156 34 Z" fill="#b4dc52"/>
+    <path d="M48 140 C49.5 150 52 152.5 62 154 C52 155.5 49.5 158 48 168 C46.5 158 44 155.5 34 154 C44 152.5 46.5 150 48 140 Z" fill="#1a7d9e" fill-opacity=".45"/>
+    <circle cx="100" cy="100" r="6" fill="#b4dc52" stroke="#ffffff" stroke-width="1.5"/>
+  </svg>
+  <div class="body" style="justify-content:flex-start;padding-top:40px">
+    <span class="kk">دورة تدريبية</span>
+    <h1>الذكاء الاصطناعي<br><span>في خدمة<br>المحتوى الديني</span></h1>
+    <p class="sub">من الفكرة.. إلى منشورٍ وفيديو وعرضٍ<br>جاهزٍ للنشر.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#4d7410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
+  </div>
+</section>
+
+<!-- 2 Axes 1-3 -->
+<section class="slide">
+  <div class="head">محاور الدورة<span class="count">٢ / ٤</span></div>
+  <div class="body">
+    <p class="t" style="font-size:54px">ماذا ستتعلّم؟</p>
+    <div class="ax">
+      <div class="axi"><div class="n">01</div><div><div class="h">مدخل إلى الذكاء الاصطناعي</div><div class="d">تعرّف على <b>أبرز الأدوات</b>، وكيف تستخدمها.</div></div></div>
+      <div class="axi"><div class="n">02</div><div><div class="h">هندسة الأوامر <i dir="ltr">Prompt Engineering</i></div><div class="d">اكتب أوامر <b>احترافية</b>.. تحصل بها على نتائج مميزة.</div></div></div>
+      <div class="axi"><div class="n">03</div><div><div class="h">صناعة المحتوى الديني</div><div class="d">أعِدّ <b>منشورات الكاروسيل</b> وصمّمها بالذكاء الاصطناعي.</div></div></div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 3 Axes 4-6 -->
+<section class="slide">
+  <div class="head">محاور الدورة<span class="count">٣ / ٤</span></div>
+  <div class="body">
+    <div class="ax" style="margin-top:0">
+      <div class="axi"><div class="n">04</div><div><div class="h">إنتاج الفيديو الديني</div><div class="d">من <b>كتابة السيناريو</b>، إلى إنشاء المشاهد، وإنتاج مقاطع قصيرة <span dir="ltr" style="font-family:PlexLat">(Reels)</span>.</div></div></div>
+      <div class="axi"><div class="n">05</div><div><div class="h">تصميم العروض التقديمية</div><div class="d">عروض <b>تعليمية ودعوية</b> من الصفر.. ولو كنت مبتدئًا.</div></div></div>
+      <div class="axi"><div class="n">06</div><div><div class="h">المراجعة والتحقق</div><div class="d">تأكّد من <span class="lime">صحة المحتوى الشرعي</span> وجودة المخرجات قبل النشر، بالربط مع <b dir="ltr" style="font-family:PlexLat">MCP</b> «تراث».</div></div></div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 4 Practice + CTA -->
+<section class="slide">
+  <div class="head">التطبيق العملي<span class="count">٤ / ٤</span></div>
+  <div class="body">
+    <p class="t" style="font-size:54px">ولن تكتفي بالتعلّم..<br>بل <b>ستُنتج بنفسك</b>:</p>
+    <div class="outs">
+      <div class="out">
+        <svg viewBox="0 0 48 48" fill="none" stroke="#1a7d9e" stroke-width="2.4" stroke-linejoin="round"><rect x="13" y="8" width="22" height="30" rx="4" fill="#1a7d9e" fill-opacity=".08"/><path d="M8 13v20M40 13v20" stroke-linecap="round" stroke-opacity=".5"/><circle cx="24" cy="43" r="1.6" fill="#b4dc52" stroke="none"/><circle cx="19" cy="43" r="1.6" fill="#1a7d9e" fill-opacity=".4" stroke="none"/><circle cx="29" cy="43" r="1.6" fill="#1a7d9e" fill-opacity=".4" stroke="none"/></svg>
+        <p>كاروسيل<br>ديني</p>
+      </div>
+      <div class="out">
+        <svg viewBox="0 0 48 48" fill="none" stroke="#1a7d9e" stroke-width="2.4" stroke-linejoin="round"><rect x="12" y="4" width="24" height="40" rx="6" fill="#1a7d9e" fill-opacity=".08"/><path d="M21 18v12l10-6z" fill="#b4dc52" stroke="#4d7410" stroke-width="1.6"/></svg>
+        <p>فيديو<br>قصير</p>
+      </div>
+      <div class="out">
+        <svg viewBox="0 0 48 48" fill="none" stroke="#1a7d9e" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><rect x="5" y="8" width="38" height="24" rx="4" fill="#1a7d9e" fill-opacity=".08"/><path d="M24 32v8M16 42h16"/><path d="M13 25l7-7 5 4 9-8" stroke="#4d7410"/><circle cx="34" cy="14" r="2" fill="#b4dc52" stroke="none"/></svg>
+        <p>عرض<br>تقديمي</p>
+      </div>
+    </div>
+    <p class="s" style="margin-top:26px;font-size:32px">باستخدام أدوات الذكاء الاصطناعي.</p>
+    <div class="cta">
+      <p>التسجيل عبر<br><span>الرابط في البايو</span></p>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+</body>
+</html>
