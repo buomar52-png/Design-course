@@ -2,11 +2,11 @@
 # Voice-first reel «تعلّم Claude في ٤ خطوات» (إعلان دورة أساسيات Claude). Times = audio/voice-clean.m4a. Transition: «مدّ ضوئي» (day variant), continuous with the speech.
 # Declarative: data-t (spoken word times), data-in / data-fx (big|up|card|pill|chip), data-mark, data-strike,
 # icon attributes: data-draw, data-pop, data-rise, data-wave, data-fill, data-beat, data-shoot, data-tilt, data-drip, data-swing.
-import json
+import json, math
 ROOT = "/home/user/Design-course"
 DIR = f"{ROOT}/motion-graphics/claude-course"
 END = round(json.load(open(f"{DIR}/audio/timing.json"))["duration"] + 2.4, 2)
-SEND = 50.03
+SEND = 50.45
 
 def kl(text, t, cls=""):
     return f'<span class="line kline {cls}" data-t="{t}">{text}</span>'
@@ -63,14 +63,36 @@ def ic_found(t):           # the basics: a foundation built block by block
             k += 1
     return SVG.format(d("M14 192 H186", t - 0.1, T, 8) + out)
 
-def ic_tools(t, open_):    # capabilities: a toolbox opens, tools fly out
-    tools = [
-        f'<g data-pop="{open_ + 0.1}"><path d="M60 60 L84 84" stroke="{T}" stroke-width="9"/><circle cx="54" cy="54" r="14" fill="{G}" stroke="{T}" stroke-width="5"/></g>',
-        f'<g data-pop="{open_ + 0.3}"><rect x="92" y="26" width="16" height="64" rx="6" fill="{HL}" stroke="{T}" stroke-width="5"/><path d="M92 40 H108" stroke="{T}" stroke-width="5"/></g>',
-        f'<g data-pop="{open_ + 0.5}"><path d="M120 86 L146 46 L156 52 L130 92 Z" fill="#fff" stroke="{T}" stroke-width="5"/><path d="M146 46 L152 36 L162 42 L156 52" fill="{G}" stroke="{T}" stroke-width="5"/></g>']
-    return SVG.format(f'''{"".join(tools)}
-        {d("M24 104 H176 V180 H24 Z", t, fill="#fff")}{d("M80 104 V92 Q80 84 88 84 H112 Q120 84 120 92 V104", t + 0.2, T, 7)}
-        {d("M24 132 H176", t + 0.3, TL, 6)}<rect data-pop="{t + 0.5}" x="88" y="124" width="24" height="16" rx="4" fill="{G}"/>''')
+CLAUDE_ORANGE = "#d97757"
+def spark(cx, cy, R):      # the Claude spark (drawn approximation): tapered rays of uneven length
+    out = ""
+    for k in range(12):
+        a = math.radians(k * 30 + (7 if k % 3 == 0 else -4))
+        L = R * (1.0 if k % 2 == 0 else 0.78) * (0.92 if k % 3 == 1 else 1)
+        w = R * 0.11
+        px, py = -math.sin(a) * w, math.cos(a) * w
+        x1, y1 = cx + math.cos(a) * R * 0.12, cy + math.sin(a) * R * 0.12
+        x2, y2 = cx + math.cos(a) * L, cy + math.sin(a) * L
+        out += f'<path d="M{x1 + px:.1f} {y1 + py:.1f} L{x2:.1f} {y2:.1f} L{x1 - px:.1f} {y1 - py:.1f} Z" fill="{CLAUDE_ORANGE}"/>'
+    return out + f'<circle cx="{cx}" cy="{cy}" r="{R * 0.16:.1f}" fill="{CLAUDE_ORANGE}"/>'
+
+def ic_tools(t, open_):    # capabilities: Claude at the centre, its abilities orbit around it
+    sats = [
+        ("<path d='M-9 9 L5 -5 L9 -1 L-5 13 Z M-9 9 L-11 15 L-5 13' fill='#b5dc55' stroke='#1b7a9c' stroke-width='2.5'/>"),   # writing
+        ("<rect x='-12' y='-10' width='24' height='20' rx='3' fill='#fff' stroke='#1b7a9c' stroke-width='2.5'/><path d='M-10 8 L-2 -1 L4 5 L7 2 L11 8 Z' fill='#4a93b0'/><circle cx='5' cy='-4' r='3' fill='#b5dc55'/>"),  # images
+        ("<rect x='-11' y='0' width='6' height='10' fill='#4a93b0'/><rect x='-3' y='-6' width='6' height='16' fill='#b5dc55'/><rect x='5' y='-11' width='6' height='21' fill='#1b7a9c'/>"),  # charts
+        ("<path d='M-6 -8 L-13 0 L-6 8 M6 -8 L13 0 L6 8 M3 -11 L-3 11' stroke='#1b7a9c' stroke-width='3' fill='none'/>"),  # code
+        ("<path d='M-6 -10 L11 0 L-6 10 Z' fill='#b5dc55' stroke='#1b7a9c' stroke-width='2.5'/>"),  # video
+    ]
+    out = f'<circle data-pop="{t}" cx="100" cy="100" r="74" stroke="#dfe5e7" stroke-width="3" stroke-dasharray="3 7"/>'
+    for k, g in enumerate(sats):
+        a = math.radians(-90 + k * 72); x, y = 100 + 74 * math.cos(a), 100 + 74 * math.sin(a)
+        out += d(f"M{100 + 34 * math.cos(a):.1f} {100 + 34 * math.sin(a):.1f} L{100 + 56 * math.cos(a):.1f} {100 + 56 * math.sin(a):.1f}", open_ + k * 0.12, TL, 3)
+        out += (f'<g data-pop="{open_ + 0.1 + k * 0.12}"><rect x="{x - 19:.1f}" y="{y - 19:.1f}" width="38" height="38" rx="10" fill="#fff" stroke="{T}" stroke-width="3"/>'
+                f'<g transform="translate({x:.1f} {y:.1f})">{g}</g></g>')
+    core = (f'<g data-pop="{t + 0.1}"><circle cx="100" cy="100" r="32" fill="#fff" stroke="#f0d9cf" stroke-width="4"/>'
+            f'<g data-spin="{t + 0.3},6,90">{spark(100, 100, 24)}</g></g>')
+    return SVG.format(out + core)
 
 def ic_door(t, open_):     # a wide field for creativity: a door swings open onto light
     rays = "".join(f'<path data-pop="{open_ + 0.15 + k * 0.08}" d="M100 110 L{100 + 90 * c:.0f} {110 + 90 * s:.0f}" stroke="{G}" stroke-width="7"/>'
@@ -120,13 +142,18 @@ def ic_motion(t):          # motion graphics: preview window + keyframed timelin
         {kf(40, 136, t + 0.9, "#fff")}{kf(136, 136, t + 1.0, G)}{kf(70, 156, t + 1.1, "#fff")}{kf(160, 156, t + 1.2, G)}{kf(94, 176, t + 1.3, "#fff")}
         <g data-move="{t + 0.6},2.2,140,0"><path d="M26 112 V194" stroke="#d9534f" stroke-width="4"/><path d="M20 108 H32 L26 116 Z" fill="#d9534f"/></g>''')
 
-def ic_board(t, bars):     # presentations: a board with bars growing
+def ic_board(t, build):    # presentations: a deck fans out, the front slide builds itself
+    back = lambda ang, col, at: (f'<g data-pop="{at}"><g transform="rotate({ang} 100 96)"><rect x="26" y="40" width="148" height="100" rx="10" fill="{col}" stroke="{T}" stroke-width="3"/></g></g>')
     return SVG.format(f'''
-        {d("M20 26 H180 V140 H20 Z", t, fill="#fff")}{d("M100 140 V176 M66 182 H134", t + 0.2, T, 7)}
-        <g data-pop="{bars}"><rect x="44" y="96" width="24" height="30" rx="4" fill="{TL}"/></g>
-        <g data-pop="{bars + 0.2}"><rect x="78" y="76" width="24" height="50" rx="4" fill="{G}"/></g>
-        <g data-pop="{bars + 0.4}"><rect x="112" y="54" width="24" height="72" rx="4" fill="{T}"/></g>
-        <path data-pop="{bars + 0.7}" d="M146 46 L152 60 L166 62 L156 72 L158 86 L146 79 L134 86 L136 72 L126 62 L140 60 Z" fill="{HL}" stroke="{T}" stroke-width="4"/>''')
+        {back(-15, "#eef3f4", t)}{back(11, HL, t + 0.12)}
+        <g data-pop="{t + 0.25}"><rect x="22" y="34" width="156" height="108" rx="10" fill="#fff" stroke="{T}" stroke-width="4"/></g>
+        <rect data-grow="{build},0.45" x="40" y="50" width="78" height="12" rx="4" fill="{T}"/>
+        {d("M40 76 H100 M40 90 H94 M40 104 H98", build + 0.2, TL, 5)}
+        <circle cx="146" cy="96" r="20" stroke="#e3e8ea" stroke-width="9"/>
+        <circle class="draw" data-draw="{build + 0.35}" cx="146" cy="96" r="20" stroke="{G}" stroke-width="9"/>
+        <rect data-pop="{build + 0.5}" x="40" y="118" width="12" height="12" rx="3" fill="{G}"/><rect data-pop="{build + 0.6}" x="58" y="118" width="12" height="12" rx="3" fill="{TL}"/>
+        <g data-pop="{build + 0.3}"><circle cx="88" cy="158" r="4" fill="{T}"/><circle cx="100" cy="158" r="4" fill="#d7dfe1"/><circle cx="112" cy="158" r="4" fill="#d7dfe1"/></g>
+        <g data-move="{build + 0.9},0.7,-38,-46"><path data-pop="{build + 0.8}" d="M150 170 L150 196 L157 189 L162 200 L167 198 L162 187 L172 187 Z" fill="#fff" stroke="var(--ink)" stroke-width="3"/></g>''')
 
 def ic_puzzle(t, join):    # building skills with Claude: two pieces click together
     P = "M20 60 H70 Q70 40 86 40 Q102 40 102 60 H120 V100 Q140 100 140 116 Q140 132 120 132 V172 H20 Z"
@@ -134,18 +161,19 @@ def ic_puzzle(t, join):    # building skills with Claude: two pieces click toget
         <g data-rise="{t}"><path d="{P}" fill="{G}" stroke="{T}" stroke-width="7"/></g>
         <g data-slidein="{join}"><path d="M120 100 Q140 100 140 116 Q140 132 120 132 V172 H184 V60 H120 Z" transform="translate(4 0)" fill="{HL}" stroke="{T}" stroke-width="7"/></g>''')
 
-def ic_journey(t, go):     # from «no experience» (empty point, right) to «experience» (lit point, left)
-    lab = lambda x, y, txt, col, w: f'<text x="{x}" y="{y}" text-anchor="middle" font-size="17" font-weight="{w}" fill="{col}" font-family="Plex Ar">{txt}</text>'
+def ic_journey(t, go):     # a straight line across the width: «no experience» (right) → «experience» (left)
+    lab = lambda x, txt, col, w: f'<text x="{x}" y="124" text-anchor="middle" font-size="9" font-weight="{w}" fill="{col}" font-family="Plex Ar">{txt}</text>'
+    arrive = t + 0.75
     return SVG.format(f'''
-        <path data-pop="{t}" d="M168 150 C120 150 100 60 32 50" stroke="#dfe5e7" stroke-width="7" stroke-dasharray="2 12"/>
-        {d("M168 150 C120 150 100 60 32 50", t + 0.3, T, 7)}
-        <g data-pop="{t}"><circle cx="168" cy="150" r="15" fill="#fff" stroke="#9aa1a4" stroke-width="6"/></g>
-        <g data-pop="{t + 0.1}">{lab(168, 188, "بلا تجربة", "#7b8386", 500)}</g>
-        <circle data-ring="{go}" opacity="0" cx="32" cy="50" r="24" stroke="{G}" stroke-width="6"/>
-        <g data-pop="{t + 0.15}"><circle cx="32" cy="50" r="15" fill="#fff" stroke="{T}" stroke-width="6"/></g>
-        <g data-pop="{go}"><circle cx="32" cy="50" r="15" fill="{G}" stroke="{T}" stroke-width="6"/><path d="M25 50 L30 55 L40 44" stroke="#fff" stroke-width="4"/></g>
-        <g data-pop="{go + 0.15}">{lab(32, 100, "بالتجربة", "#1b7a9c", 700)}</g>
-        <g data-out="{go - 0.05}"><g data-move="{t + 0.3},{round(go - t - 0.35, 2)},-136,-100,-60,-46"><circle data-pop="{t + 0.25}" cx="168" cy="150" r="9" fill="{T}"/></g></g>''')
+        <path data-pop="{t}" d="M186 100 H14" stroke="#dfe5e7" stroke-width="2.4" stroke-dasharray="0.5 5"/>
+        <path class="draw" data-draw="{t + 0.05}" d="M186 100 H14" stroke="{T}" stroke-width="2.4"/>
+        <g data-pop="{t}"><circle cx="186" cy="100" r="6.5" fill="#fff" stroke="#9aa1a4" stroke-width="2.4"/></g>
+        <g data-pop="{t + 0.05}">{lab(186, "بلا تجربة", "#7b8386", 500)}</g>
+        <g data-pop="{t + 0.1}"><circle cx="14" cy="100" r="6.5" fill="#fff" stroke="{T}" stroke-width="2.4"/></g>
+        <circle data-ring="{go}" opacity="0" cx="14" cy="100" r="10" stroke="{G}" stroke-width="2.4"/>
+        <g data-pop="{arrive}"><circle cx="14" cy="100" r="6.5" fill="{G}" stroke="{T}" stroke-width="2.4"/><path d="M11 100 L13.3 102.4 L17.4 97.6" stroke="#fff" stroke-width="1.8"/></g>
+        <g data-pop="{arrive + 0.1}">{lab(14, "بالتجربة", "#1b7a9c", 700)}</g>
+        <g data-out="{arrive - 0.05}"><g data-move="{t + 0.08},0.65,-172,0"><circle data-pop="{t + 0.05}" cx="186" cy="100" r="3.6" fill="{T}"/></g></g>''')
 
 def ic_devices(t, no, tab, ph):   # no laptop needed — the tablet or the phone is enough
     return SVG.format(f'''
@@ -191,96 +219,97 @@ S.append(scene(2, 3.86,
 # 3 — الخطوة ٢: القدرات والإمكانات
 S.append(scene(3, 5.48,
   steps(2, 5.52) +
-  icon(450, 360, ic_tools(5.5, 6.34)) +
+  icon(400, 470, ic_tools(5.45, 6.0)) +
   c(880, 84, 600, kl(f'معرفة {A("القدرات والإمكانات")}', "5.52,5.88,6.34"), 5.4) +
   c(1000, 68, 500, kl("التي يقدّمها لك هذا التطبيق", "6.9,7.3,7.62,7.82,8.06"), 6.75)))
 # 4 — رسم: باب يُفتح على الإبداع
 S.append(scene(4, 8.5,
   icon(420, 560, ic_door(8.5, 9.0)) +
   c(1060, 72, 500, kl(f'تفتح لك {A("مجالًا واسعًا")} للإبداع', "8.72,8.96,9.16,9.36,9.8"), 8.6)))
-# 5 — الخطوة ٣: نصّية «التجربة، ثمّ التجربة»
+# 5 — الخطوة ٣: نصّية «التجربة» ×٣
 S.append(scene(5, 10.26,
   steps(3, 10.3) +
-  c(520, 110, 500, kl('<span class="mute">التجربة</span>', "10.3"), 10.2, "big", 1.2) +
-  c(720, 72, 500, kl('<span class="mute">ثمّ</span>', "10.98"), 10.85) +
-  c(840, 210, 700, kl(mark(A("التجربة"), 11.5), "11.2"), 11.05, "big", 1.15)))
+  c(470, 84, 500, kl('<span class="mute">التجربة</span>', "10.30"), 10.2) +
+  c(590, 56, 500, kl('<span class="mute">ثمّ</span>', "10.98"), 10.85) +
+  c(670, 120, 600, kl("التجربة", "11.20"), 11.05, "big", 1.2) +
+  c(840, 56, 500, kl('<span class="mute">ثمّ</span>', "11.72"), 11.6) +
+  c(920, 190, 700, kl(mark(A("التجربة"), 12.1), "11.94"), 11.8, "big", 1.2)))
 # 6 — مزدوجة: جرّبه في
-S.append(scene(6, 11.92,
-  c(420, 96, 600, kl("جرّبه في:", "11.96,12.3"), 11.86) +
-  chip(575, 76, MONT, "المونتاج", "12.38", 12.2) +
-  chip(770, 76, PAL, "التصميم", "12.82", 12.66) +
-  chip(965, 76, SUMM, "التلخيص", "13.28", 13.11) +
-  chip(1160, 76, DECK, "العروض التقديمية", "13.94,14.14", 13.76)))
+S.append(scene(6, 12.36,
+  c(420, 96, 600, kl("جرّبه في:", "12.4,12.74"), 12.3) +
+  chip(575, 76, MONT, "المونتاج", "12.82", 12.64) +
+  chip(770, 76, PAL, "التصميم", "13.26", 13.1) +
+  chip(965, 76, SUMM, "التلخيص", "13.72", 13.55) +
+  chip(1160, 76, DECK, "العروض التقديمية", "14.38,14.58", 14.2)))
 # 7 — مزدوجة: ستنبهر
-S.append(scene(7, 14.54,
-  icon(400, 400, ic_wand(14.46, 14.86)) +
-  c(860, 160, 700, kl(A("ستنبهر"), "14.58"), 14.46, "big", 1.2) +
-  c(1080, 84, 500, kl("بالنتائج الأوليّة", "15.0,15.46"), 14.86)))
+S.append(scene(7, 14.98,
+  icon(400, 400, ic_wand(14.9, 15.3)) +
+  c(860, 160, 700, kl(A("ستنبهر"), "15.02"), 14.9, "big", 1.2) +
+  c(1080, 84, 500, kl("بالنتائج الأوليّة", "15.44,15.9"), 15.3)))
 # 8 — نصّية: ثم الخطوة الأهم
-S.append(scene(8, 15.82,
-  c(560, 96, 500, kl("ثمّ", "15.86"), 15.76) +
-  c(690, 130, 700, kl("الخطوة", "16.36"), 16.21, "big", 1.2) +
-  c(860, 230, 700, kl(mark(A("الأهمّ"), 16.96), "16.7"), 16.56, "big", 1.1)))
+S.append(scene(8, 16.26,
+  c(560, 96, 500, kl("ثمّ", "16.3"), 16.2) +
+  c(690, 130, 700, kl("الخطوة", "16.8"), 16.65, "big", 1.2) +
+  c(860, 230, 700, kl(mark(A("الأهمّ"), 17.4), "17.14"), 17.0, "big", 1.1)))
 # 9 — الخطوة ٤: التعديل حتى القالب
-S.append(scene(9, 17.06,
-  steps(4, 17.1) +
-  icon(430, 380, ic_cycle(17.06, 20.22)) +
-  c(860, 84, 600, kl(f'التعديل والملاحظات {A("المستمرّة")}', "17.1,18.38,18.96"), 16.96) +
-  c(990, 68, 500, kl("حتى تصل إلى " + mark("القوالب", 20.36), "19.5,19.8,20.08,20.22"), 19.36) +
-  c(1090, 68, 500, kl("التي تعتمدها لمشاريعك", "20.62,20.98,21.42"), 20.46)))
+S.append(scene(9, 17.5,
+  steps(4, 17.54) +
+  icon(430, 380, ic_cycle(17.5, 20.66)) +
+  c(860, 84, 600, kl(f'التعديل والملاحظات {A("المستمرّة")}', "17.54,18.82,19.4"), 17.4) +
+  c(990, 68, 500, kl("حتى تصل إلى " + mark("القوالب", 20.8), "19.94,20.24,20.52,20.66"), 19.8) +
+  c(1090, 68, 500, kl("التي تعتمدها لمشاريعك", "21.06,21.42,21.86"), 20.9)))
 # 10 — مزدوجة: دورة أساسيات Claude
-S.append(scene(10, 22.04,
-  c(440, 72, 500, kl("وهذا بالضبط ما سنتعلّمه في", "22.08,22.38,22.72,22.82,23.26"), 21.96) +
-  card(600, 23.16, '<div style="font-size:64px;font-weight:500;color:var(--muted)">' + kl("دورة", "23.36") + '</div>'
-       + '<div style="font-size:120px;font-weight:700;line-height:1.3">' + kl(f'أساسيات {A("Claude")}', "23.92,24.52") + '</div>') +
-  c(1030, 72, 500, kl("تتعلّم فيها الأساسيات", "24.84,25.14,25.32"), 24.71)))
+S.append(scene(10, 22.48,
+  c(440, 72, 500, kl("وهذا بالضبط ما سنتعلّمه في", "22.52,22.82,23.16,23.26,23.7"), 22.4) +
+  card(600, 23.6, '<div style="font-size:64px;font-weight:500;color:var(--muted)">' + kl("دورة", "23.8") + '</div>'
+       + '<div style="font-size:120px;font-weight:700;line-height:1.3">' + kl(f'أساسيات {A("Claude")}', "24.36,24.96") + '</div>') +
+  c(1030, 72, 500, kl("تتعلّم فيها الأساسيات", "25.28,25.58,25.76"), 25.15)))
 # 11 — مزدوجة: المشروع النهائي = كاروسيل
-S.append(scene(11, 25.78,
-  pill(340, 60, "المشروع النهائي", "25.82,26.2", 25.71, "soft") +
-  icon(470, 400, carousel(26.76, 28.5, 29.34)) +
-  c(920, 84, 600, kl(f'أن نصمّم {A("كاروسيل")}', "27.82,28.16,28.5"), 27.71) +
-  c(1040, 68, 500, kl("مثل الموجود في الحساب", "28.96,29.34,29.72,29.82"), 28.81)))
+S.append(scene(11, 26.22,
+  pill(340, 60, "المشروع النهائي", "26.26,26.64", 26.15, "soft") +
+  icon(470, 400, carousel(27.2, 28.94, 29.78)) +
+  c(920, 84, 600, kl(f'أن نصمّم {A("كاروسيل")}', "28.26,28.6,28.94"), 28.15) +
+  c(1040, 68, 500, kl("مثل الموجود في الحساب", "29.4,29.78,30.16,30.26"), 29.25)))
 # 12 — مزدوجة: فيديو مثل هذا (هاتف داخل هاتف)
-S.append(scene(12, 30.06,
-  icon(300, 520, ic_motion(30.16)) +
-  c(860, 92, 600, kl(f'وفيديو {A("موشن جرافيك")}', "30.1,30.44,30.78"), 30.01) +
-  c(990, 68, 500, kl("تمامًا مثل الفيديو الذي تشاهده الآن", "31.46,31.92,32.12,32.4,32.66,32.96"), 31.31)))
+S.append(scene(12, 30.5,
+  icon(300, 520, ic_motion(30.6)) +
+  c(860, 92, 600, kl(f'وفيديو {A("موشن جرافيك")}', "30.54,30.88,31.22"), 30.45) +
+  c(990, 68, 500, kl("تمامًا مثل الفيديو الذي تشاهده الآن", "31.9,32.36,32.56,32.84,33.1,33.4"), 31.75)))
 # 13 — مزدوجة: عروض تقديمية
-S.append(scene(13, 33.24,
-  icon(400, 400, ic_board(33.26, 34.96)) +
-  c(860, 72, 500, kl("ومن خلال هذه التطبيقات", "33.28,33.58,33.84,33.98"), 33.16) +
-  c(970, 92, 600, kl(f'تستطيع صنع {A("عروضٍ تقديميّة")}', "34.68,34.9,35.1,35.32"), 34.56)))
+S.append(scene(13, 33.68,
+  icon(380, 440, ic_board(33.7, 34.3)) +
+  c(860, 72, 500, kl("ومن خلال هذه التطبيقات", "33.72,34.02,34.28,34.42"), 33.6) +
+  c(970, 92, 600, kl(f'تستطيع صنع {A("عروضٍ تقديميّة")}', "35.12,35.34,35.54,35.76"), 35.0)))
 # 14 — مزدوجة: تبني المهارات مع Claude
-S.append(scene(14, 35.68,
-  icon(400, 360, ic_puzzle(35.66, 36.96)) +
-  c(820, 72, 500, kl("ستتعلّم كيف تبني", "35.72,36.12,36.3"), 35.61) +
-  c(930, 110, 700, kl(f'المهارات مع {A("Claude")}', "36.56,37.0,37.14"), 36.46, "big", 1.2)))
+S.append(scene(14, 36.12,
+  icon(400, 360, ic_puzzle(36.1, 37.4)) +
+  c(820, 72, 500, kl("ستتعلّم كيف تبني", "36.16,36.56,36.74"), 36.05) +
+  c(930, 110, 700, kl(f'المهارات مع {A("Claude")}', "37.0,37.44,37.58"), 36.9, "big", 1.2)))
 # 15 — نصّية: لمن هذه الدورة (سحابة شارات)
-S.append(scene(15, 37.4,
-  c(420, 96, 600, kl("سواء كنتَ", "37.44,37.72"), 37.36) +
-  pill(600, 76, "معلّمًا", "37.98", 37.86) +
-  pill(740, 76, "صانع محتوى هادف", "38.32,38.62,38.96", 38.21, "soft") +
-  pill(880, 76, "طالبًا", "39.26", 39.11) +
-  pill(1020, 76, "مدرّبًا", "39.62", 39.51, "soft") +
-  pill(1160, 76, "ولديك دورات", "39.94,40.26", 39.81)))
+S.append(scene(15, 37.84,
+  c(420, 96, 600, kl("سواء كنتَ", "37.88,38.16"), 37.8) +
+  pill(600, 76, "معلّمًا", "38.42", 38.3) +
+  pill(740, 76, "صانع محتوى هادف", "38.76,39.06,39.4", 38.65, "soft") +
+  pill(880, 76, "طالبًا", "39.7", 39.55) +
+  pill(1020, 76, "مدرّبًا", "40.06", 39.95, "soft")))
 # 16 — رسم + كلمة: انطلاقة
-S.append(scene(16, 40.66,
-  icon(300, 500, ic_journey(40.66, 41.76)) +
-  c(860, 72, 500, kl("وبإذن الله، هذه الدورة", "40.7,41.0,41.1,41.36"), 40.61) +
-  c(980, 108, 700, kl(f'ستكون {A("انطلاقةً")} لك', "41.58,41.82,42.26"), 41.46, "big", 1.2)))
+S.append(scene(16, 41.1,
+  icon(80, 960, ic_journey(41.05, 42.2)) +
+  c(860, 72, 500, kl("وبإذن الله، هذه الدورة", "41.14,41.44,41.54,41.8"), 41.05) +
+  c(980, 108, 700, kl(f'ستكون {A("انطلاقةً")} لك', "42.02,42.26,42.7"), 41.9, "big", 1.2)))
 # 17 — مزدوجة: لا لابتوب — يكفي الآيباد أو الجوال
-S.append(scene(17, 42.4,
-  icon(380, 420, ic_devices(42.36, 43.06, 44.29, 44.98)) +
-  c(860, 76, 600, kl("لن تحتاج إلى لابتوب للتطبيق العملي", "42.44,42.52,42.76,42.96,43.22,43.72"), 42.31) +
-  c(990, 110, 700, kl(f'يكفيك {A("الآيباد")} أو الجوال', "44.06,44.29,44.96,45.1"), 43.96, "big", 1.2)))
+S.append(scene(17, 42.84,
+  icon(380, 420, ic_devices(42.8, 43.5, 44.73, 45.42)) +
+  c(860, 76, 600, kl("لن تحتاج إلى لابتوب للتطبيق العملي", "42.88,42.96,43.2,43.4,43.66,44.16"), 42.75) +
+  c(990, 110, 700, kl(f'يكفيك {A("الآيباد")} أو الجوال', "44.5,44.73,45.4,45.54"), 44.4, "big", 1.2)))
 # 18 — دعوة: حضوريًّا + سجّل اهتمامك (+ أيقونة المشاركة)
-S.append(scene(18, 45.58,
-  icon(300, 200, ic_pin(45.58)) +
-  c(530, 76, 600, kl(f'الدورة ستكون {A("حضوريّة")}', "45.62,46.1,46.74"), 45.53) +
-  pill(690, 110, "سجّل اهتمامك", "47.08,47.42", 46.93) +
-  icon(810, 200, tap(47.58)) +
-  c(1050, 68, 500, kl("من الرابط في البايو", "47.92,47.98,48.02"), 47.78) +
-  c(1150, 68, 500, kl(f'لتصلك التفاصيل {A("قريبًا")}', "48.5,48.88,49.52"), 48.38) +
+S.append(scene(18, 46.02,
+  icon(300, 200, ic_pin(46.02)) +
+  c(530, 76, 600, kl(f'الدورة ستكون {A("حضوريّة")}', "46.06,46.54,47.18"), 45.97) +
+  pill(690, 110, "سجّل اهتمامك", "47.52,47.86", 47.37) +
+  icon(810, 200, tap(48.02)) +
+  c(1050, 68, 500, kl("من الرابط في البايو", "48.36,48.42,48.46"), 48.22) +
+  c(1150, 68, 500, kl(f'لتصلك التفاصيل {A("قريبًا")}', "48.94,49.32,49.96"), 48.82) +
   '      <svg id="send" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">'
   '<path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/></svg>\n'))
 
@@ -474,7 +503,7 @@ __SCENES__
 
   /* ---- icon motion ---- */
   $$('svg path.draw, svg circle.draw').forEach(p => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
-  $$('svg [data-draw]').forEach(p => tl.to(p, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, +p.dataset.draw));
+  $$('svg [data-draw]').forEach(p => tl.to(p, { strokeDashoffset: 0, duration: p.closest('.fast') ? 0.6 : 0.7, ease: 'power2.inOut' }, +p.dataset.draw));
   $$('svg [data-pop]').forEach(g => tl.fromTo(g, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(2.4)' }, +g.dataset.pop));
   $$('svg [data-rise]').forEach(g => tl.fromTo(g, { y: 46, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' }, +g.dataset.rise)
       .to(g, { y: -4, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, +g.dataset.rise + 1.1));
@@ -521,6 +550,8 @@ __SCENES__
       .to(g, { y: -70, duration: 1.2, ease: 'power2.in' }, +g.dataset.fly).to(g, { y: -50, duration: 0.6, ease: 'sine.out' }, +g.dataset.fly + 1.2));
   $$('svg [data-slidein]').forEach(g => tl.fromTo(g, { x: 60, opacity: 0 }, { x: 40, opacity: 1, duration: 0.4 }, +g.dataset.slidein - 0.8)
       .to(g, { x: 0, duration: 0.35, ease: 'back.out(3)' }, +g.dataset.slidein));
+  $$('svg [data-spin]').forEach(g => { const [t, du, deg] = g.dataset.spin.split(',').map(Number);
+      gsap.set(g, { svgOrigin: '100 100' }); tl.to(g, { rotation: deg, duration: du, ease: 'none' }, t); });
   $$('svg [data-move]').forEach(g => { const v = g.dataset.move.split(',').map(Number), [t, du, dx, dy] = v;
       const kx = v.length > 4 ? [0, v[4], dx] : [0, dx], ky = v.length > 4 ? [0, v[5], dy] : [0, dy];
       tl.fromTo(g, { x: 0, y: 0 }, { keyframes: { x: kx, y: ky }, duration: du, ease: 'sine.inOut' }, t); });
