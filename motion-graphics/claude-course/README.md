@@ -1,4 +1,4 @@
-# تعلّم Claude في ٤ خطوات — القالب النهاري · ٩:١٦ · ٥٤ ثانية
+# تعلّم Claude في ٤ خطوات — القالب النهاري · ٩:١٦ · ٥٣ ثانية
 
 ريل إعلاني لدورة «أساسيات Claude» بالقالب النهاري، بلا عنوان ولا ترقيم. الانتقال بين الشرائح **«مدّ ضوئي»**، وفي النهاية أيقونة المشاركة.
 شرائح الخطوات الأربع فوقها **شريط تقدّم** يمتلئ خطوةً بعد خطوة.
@@ -23,6 +23,6 @@
 python3 tools/build.py
 S=../../.claude/skills/carousel-to-reel/scripts
 ffmpeg -i audio/voice-original.m4a -ac 1 -ar 48000 -af "$(cat tools/studio-chain.txt)" -c:a pcm_s16le /tmp/studio.wav
-python3 $S/clean_voice.py /tmp/studio.wav tools/transcript.json audio --no-denoise --cut 52.58-57.38 --cut 60.30-62.10 --cut 48.50-49.72 --hold 46.62:1.6:0.05
+python3 $S/clean_voice.py /tmp/studio.wav tools/transcript.json audio --no-denoise --cut 52.58-57.38 --cut 60.30-62.10 --cut 48.50-49.72
 node $S/render.js . --audio audio/voice-clean.m4a
 ```
