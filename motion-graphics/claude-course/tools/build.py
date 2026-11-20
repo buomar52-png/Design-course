@@ -211,7 +211,7 @@ def carousel(t, s1, s2):   # a seamless carousel: three connected slides, one li
              f'<rect x="152" y="51" width="24" height="5" rx="2.5" fill="var(--ink)"/></g></g></g>')
     dots = "".join(f'<circle cx="{112 - k * 12}" cy="162" r="3.5" fill="#d7dfe1"/>' for k in range(3))
     act = f'<g data-pop="{t + 0.3}"><g data-move="{s1 - 0.3},0.45,-12,0"><g data-move="{s2 - 0.3},0.45,-12,0"><rect x="106" y="158.5" width="12" height="7" rx="3.5" fill="{T}"/></g></g></g>'
-    return SVG.format(slides + content + wave + frame + dots + act)
+    return SVG.format(slides + content + frame + dots + act)
 
 
 S = []
@@ -300,10 +300,10 @@ S.append(scene(14, 36.12,
 # 15 — نصّية: لمن هذه الدورة (سحابة شارات)
 S.append(scene(15, 37.84,
   c(420, 96, 600, kl("سواء كنتَ", "37.88,38.16"), 37.8) +
-  pill(600, 76, "معلّمًا", "38.42", 38.3) +
-  pill(740, 76, "صانع محتوى هادف", "38.76,39.06,39.4", 38.65, "soft") +
-  pill(880, 76, "طالبًا", "39.7", 39.55) +
-  pill(1020, 76, "مدرّبًا", "40.06", 39.95, "soft")))
+  pill(590, 72, "معلّم", "38.42", 38.3) +
+  pill(750, 72, "صانع محتوى", "38.76,39.06", 38.65, "soft") +
+  pill(910, 72, "طالب", "39.7", 39.55) +
+  pill(1070, 72, "مدرّب", "40.06", 39.95, "soft")))
 # 16 — رسم + كلمة: انطلاقة
 S.append(scene(16, 41.1,
   icon(80, 960, ic_journey(41.05, 42.2)) +
@@ -595,7 +595,19 @@ __SCENES__
   window.__duration = END;
   window.__scenes = Object.fromEntries(starts.map((s, i) => ['s' + (i + 1), s]).concat([['end', END]]));
   window.__seek = t => { tl.seek(t, false); };
-  window.__ready = document.fonts.ready.then(() => true);
+  /* keep a wide margin on both sides: shrink any line or pill wider than the safe column */
+  const MAXW = 1080 - 2 * 120;
+  const fitW = () => {
+    $$('.c').forEach(el => {
+      const r = el.style.right, w0 = el.style.width;
+      el.style.right = 'auto'; el.style.width = 'max-content';
+      const w = el.offsetWidth; el.style.right = r; el.style.width = w0;
+      if (w > MAXW) el.style.fontSize = (parseFloat(el.style.fontSize) * MAXW / w).toFixed(1) + 'px';
+    });
+    $$('.pillrow').forEach(el => { const w = el.firstElementChild.offsetWidth;
+      if (w > MAXW) el.style.fontSize = (parseFloat(el.style.fontSize) * MAXW / w).toFixed(1) + 'px'; });
+  };
+  window.__ready = document.fonts.ready.then(() => { fitW(); return true; });
 
   const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
   let withSound = false;

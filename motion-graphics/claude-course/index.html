@@ -200,7 +200,7 @@
         <circle class="draw" data-draw="28.94" cx="104" cy="96" r="13" stroke="#b5dc55" stroke-width="6"/>
         <path data-pop="29.14" d="M86 124 H122" stroke="var(--teal-line)" stroke-width="3"/>
         <rect data-pop="29.880000000000003" x="22" y="112" width="44" height="14" rx="7" fill="#b5dc55"/>
-        <path data-pop="29.78" d="M24 76 H58 M24 86 H50" stroke="var(--teal-line)" stroke-width="3"/><path class="draw" data-draw="27.2" d="M194 120 C170 150 150 90 124 112 S90 150 64 108 S30 80 14 100" stroke="#b5dc55" stroke-width="3.5"/><g data-pop="27.099999999999998"><g data-move="28.64,0.45,-60,0"><g data-move="29.48,0.45,-60,0"><rect x="130" y="56" width="68" height="88" rx="8" stroke="var(--ink)" stroke-width="3.5"/><rect x="152" y="51" width="24" height="5" rx="2.5" fill="var(--ink)"/></g></g></g><circle cx="112" cy="162" r="3.5" fill="#d7dfe1"/><circle cx="100" cy="162" r="3.5" fill="#d7dfe1"/><circle cx="88" cy="162" r="3.5" fill="#d7dfe1"/><g data-pop="27.2"><g data-move="28.64,0.45,-12,0"><g data-move="29.48,0.45,-12,0"><rect x="106" y="158.5" width="12" height="7" rx="3.5" fill="var(--teal)"/></g></g></g></svg></div>
+        <path data-pop="29.78" d="M24 76 H58 M24 86 H50" stroke="var(--teal-line)" stroke-width="3"/><g data-pop="27.099999999999998"><g data-move="28.64,0.45,-60,0"><g data-move="29.48,0.45,-60,0"><rect x="130" y="56" width="68" height="88" rx="8" stroke="var(--ink)" stroke-width="3.5"/><rect x="152" y="51" width="24" height="5" rx="2.5" fill="var(--ink)"/></g></g></g><circle cx="112" cy="162" r="3.5" fill="#d7dfe1"/><circle cx="100" cy="162" r="3.5" fill="#d7dfe1"/><circle cx="88" cy="162" r="3.5" fill="#d7dfe1"/><g data-pop="27.2"><g data-move="28.64,0.45,-12,0"><g data-move="29.48,0.45,-12,0"><rect x="106" y="158.5" width="12" height="7" rx="3.5" fill="var(--teal)"/></g></g></g></svg></div>
       <div class="c" style="top:920px;font-size:84px;font-weight:600;" data-in="28.15" data-fx="up"><span class="line kline " data-t="28.26,28.6,28.94">أن نصمّم <span class="acc">كاروسيل</span></span></div>
       <div class="c" style="top:1040px;font-size:68px;font-weight:500;" data-in="29.25" data-fx="up"><span class="line kline " data-t="29.4,29.78,30.16,30.26">مثل الموجود في الحساب</span></div>
     </section>
@@ -251,10 +251,10 @@
     <!-- ===== S15 (37.84s) ===== -->
     <section class="scene" id="s15" data-start="37.84">
       <div class="c" style="top:420px;font-size:96px;font-weight:600;" data-in="37.8" data-fx="up"><span class="line kline " data-t="37.88,38.16">سواء كنتَ</span></div>
-      <div class="pillrow" style="top:600px;font-size:76px" data-in="38.3" data-fx="pill"><span class="pill "><span class="kline" data-t="38.42">معلّمًا</span></span></div>
-      <div class="pillrow" style="top:740px;font-size:76px" data-in="38.65" data-fx="pill"><span class="pill soft"><span class="kline" data-t="38.76,39.06,39.4">صانع محتوى هادف</span></span></div>
-      <div class="pillrow" style="top:880px;font-size:76px" data-in="39.55" data-fx="pill"><span class="pill "><span class="kline" data-t="39.7">طالبًا</span></span></div>
-      <div class="pillrow" style="top:1020px;font-size:76px" data-in="39.95" data-fx="pill"><span class="pill soft"><span class="kline" data-t="40.06">مدرّبًا</span></span></div>
+      <div class="pillrow" style="top:590px;font-size:72px" data-in="38.3" data-fx="pill"><span class="pill "><span class="kline" data-t="38.42">معلّم</span></span></div>
+      <div class="pillrow" style="top:750px;font-size:72px" data-in="38.65" data-fx="pill"><span class="pill soft"><span class="kline" data-t="38.76,39.06">صانع محتوى</span></span></div>
+      <div class="pillrow" style="top:910px;font-size:72px" data-in="39.55" data-fx="pill"><span class="pill "><span class="kline" data-t="39.7">طالب</span></span></div>
+      <div class="pillrow" style="top:1070px;font-size:72px" data-in="39.95" data-fx="pill"><span class="pill soft"><span class="kline" data-t="40.06">مدرّب</span></span></div>
     </section>
 
     <!-- ===== S16 (41.1s) ===== -->
@@ -470,7 +470,19 @@
   window.__duration = END;
   window.__scenes = Object.fromEntries(starts.map((s, i) => ['s' + (i + 1), s]).concat([['end', END]]));
   window.__seek = t => { tl.seek(t, false); };
-  window.__ready = document.fonts.ready.then(() => true);
+  /* keep a wide margin on both sides: shrink any line or pill wider than the safe column */
+  const MAXW = 1080 - 2 * 120;
+  const fitW = () => {
+    $$('.c').forEach(el => {
+      const r = el.style.right, w0 = el.style.width;
+      el.style.right = 'auto'; el.style.width = 'max-content';
+      const w = el.offsetWidth; el.style.right = r; el.style.width = w0;
+      if (w > MAXW) el.style.fontSize = (parseFloat(el.style.fontSize) * MAXW / w).toFixed(1) + 'px';
+    });
+    $$('.pillrow').forEach(el => { const w = el.firstElementChild.offsetWidth;
+      if (w > MAXW) el.style.fontSize = (parseFloat(el.style.fontSize) * MAXW / w).toFixed(1) + 'px'; });
+  };
+  window.__ready = document.fonts.ready.then(() => { fitW(); return true; });
 
   const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
   let withSound = false;
