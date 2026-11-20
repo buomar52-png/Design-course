@@ -191,16 +191,28 @@ def tap(t):
         <circle data-ring="{t}" cx="70" cy="60" r="40" stroke="{G}" stroke-width="6"/>
         <g data-pop="{t - 0.3}"><path d="M70 60 V150 Q70 172 92 176 H130 Q152 172 156 150 V110 Q156 98 144 98 Q132 98 132 110 V104 Q132 92 120 92 Q108 92 108 104 V100 Q108 88 96 88 Q86 88 86 98 V60 Q86 46 78 46 Q70 46 70 60 Z" fill="#fff" stroke="var(--ink)" stroke-width="6"/></g>''')
 
-def carousel(t, s1, s2):
-    cards = ""
-    for k, col in enumerate((G, HL, TL)):
-        x = 40 + k * 130
-        cards += (f'<rect x="{x}" y="36" width="120" height="120" rx="16" fill="#fff" stroke="{T}" stroke-width="5"/>'
-                  f'<rect x="{x + 16}" y="52" width="88" height="44" rx="8" fill="{col}"/><path d="M{x + 18} 116 H{x + 100} M{x + 18} 134 H{x + 74}" stroke="{TL}" stroke-width="6"/>')
-    dots = "".join(f'<circle cx="{88 + k * 12}" cy="182" r="5" fill="#d7dfe1"/>' for k in range(3))
-    act = f'<circle data-pop="{t + 0.3}" cx="112" cy="182" r="6" fill="{T}"/><circle data-pop="{s1 + 0.3}" cx="100" cy="182" r="6" fill="{T}"/><circle data-pop="{s2 + 0.3}" cx="88" cy="182" r="6" fill="{T}"/>'
-    return SVG.format(f'''<defs><clipPath id="cv"><rect x="34" y="28" width="132" height="136"/></clipPath></defs>
-        <g clip-path="url(#cv)"><g data-pop="{t}"><g data-slide="{s1},{s2},-130">{cards}</g></g></g>{dots}{act}''')
+def carousel(t, s1, s2):   # a seamless carousel: three connected slides, one line runs through them, the frame swipes along
+    W, Y, H = 60, 62, 76
+    xs = (134, 74, 14)                                   # RTL: the first slide is on the right
+    slides = "".join(f'<g data-pop="{t + k * 0.15}"><rect x="{x}" y="{Y}" width="{W}" height="{H}" fill="{("#fff", "#f4f8f1", "#fff")[k]}" stroke="#d7dfe1" stroke-width="1.5"/></g>'
+                     for k, x in enumerate(xs))
+    content = f'''
+        <rect data-grow="{t + 0.5},0.4" x="146" y="74" width="36" height="7" rx="3" fill="{T}"/>
+        <path data-pop="{t + 0.6}" d="M146 88 H178 M146 96 H170" stroke="{TL}" stroke-width="3"/>
+        <g data-pop="{t + 0.4}"><rect x="146" y="104" width="36" height="24" rx="4" fill="{HL}"/><path d="M148 126 L158 114 L165 121 L170 116 L180 126 Z" fill="{TL}"/></g>
+        <circle cx="104" cy="96" r="13" stroke="#e3e8ea" stroke-width="6"/>
+        <circle class="draw" data-draw="{s1}" cx="104" cy="96" r="13" stroke="{G}" stroke-width="6"/>
+        <path data-pop="{s1 + 0.2}" d="M86 124 H122" stroke="{TL}" stroke-width="3"/>
+        <rect data-pop="{s2 + 0.1}" x="22" y="112" width="44" height="14" rx="7" fill="{G}"/>
+        <path data-pop="{s2}" d="M24 76 H58 M24 86 H50" stroke="{TL}" stroke-width="3"/>'''
+    wave = f'<path class="draw" data-draw="{t + 0.3}" d="M194 120 C170 150 150 90 124 112 S90 150 64 108 S30 80 14 100" stroke="{G}" stroke-width="3.5"/>'
+    frame = (f'<g data-pop="{t + 0.2}"><g data-move="{s1 - 0.3},0.45,-60,0"><g data-move="{s2 - 0.3},0.45,-60,0">'
+             f'<rect x="130" y="56" width="68" height="88" rx="8" stroke="var(--ink)" stroke-width="3.5"/>'
+             f'<rect x="152" y="51" width="24" height="5" rx="2.5" fill="var(--ink)"/></g></g></g>')
+    dots = "".join(f'<circle cx="{112 - k * 12}" cy="162" r="3.5" fill="#d7dfe1"/>' for k in range(3))
+    act = f'<g data-pop="{t + 0.3}"><g data-move="{s1 - 0.3},0.45,-12,0"><g data-move="{s2 - 0.3},0.45,-12,0"><rect x="106" y="158.5" width="12" height="7" rx="3.5" fill="{T}"/></g></g></g>'
+    return SVG.format(slides + content + wave + frame + dots + act)
+
 
 S = []
 # 1 — نصّية: أفضل طريقة لتعلّم Claude … ٤ خطوات
@@ -267,7 +279,7 @@ S.append(scene(10, 22.48,
 # 11 — مزدوجة: المشروع النهائي = كاروسيل
 S.append(scene(11, 26.22,
   pill(340, 60, "المشروع النهائي", "26.26,26.64", 26.15, "soft") +
-  icon(470, 400, carousel(27.2, 28.94, 29.78)) +
+  icon(400, 520, carousel(26.9, 28.94, 29.78)) +
   c(920, 84, 600, kl(f'أن نصمّم {A("كاروسيل")}', "28.26,28.6,28.94"), 28.15) +
   c(1040, 68, 500, kl("مثل الموجود في الحساب", "29.4,29.78,30.16,30.26"), 29.25)))
 # 12 — مزدوجة: فيديو مثل هذا (هاتف داخل هاتف)
