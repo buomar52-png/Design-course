@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ — ليل ونهار</title>
+<!-- القالب الخامس «المزدوج» (ليل ونهار، بدون مربعات): كل فكرة تبدّل الثيم بانتقال دائري من أعلى الوسط،
+     ونص كاريوكي تضيء كلماته واحدة واحدة.
+     - .kline سطر كاريوكي. data-t="12.3,12.8" = لحظة نطق كل كلمة (ثوانٍ مطلقة من audio/timing.json).
+       بدون data-t تضيء الكلمات تلقائيًا بالتتابع بعد ظهور السطر (للريل بلا صوت).
+     - .acc كلمات بلون الإبراز، .lime كلمات بالأخضر الليموني، .mark تظليل يُرسم خلف الكلمة.
+     - كل مشهد section.scene.night أو .day — بدّل الترتيب كما تشاء (ليل/نهار بالتناوب هو الأصل).
+     - المصدر المرجعي: motion-graphics/quran-hifz-trend/ -->
+<style>
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-500.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-600.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-700.ttf") format("truetype"); font-weight: 700; }
+
+  :root { --lime: #c6f36b; --pad: 100px; }
+  .night {
+    --bg: #0a0e13; --ink: #f3efe6; --dim: rgba(243, 239, 230, .2); --accent: #c6f36b; --accent-2: #4cb3d6;
+    --stroke: rgba(243, 239, 230, .09); --chip: rgba(243, 239, 230, .08); --chip-line: rgba(243, 239, 230, .16);
+    --blob-a: rgba(46, 140, 180, .42); --blob-b: rgba(160, 220, 70, .16); --glass: rgba(255, 255, 255, .06);
+    --handle: rgba(243, 239, 230, .35); --hl: rgba(198, 243, 107, .30);
+  }
+  .day {
+    --bg: #f3efe6; --ink: #0a0e13; --dim: rgba(10, 14, 19, .18); --accent: #12708f; --accent-2: #12708f;
+    --stroke: rgba(10, 14, 19, .08); --chip: rgba(10, 14, 19, .05); --chip-line: rgba(10, 14, 19, .14);
+    --blob-a: rgba(198, 243, 107, .55); --blob-b: rgba(76, 179, 214, .28); --glass: rgba(255, 255, 255, .7);
+    --handle: rgba(10, 14, 19, .38); --hl: #c6f36b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #1d2124; font-family: "Plex Ar", system-ui, sans-serif; overflow: hidden;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #viewport { position: relative; flex: 1; width: 100%; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 50% 50%; background: #0a0e13; overflow: hidden; }
+  body.render { background: #0a0e13; display: block; }
+  body.render #viewport { position: fixed; inset: 0; }
+  body.render #stage { left: 0; top: 0; transform: none !important; }
+  body.render #controls { display: none; }
+
+  .scene { position: absolute; inset: 0; background: var(--bg); color: var(--ink); overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(40px); }
+  .blob.a { width: 900px; height: 900px; right: -380px; top: -360px; background: radial-gradient(circle, var(--blob-a), transparent 68%); }
+  .blob.b { width: 980px; height: 980px; left: -440px; bottom: -420px; background: radial-gradient(circle, var(--blob-b), transparent 68%); }
+  .num { position: absolute; left: -60px; top: 330px; font-size: 1150px; font-weight: 700; line-height: 1; color: transparent;
+         -webkit-text-stroke: 5px var(--stroke); pointer-events: none; }
+
+
+  .c { position: absolute; left: 0; right: 0; text-align: center; }
+  .line { display: block; white-space: nowrap; }
+  .k { display: inline-block; color: var(--dim); }
+  .chip { display: inline-block; padding: 6px 30px 10px; border-radius: 999px; font-size: 40px; font-weight: 600; }
+  .chip.solid { background: var(--ink); color: var(--bg); }
+  .chip.line { border: 2px solid var(--chip-line); color: var(--ink); opacity: .75; font-weight: 500; font-size: 34px; }
+  .mark { background-image: linear-gradient(var(--hl), var(--hl)); background-repeat: no-repeat; background-position: 100% 86%; background-size: 0% 38%; padding: 0 8px; }
+
+  /* ===== S1 night ===== */
+  #s1 .l1 { top: 470px; font-size: 112px; font-weight: 700; }
+  #s1 .l2 { top: 600px; font-size: 300px; font-weight: 700; line-height: 1.15; letter-spacing: -3px; }
+  #s1 .l3 { top: 1010px; font-size: 72px; font-weight: 500; line-height: 1.45; }
+  #s1 .dots { top: 1290px; }
+  #s1 .dots span { display: inline-block; width: 110px; height: 110px; margin: 0 14px; border-radius: 50%; border: 3px solid var(--chip-line);
+                   font-size: 54px; font-weight: 700; line-height: 100px; color: var(--ink); }
+  #s1 .dots span.on { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  /* ===== S2 day ===== */
+  #s2 .say { top: 560px; }
+  #s2 .hadith { top: 700px; font-size: 118px; font-weight: 600; line-height: 1.55; }
+  #s2 .src { top: 1140px; }
+
+  /* ===== S3 night ===== */
+  #s3 .head { top: 470px; font-size: 84px; font-weight: 500; }
+  .glass { position: absolute; left: 70px; right: 70px; border-radius: 48px; background: var(--glass); border: 2px solid var(--chip-line);
+           backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); padding: 44px 50px 46px; text-align: center; }
+  #s3 .glass { top: 640px; }
+  #s3 .who { font-size: 38px; font-weight: 500; color: var(--accent); }
+  #s3 .quote { margin-top: 10px; font-size: 108px; font-weight: 600; line-height: 1.5; }
+  #s3 .src { margin-top: 8px; }
+  #s3 .after { top: 1170px; font-size: 88px; font-weight: 500; }
+
+  /* ===== S4 day ===== */
+  #s4 .l1 { top: 380px; font-size: 86px; font-weight: 500; }
+  #s4 .big { top: 580px; font-size: 300px; font-weight: 700; line-height: 1.15; letter-spacing: -3px; }
+  #s4 .l2 { top: 925px; font-size: 86px; font-weight: 500; }
+  #s4 .row { position: absolute; left: 0; right: 0; text-align: center; }
+  #s4 .row .pill { display: inline-block; padding: 14px 44px 20px; border-radius: 999px; font-size: 56px; font-weight: 600; white-space: nowrap; }
+  #s4 .row.a { top: 1100px; } #s4 .row.a .pill { border: 3px dashed var(--chip-line); }
+  #s4 .row.b { top: 1240px; } #s4 .row.b .pill { background: var(--ink); }
+  #s4 .row.b .k { color: rgba(243, 239, 230, .25); }
+  #send { position: absolute; left: 50%; top: 1440px; width: 92px; height: 92px; margin-left: -46px; }
+
+  .handle { position: absolute; left: 0; right: 0; top: 1662px; text-align: center; direction: ltr; font-size: 34px; color: var(--handle); letter-spacing: .5px; }
+
+  #grain { position: absolute; inset: -200px; pointer-events: none; opacity: .11; mix-blend-mode: overlay;
+           background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.2 0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>"); }
+
+  #safe { display: none; pointer-events: none; } #safe.on { display: block; }
+  #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
+  #controls { width: min(760px, 100%); padding: 12px 16px 16px; display: flex; gap: 12px; align-items: center; color: #e8ecee; font-size: 15px; direction: ltr; }
+  #controls button { font: inherit; color: inherit; background: #2f3539; border: 1px solid #454c51; border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+  #controls input[type=range] { flex: 1; accent-color: #c6f36b; min-width: 60px; }
+  #time { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+
+    <!-- ===================== S1 — ليل: الخطّاف ===================== -->
+    <section class="scene night" id="s1">
+      <div class="blob a"></div><div class="blob b"></div>
+      <div class="c l1"><span class="line kline">__سطر الخطّاف__</span></div>
+      <div class="c l2"><span class="line kline acc">كلمة</span></div>
+      <div class="c l3">
+        <span class="line kline">__سطر تمهيدي__</span>
+        <span class="line kline">__سطر ثانٍ__</span>
+      </div>
+      <div class="c dots"><span>١</span><span>٢</span><span>٣</span></div>
+      <div class="handle">@__handle__</div>
+    </section>
+
+    <!-- ===================== S2 — نهار: اقتباس / حديث ===================== -->
+    <section class="scene day" id="s2">
+      <div class="blob a"></div><div class="blob b"></div>
+      <div class="num">١</div>
+      <div class="c say"><span class="chip solid">__قال فلان__</span></div>
+      <div class="c hadith">
+        <span class="line kline">«<span class="mark" id="m1">__مظلل__</span> __نص__</span>
+        <span class="line kline">__سطر ٢__»</span>
+      </div>
+      <div class="c src"><span class="chip line">__المصدر__</span></div>
+      <div class="handle">@__handle__</div>
+    </section>
+
+    <!-- ===================== S3 — ليل: تمهيد + بطاقة زجاجية ===================== -->
+    <section class="scene night" id="s3">
+      <div class="blob a"></div><div class="blob b"></div>
+      <div class="num">٢</div>
+      <div class="c head"><span class="line kline">__جملة تمهيدية__</span></div>
+      <div class="glass">
+        <div class="who">__قال فلان__</div>
+        <div class="quote"><span class="line kline">«__نص__ <span class="mark acc" id="m2">__مبرز__»</span></span></div>
+        <div class="src"><span class="chip line">__المصدر__</span></div>
+      </div>
+      <div class="c after"><span class="line kline">__جملة بعدها__ <span class="acc">__مبرز.__</span></span></div>
+      <div class="handle">@__handle__</div>
+    </section>
+
+    <!-- ===================== S4 — نهار: الخاتمة + المقارنة ===================== -->
+    <section class="scene day" id="s4">
+      <div class="blob a"></div><div class="blob b"></div>
+      <div class="num">٣</div>
+      <div class="c l1"><span class="line kline">__سطر__</span></div>
+      <div class="c big"><span class="line kline acc">كلمة</span></div>
+      <div class="c l2"><span class="line kline">__سطر بعدها..__</span></div>
+      <div class="row a"><span class="pill"><span class="kline">__الحال الأولى (تبهت)__</span></span></div>
+      <div class="row b"><span class="pill"><span class="kline lime">__الحال المقصودة__</span></span></div>
+      <svg id="send" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/>
+      </svg>
+      <div class="handle">@__handle__</div>
+    </section>
+    <div id="grain"></div>
+    <div class="layer" id="safe" style="position:absolute;inset:0">
+      <div style="left:0;right:0;top:0;height:220px"></div>
+      <div style="left:0;right:0;bottom:0;height:380px"></div>
+      <div style="right:0;width:140px;top:1040px;bottom:380px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ تشغيل</button>
+  <input type="range" id="scrub" min="0" max="40" step="0.01" value="0">
+  <span id="time"></span>
+  <button id="soundBtn" title="تشغيل مع الصوت">🔊</button>
+  <button id="safeBtn">Safe zone</button>
+</div>
+<audio id="voice" src="audio/voice-clean.m4a" preload="auto"></audio>
+
+<script src="gsap.min.js"></script>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  /* ===== التوقيت: بداية كل مشهد ونهاية الريل (ضعها من scripts/voice_sync.py عند وجود صوت) ===== */
+  const T = { s1: 0, s2: 6, s3: 15, s4: 26, end: 38 };
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const css = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
+
+  /* split .kline into words; data-t = spoken times (absolute s). Without it words light up in sequence. */
+  const lines = $$('.kline').map(el => {
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(p => {
+          if (!p) return;
+          if (/^\s+$/.test(p)) return frag.appendChild(document.createTextNode(p));
+          const s = document.createElement('span'); s.className = 'k'; s.textContent = p; frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+    walk(el);
+    const ws = $$('.k', el), times = el.dataset.t ? el.dataset.t.split(',').map(Number) : null;
+    return { el, ws, times, auto: null };
+  });
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const scenes = ['#s1', '#s2', '#s3', '#s4'];
+  const KX = 540, KY = 272;                                     // scene changes open from the top centre
+  scenes.slice(1).forEach(s => gsap.set(s, { clipPath: `circle(0px at ${KX}px ${KY}px)` }));
+
+  /* -------- motion library -------- */
+  const appear = (L, at, stagger = 0.07) => {                   // words fade in dimmed…
+    L.auto = at + 0.45;
+    return tl.fromTo(L.ws, { y: 50, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6, stagger }, at);
+  };
+  const bigPop = (L, at) => {                                   // huge accent word
+    L.auto = at + 0.2;
+    return tl.fromTo(L.ws, { scale: 1.6, opacity: 0, filter: 'blur(30px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, at);
+  };
+  const lightLine = (L, scene, step = 0.32) => L.ws.forEach((w, i) => {   // …then light up (karaoke)
+    const t = L.times ? L.times[Math.min(i, L.times.length - 1)] + Math.max(0, i - L.times.length + 1) * 0.12
+                      : (L.auto ?? 0) + i * step;
+    const color = w.closest('.lime') ? '#c6f36b' : w.closest('.acc') ? css(scene, '--accent') : css(scene, '--ink');
+    tl.to(w, { color, duration: 0.18, ease: 'none' }, t - 0.05)
+      .fromTo(w, { scale: 1 }, { scale: 1.08, duration: 0.12, ease: 'power2.out', yoyo: true, repeat: 1 }, t - 0.05);
+  });
+  const mark = (sel, at) => tl.to(sel, { backgroundSize: '100% 38%', duration: 0.5, ease: 'power2.inOut' }, at);
+  const chipIn = (sel, at, op = 1) => tl.fromTo(sel, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: op, duration: 0.5, ease: 'back.out(2)' }, at);
+  const iris = (scene, at) => tl.to(scene, { clipPath: `circle(2300px at ${KX}px ${KY}px)`, duration: 0.85, ease: 'power3.inOut' }, at - 0.4);
+  const exitPrev = (scene, at) => tl.to(scene + ' > *:not(.blob)', { scale: 0.94, opacity: 0.4, duration: 0.6, ease: 'power2.in' }, at - 0.4);
+  const numIn = (scene, at) => tl.fromTo(scene + ' .num', { x: -200, opacity: 0 }, { x: 0, opacity: 1, duration: 1.2, ease: 'expo.out' }, at);
+  const blobs = (scene, a, b) => tl.fromTo(scene + ' .blob.a', { x: 0, y: 0 }, { x: -60, y: 50, duration: b - a, ease: 'sine.inOut' }, a)
+                                   .fromTo(scene + ' .blob.b', { x: 0, y: 0 }, { x: 70, y: -40, duration: b - a, ease: 'sine.inOut' }, a);
+  const linesIn = scene => lines.filter(L => L.el.closest(scene));
+  const sceneChange = (prev, next, a, end) => { iris(next, a); exitPrev(prev, a); blobs(next, a - 0.4, end); numIn(next, a + 0.1); };
+
+  /* -------- S1 night (hook) -------- */
+  { const a = T.s1, S = $('#s1'), L = linesIn('#s1');
+    blobs('#s1', 0, T.s2);
+    appear(L[0], a + 0.1, 0.08);
+    bigPop(L[1], a + 1.0);
+    appear(L[2], a + 1.8, 0.08); appear(L[3], a + 2.6, 0.08);
+    L.forEach(l => lightLine(l, S));
+    tl.fromTo('#s1 .dots span', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.5)', stagger: 0.12 }, a + 3.6);
+    tl.to('#s1 .dots span:first-child', { backgroundColor: '#c6f36b', color: '#0a0e13', borderColor: '#c6f36b', duration: 0.3 }, a + 4.2);
+    tl.fromTo('#s1 .handle', { opacity: 0 }, { opacity: 1, duration: 0.6 }, a + 0.6);
+  }
+
+  /* -------- S2 day (quote) -------- */
+  { const a = T.s2, S = $('#s2'), L = linesIn('#s2');
+    sceneChange('#s1', '#s2', a, T.s3);
+    chipIn('#s2 .say .chip', a + 0.2);
+    appear(L[0], a + 1.0, 0.1); appear(L[1], a + 1.3, 0.1);
+    L.forEach(l => lightLine(l, S, 0.45));
+    mark('#m1', a + 1.6);
+    chipIn('#s2 .src .chip', a + 3.6, 0.75);
+  }
+
+  /* -------- S3 night (intro + glass card) -------- */
+  { const a = T.s3, S = $('#s3'), L = linesIn('#s3');
+    sceneChange('#s2', '#s3', a, T.s4);
+    appear(L[0], a + 0.3, 0.1);
+    tl.fromTo('#s3 .glass', { y: 140, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: 'expo.out' }, a + 2.0);
+    appear(L[1], a + 2.2, 0.1);
+    mark('#m2', a + 3.4);
+    tl.fromTo('#s3 .who', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, a + 3.8);
+    chipIn('#s3 .glass .src .chip', a + 4.6, 0.75);
+    appear(L[2], a + 6.0, 0.1);
+    L.forEach(l => lightLine(l, S, 0.4));
+  }
+
+  /* -------- S4 day (closing + contrast) -------- */
+  { const a = T.s4, S = $('#s4'), L = linesIn('#s4');
+    sceneChange('#s3', '#s4', a, T.end);
+    appear(L[0], a + 0.0, 0.12);
+    bigPop(L[1], a + 0.8);
+    appear(L[2], a + 1.4, 0.12);
+    tl.fromTo('#s4 .row.a .pill', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, a + 3.0);
+    L[3].auto = a + 3.3;
+    tl.fromTo('#s4 .row.b .pill', { y: 40, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, a + 5.2);
+    L[4].auto = a + 5.5;
+    tl.to('#s4 .row.a .pill', { opacity: 0.35, scale: 0.94, duration: 0.6 }, a + 5.3);
+    L.forEach(l => lightLine(l, S, 0.4));
+    tl.fromTo('#send', { y: 120, opacity: 0, rotation: -25 }, { y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, a + 7.4)
+      .to('#send', { y: -12, duration: 0.5, ease: 'sine.inOut', yoyo: true, repeat: 2 }, a + 8.3);
+  }
+  /* film grain: jitters every 1/15 s, driven by timeline time (deterministic for rendering) */
+  const grain = $('#grain');
+  tl.eventCallback('onUpdate', () => {
+    const n = Math.floor(tl.time() * 15);
+    grain.style.transform = `translate(${(n * 137) % 200 - 100}px, ${(n * 251) % 200 - 100}px)`;
+    sync();
+  });
+  tl.to({}, { duration: 0.001 }, T.end - 0.001);
+
+  /* -------- player / render API -------- */
+  const stage = $('#stage'), vp = $('#viewport'), voice = $('#voice');
+  const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
+  if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
+  window.__duration = T.end; window.__scenes = T;
+  window.__seek = t => { tl.seek(t, false); };
+  window.__ready = document.fonts.ready.then(() => true);
+
+  const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
+  let withSound = false;
+  scrub.max = T.end;
+  function sync() { scrub.value = tl.time(); time.textContent = `${tl.time().toFixed(2)} / ${T.end.toFixed(1)}`; }
+  sync();
+  tl.eventCallback('onComplete', () => { playBtn.textContent = '↺ إعادة'; voice.pause(); });
+  const play = () => { if (withSound) { voice.currentTime = tl.time(); voice.play().catch(() => {}); } tl.play(); };
+  const pause = () => { tl.pause(); voice.pause(); };
+  playBtn.onclick = () => {
+    if (tl.progress() >= 1) { tl.seek(0); play(); } else if (tl.paused()) play(); else pause();
+    playBtn.textContent = tl.paused() ? '▶ تشغيل' : '❚❚ إيقاف';
+  };
+  $('#soundBtn').onclick = () => { withSound = !withSound; $('#soundBtn').style.opacity = withSound ? 1 : .5; if (!tl.paused()) { voice.currentTime = tl.time(); withSound ? voice.play() : voice.pause(); } };
+  $('#soundBtn').style.opacity = .5;
+  scrub.oninput = () => { pause(); tl.seek(+scrub.value); playBtn.textContent = '▶ تشغيل'; sync(); };
+  $('#safeBtn').onclick = () => $('#safe').classList.toggle('on');
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+  if (params.has('t')) tl.seek(+params.get('t'));
+  else if (!params.has('render')) window.__ready.then(() => { tl.play(); playBtn.textContent = '❚❚ إيقاف'; });
+})();
+</script>
+</body>
+</html>

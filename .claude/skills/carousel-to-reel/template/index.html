@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ — موشن</title>
+<!--
+  قالب «من كاروسيل إلى ريل» — 1080×1920
+  - كل توقيتات المشاهد في كائن T أسفل الملف (مكان واحد لضبطها على التعليق الصوتي).
+  - اصطلاحات التصدير إلى Lottie (لا تحذفها):
+      .split   سطر يُقسَّم تلقائيًا إلى كلمات .w تتحرك منفردة
+      .reveal  سطر يُكشف من اليمين لليسار (clip-path)
+      .u       عنصر نصي مستقل متحرك (اسم، مرجع، توقيع…)
+      .ubox    مستطيل/شكل HTML متحرك، و .card بطاقة، و .dot نقطة خضراء بهالة
+      .hl      تظليل خلف النص يُرسم من اليمين
+      svg.usvg أيقونة SVG كاملة، path.upath مسار مستقل، path.draw مسار يُرسم بالخط
+-->
+<style>
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-500.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-600.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-700.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    /* الهوية — عدّلها لتطابق ألوان ملف المستخدم */
+    --bg: #f3f5f4;
+    --ink: #151718;
+    --muted: #7b8386;
+    --teal: #1b7a9c;        /* لون الإبراز */
+    --teal-line: #4a93b0;
+    --green: #b5dc55;       /* النقطة */
+    --hl: #d2ee94;          /* التظليل */
+    --grid: rgba(40, 80, 95, .075);
+    --pad: 100px;
+    --handle: #9aa1a4;
+    --card: #fff;
+    --card-edge: rgba(215, 225, 228, .9);
+    --card-shadow: rgba(30, 60, 70, .08);
+    --glow-a: 140, 196, 220; --glow-a-a: .42;   /* توهج أعلى اليمين (RGB, alpha) */
+    --glow-b: 205, 232, 150; --glow-b-a: .45;   /* توهج أسفل اليسار */
+    --accent-glow: rgba(27, 122, 156, .28);     /* ظل الكلمة الكبيرة */
+  }
+  /* ===== النظام الليلي (الافتراضي في القالب؛ ?theme=light للنهاري) =====
+     كل لون في الصفحة يجب أن يأتي من هذه المتغيرات حتى تعمل النسختان. */
+  :root[data-theme="dark"] {
+    --bg: #0e1416;
+    --ink: #eef3f4;
+    --muted: #8a979c;
+    --teal: #4cb3d6;
+    --teal-line: #5aaccb;
+    --green: #b5dc55;
+    --hl: rgba(181, 220, 85, .38);
+    --grid: rgba(170, 215, 230, .055);
+    --handle: #66737a;
+    --card: #172024;
+    --card-edge: rgba(0, 0, 0, .45);
+    --card-shadow: rgba(0, 0, 0, .35);
+    --glow-a: 40, 130, 170; --glow-a-a: .40;
+    --glow-b: 120, 170, 50; --glow-b-a: .26;
+    --accent-glow: rgba(76, 179, 214, .35);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #1d2124; font-family: "Plex Ar", system-ui, sans-serif; color: var(--ink); overflow: hidden;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #viewport { position: relative; flex: 1; width: 100%; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 50% 50%; background: var(--bg); overflow: hidden; }
+  body.render { background: var(--bg); display: block; }
+  body.render #viewport { position: fixed; inset: 0; }
+  body.render #stage { left: 0; top: 0; transform: none !important; }
+  body.render #controls { display: none; }
+
+  .layer { position: absolute; inset: 0; }
+  :root[data-grid="off"] .grid { display: none; }
+  .grid { background-image: linear-gradient(var(--grid) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
+          background-size: 56px 56px; background-position: -8px -8px; }
+  .glow-a { inset: -120px; background: radial-gradient(circle at calc(100% - 120px) 120px, rgba(var(--glow-a), var(--glow-a-a)) 0px, rgba(var(--glow-a), calc(var(--glow-a-a) * .43)) 260px, rgba(var(--glow-a), 0) 620px); }
+  .glow-b { inset: -120px; background: radial-gradient(circle at 120px calc(100% - 120px), rgba(var(--glow-b), var(--glow-b-a)) 0px, rgba(var(--glow-b), calc(var(--glow-b-a) * .44)) 260px, rgba(var(--glow-b), 0) 640px); }
+
+  .scene { position: absolute; inset: 0; }
+  .rtl-block { position: absolute; right: var(--pad); left: var(--pad); text-align: right; }
+  .center-block { position: absolute; left: 0; right: 0; text-align: center; }
+  .line { display: block; white-space: nowrap; }
+  .w { display: inline-block; }
+  .accent { color: var(--teal); font-weight: 700; }
+
+  .dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .dot i, .dot b { position: absolute; inset: 0; border-radius: 50%; }
+  .dot b { background: rgba(181, 220, 85, .35); }
+  .dot i { inset: 7px; background: var(--green); }
+
+  .hl { font-weight: 700; padding: 0 6px; background-image: linear-gradient(var(--hl), var(--hl));
+        background-repeat: no-repeat; background-position: 100% 82%; background-size: 0% 40%; }
+
+
+  /* ===== scene 1 — hook ===== */
+  #s1 .title { top: 330px; font-weight: 700; font-size: 116px; line-height: 1.24; letter-spacing: -1px; }
+  #s1 .big { color: var(--teal); font-size: 220px; line-height: 1.12; margin-top: 6px; letter-spacing: -2px; }
+  #visual { position: absolute; left: 50%; top: 1010px; width: 620px; height: 566px; margin-left: -310px; }
+
+  /* ===== scene 2 — verse / quote ===== */
+  #s2 .say { top: 610px; font-size: 80px; font-weight: 400; }
+  #s2 .ayah { top: 790px; font-size: 84px; font-weight: 500; line-height: 1.62; }
+  #s2 .ayah .line { padding: 0 20px; }
+  .orn { color: var(--teal); font-weight: 400; }
+  #s2 .ref { top: 1240px; font-size: 40px; color: var(--muted); }
+
+  /* ===== scene 3 — statement + card ===== */
+  #s3 .head { top: 470px; font-size: 92px; font-weight: 400; line-height: 1.45; }
+  .card { position: absolute; right: 80px; left: 80px; top: 820px; background: var(--card); border-radius: 42px; padding: 52px 48px 50px;
+          box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
+  .card .who { font-size: 40px; color: var(--teal); font-weight: 500; position: relative; padding-right: 40px; }
+  .card .who::before { content: ""; position: absolute; right: 2px; top: 50%; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--green); }
+  .card .quote { margin-top: 22px; font-size: 45px; line-height: 1.86; font-weight: 400; }
+  .card .src { margin-top: 18px; font-size: 32px; color: var(--muted); }
+
+  /* ===== scene 4 — closing ===== */
+  #s4 .lines { top: 500px; font-size: 64px; font-weight: 400; line-height: 1.5; }
+  #s4 .lines .gap { height: 34px; }
+  #s4 .sirr { top: 930px; font-size: 232px; font-weight: 700; color: var(--teal); line-height: 1.15; letter-spacing: -2px; }
+  #s4 .tail { top: 1250px; font-size: 70px; font-weight: 400; }
+  #send { position: absolute; left: 110px; top: 1460px; width: 96px; height: 96px; }
+
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: var(--handle); letter-spacing: .5px; }
+
+  #safe { display: none; pointer-events: none; } #safe.on { display: block; }
+  #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
+  #controls { width: min(720px, 100%); padding: 12px 16px 16px; display: flex; gap: 12px; align-items: center; color: #e8ecee; font-size: 15px; direction: ltr; }
+  #controls button { font: inherit; color: inherit; background: #2f3539; border: 1px solid #454c51; border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+  #controls input[type=range] { flex: 1; accent-color: var(--green); min-width: 60px; }
+  #time { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="layer grid" id="bg-grid"></div>
+    <div class="layer glow-a" id="bg-a"></div>
+    <div class="layer glow-b" id="bg-b"></div>
+
+    <!-- ========== SCENE 1 — الغلاف (الخطّاف) ========== -->
+    <section class="scene" id="s1">
+      <div class="dot" id="s1-dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
+      <div class="rtl-block title">
+        <span class="line split" id="t1">__السطر الأول__</span>
+        <span class="line split" id="t2">__السطر الثاني__</span>
+        <span class="line big" id="t3"><span class="w">__كلمة__</span></span>
+      </div>
+      <!-- العنصر البصري الخاص بالمنشور (قلب، أيقونة، رسم…) يُصمَّم من ملف المستخدم.
+           استخدم svg بمسارات .upath / .draw ونصوصًا بـ .u حتى تُصدَّر إلى Lottie. -->
+      <div id="visual"></div>
+    </section>
+
+
+    <!-- ========== SCENE 2 — الآية / الاقتباس ========== -->
+    <section class="scene" id="s2">
+      <div class="rtl-block say"><span class="line split">قال الله تعالى:</span></div>
+      <div class="center-block ayah">
+        <span class="line reveal"><span class="orn">﴿</span>__السطر الأول من الآية__</span>
+        <span class="line reveal">__السطر الثاني__</span>
+        <span class="line reveal">__السطر الثالث__<span class="orn">﴾</span></span>
+      </div>
+      <div class="center-block ref u">[__السورة: الآية__]</div>
+    </section>
+
+    <!-- ========== SCENE 3 — الفكرة + بطاقة ========== -->
+    <section class="scene" id="s3">
+      <div class="rtl-block head">
+        <span class="line split">__جملة تمهيدية..__</span>
+        <span class="line split" id="s3-l2">__بداية__ <span class="accent">__المبرز!__</span></span>
+      </div>
+      <div class="card" id="card">
+        <div class="who u">__قال فلان رحمه الله__</div>
+        <div class="quote">
+          <span class="line reveal">«__سطر ١__</span>
+          <span class="line reveal">__سطر ٢ فيه__ <span class="hl" id="hl1">__عبارة مظللة__</span></span>
+          <span class="line reveal">__سطر ٣__»</span>
+        </div>
+        <div class="src u">من كتاب: __اسم الكتاب__</div>
+      </div>
+    </section>
+
+    <!-- ========== SCENE 4 — الخاتمة ========== -->
+    <section class="scene" id="s4">
+      <div class="rtl-block lines">
+        <span class="line split">__سطر الخاتمة الأول..__</span>
+        <span class="line gap"></span>
+        <span class="line split">__سطر ثانٍ،__</span>
+        <span class="line split">__وخصوصًا:__</span>
+      </div>
+      <div class="rtl-block sirr"><span class="line split">__كلمة__</span></div>
+      <div class="rtl-block tail"><span class="line"><span class="w" id="tail-a">__فهي__</span> <span class="w hl" id="hl2">__العبارة المظللة__</span><span class="w" id="tail-c">.</span></span></div>
+      <svg id="send" class="usvg" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/>
+      </svg>
+    </section>
+
+    <div id="handle" class="u">@__handle__</div>
+
+    <div class="layer" id="safe">
+      <div style="left:0;right:0;top:0;height:220px"></div>
+      <div style="left:0;right:0;bottom:0;height:380px"></div>
+      <div style="right:0;width:140px;top:1040px;bottom:380px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ تشغيل</button>
+  <input type="range" id="scrub" min="0" max="40" step="0.01" value="0">
+  <span id="time"></span>
+  <button id="safeBtn" title="مناطق واجهة ريلز">Safe zone</button>
+</div>
+
+<script src="gsap.min.js"></script>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  /* الافتراضي: ليلي بدون مربعات. للنهاري: ?theme=light — لإظهار المربعات: ?grid=on */
+  const DEFAULTS = { theme: 'dark', grid: 'off' };
+  if ((params.get('theme') || DEFAULTS.theme) === 'dark') document.documentElement.dataset.theme = 'dark';
+  if ((params.get('grid') || DEFAULTS.grid) === 'off') document.documentElement.dataset.grid = 'off';
+  /* لون من متغيرات الهوية — استخدمه داخل GSAP (لا يحرّك GSAP قيم var()) */
+  const tok = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  /* ================== التوقيت — المكان الوحيد لضبط المشاهد ==================
+     كل مشهد يبدأ عند T.sN وينتهي قبل بداية التالي. لمزامنة التعليق الصوتي
+     ضع هنا بداية كل جملة (من scripts/voice_sync.py) وطول التسجيل في end. */
+  const T = { s1: 0, s2: 9, s3: 19, s4: 31, end: 40 };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  // split .split lines into word spans (Arabic shaping stays intact inside each word)
+  $$('.split').forEach(el => {
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) return frag.appendChild(document.createTextNode(part));
+          const s = document.createElement('span'); s.className = 'w'; s.textContent = part; frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && !n.classList.contains('w')) walk(n);
+    });
+    walk(el);
+  });
+  $$('path.draw').forEach(p => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
+
+  gsap.set(['#s2', '#s3', '#s4'], { autoAlpha: 0 });
+  gsap.set('#bg-grid, #bg-a, #bg-b, #handle', { opacity: 0 });
+  gsap.set('.reveal', { clipPath: 'inset(-40% 0% -40% 100%)' });
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const words = el => $$('.w', typeof el === 'string' ? $(el) : el);
+
+  /* ---------- مكتبة الحركات (نفس أسلوب الهوية) ---------- */
+  const wordIn = (targets, at, stagger = 0.1, dur = 0.8) =>
+    tl.fromTo(targets, { y: 70, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: dur, stagger }, at);
+  const popIn = (targets, at, stagger = 0.12) =>
+    tl.fromTo(targets, { scale: 1.6, opacity: 0, filter: 'blur(16px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger, ease: 'back.out(2)' }, at);
+  const bigIn = (targets, at) =>
+    tl.fromTo(targets, { y: 90, opacity: 0, scale: 0.85, filter: 'blur(26px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.1, stagger: 0.18, ease: 'expo.out' }, at);
+  const reveal = (el, at, dur = 1.15) =>
+    tl.to(el, { clipPath: 'inset(-40% 0% -40% 0%)', duration: dur, ease: 'power2.inOut' }, at);
+  const highlight = (el, at) => tl.to(el, { backgroundSize: '100% 40%', duration: 0.75, ease: 'power2.inOut' }, at);
+  const dotIn = (sel, at, pulses = 3) => {
+    tl.fromTo(sel, { scale: 0 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' }, at)
+      .fromTo(sel + ' b', { scale: 1, opacity: 1 }, { scale: 2.4, opacity: 0, duration: 1.4, ease: 'sine.out', repeat: pulses }, at + 0.6);
+  };
+  const fadeUp = (sel, at) => tl.fromTo(sel, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, at);
+  const sceneIn = (sel, at) => tl.set(sel, { autoAlpha: 1 }, at);
+  const sceneOut = (sel, nextStart) =>
+    tl.to(sel, { y: -60, opacity: 0, filter: 'blur(12px)', duration: 0.55, ease: 'power2.in' }, nextStart - 0.55);
+  /* يوزّع عناصر بالتساوي داخل فترة [from, to] — مفيد عند المزامنة مع الصوت */
+  const spread = (n, from, to) => Array.from({ length: n }, (_, i) => from + (to - from) * (n > 1 ? i / (n - 1) : 0));
+
+  /* ---------- الخلفية ---------- */
+  tl.to('#bg-grid', { opacity: 1, duration: 0.8 }, 0)
+    .fromTo('#bg-a', { opacity: 0 }, { opacity: 1, duration: 1.6 }, 0)
+    .fromTo('#bg-b', { opacity: 0 }, { opacity: 1, duration: 1.6 }, 0.2)
+    .to('#handle', { opacity: 1, duration: 0.8 }, 0.8)
+    .to('#bg-a', { x: -40, y: 30, duration: T.end - 1.6, ease: 'sine.inOut' }, 1.6)
+    .to('#bg-b', { x: 40, y: -30, duration: T.end - 1.8, ease: 'sine.inOut' }, 1.8);
+
+  /* ---------- SCENE 1 ---------- */
+  { const a = T.s1;
+    dotIn('#s1-dot', a + 0.3, 4);
+    wordIn(words('#t1'), a + 0.5, 0.13);
+    wordIn(words('#t2'), a + 1.35, 0.13);
+    tl.fromTo('#t3 .w', { scale: 1.35, opacity: 0, filter: 'blur(24px)', transformOrigin: '100% 60%' },
+      { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out' }, a + 2.2);
+    // العنصر البصري: حركته من a + 2.9 تقريبًا حتى نهاية المشهد
+    tl.fromTo('#visual', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, a + 2.9);
+    sceneOut('#s1', T.s2);
+  }
+
+  /* ---------- SCENE 2 ---------- */
+  { const a = T.s2;
+    sceneIn('#s2', a);
+    wordIn(words('#s2 .say'), a + 0.4, 0.12);
+    const lines = $$('#s2 .reveal');
+    spread(lines.length, a + 1.2, a + 4.1).forEach((t, i) => reveal(lines[i], t, 1.35));
+    fadeUp('#s2 .ref', a + 5.7);
+    tl.fromTo('#s2 .ayah', { scale: 1 }, { scale: 1.03, duration: T.s3 - a - 6.2, ease: 'sine.inOut' }, a + 5.8);
+    sceneOut('#s2', T.s3);
+  }
+
+  /* ---------- SCENE 3 ---------- */
+  { const a = T.s3;
+    sceneIn('#s3', a);
+    wordIn(words($$('#s3 .head .line')[0]), a + 0.15, 0.14);
+    const l2 = words('#s3-l2'), acc = $$('.accent .w', $('#s3-l2'));
+    wordIn(l2.filter(w => !acc.includes(w)), a + 1.0, 0.14);
+    popIn(acc, a + 1.45);
+    tl.fromTo('#card', { y: 160, opacity: 0, rotation: -1.5 }, { y: 0, opacity: 1, rotation: 0, duration: 1, ease: 'expo.out' }, a + 2.5)
+      .fromTo('#card .who', { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6 }, a + 3.0);
+    const q = $$('#card .reveal');
+    spread(q.length, a + 3.4, a + 3.4 + 1.15 * (q.length - 1)).forEach((t, i) => reveal(q[i], t, 1.1));
+    highlight('#hl1', a + 5.1);
+    fadeUp('#card .src', a + 3.4 + 1.15 * q.length + 0.4);
+    sceneOut('#s3', T.s4);
+  }
+
+  /* ---------- SCENE 4 ---------- */
+  { const a = T.s4;
+    sceneIn('#s4', a);
+    const ls = $$('#s4 .lines .split');
+    spread(ls.length, a + 0.2, a + 2.8).forEach((t, i) => wordIn(words(ls[i]), t, 0.09));
+    bigIn(words('#s4 .sirr'), a + 3.5);
+    tl.fromTo('#s4 .sirr', { textShadow: '0 0 0 rgba(0,0,0,0)' }, { textShadow: '0 10px 50px ' + tok('--accent-glow'), duration: 1.2 }, a + 4.2);
+    wordIn(['#tail-a', '#hl2', '#tail-c'], a + 4.9, 0.12);
+    highlight('#hl2', a + 5.6);
+    tl.fromTo('#send', { x: -140, y: 140, opacity: 0, rotation: -25 }, { x: 0, y: 0, opacity: 1, rotation: 0, duration: 1, ease: 'expo.out' }, a + 6.3)
+      .to('#send', { x: 10, y: -10, duration: 0.5, ease: 'sine.inOut', yoyo: true, repeat: 3 }, a + 7.3);
+  }
+
+  tl.to({}, { duration: 0.001 }, T.end - 0.001);
+
+  /* ---------- player / render API (used by scripts/render.js and bake.js) ---------- */
+  const stage = $('#stage'), vp = $('#viewport');
+  const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
+  if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
+  window.__duration = T.end;
+  window.__scenes = T;
+  window.__seek = t => { tl.seek(t, false); };
+  window.__ready = document.fonts.ready.then(() => true);
+
+  const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
+  scrub.max = T.end;
+  const sync = () => { scrub.value = tl.time(); time.textContent = `${tl.time().toFixed(2)} / ${T.end.toFixed(1)}`; };
+  tl.eventCallback('onUpdate', sync); sync();
+  tl.eventCallback('onComplete', () => { playBtn.textContent = '↺ إعادة'; });
+  playBtn.onclick = () => {
+    if (tl.progress() >= 1) tl.restart(); else if (tl.paused()) tl.play(); else tl.pause();
+    playBtn.textContent = tl.paused() ? '▶ تشغيل' : '❚❚ إيقاف';
+  };
+  scrub.oninput = () => { tl.pause(); tl.seek(+scrub.value); playBtn.textContent = '▶ تشغيل'; sync(); };
+  $('#safeBtn').onclick = () => $('#safe').classList.toggle('on');
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+  if (params.has('t')) tl.seek(+params.get('t'));
+  else if (!params.has('render')) window.__ready.then(() => { tl.play(); playBtn.textContent = '❚❚ إيقاف'; });
+})();
+</script>
+</body>
+</html>
