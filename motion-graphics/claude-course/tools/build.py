@@ -6,7 +6,7 @@ import json, math
 ROOT = "/home/user/Design-course"
 DIR = f"{ROOT}/motion-graphics/claude-course"
 END = round(json.load(open(f"{DIR}/audio/timing.json"))["duration"] + 2.4, 2)
-SEND = 50.45
+SEND = 52.05
 
 def kl(text, t, cls=""):
     return f'<span class="line kline {cls}" data-t="{t}">{text}</span>'
@@ -241,9 +241,9 @@ S.append(scene(4, 8.5,
 # 5 — الخطوة ٣: نصّية «التجربة» ×٣
 S.append(scene(5, 10.26,
   steps(3, 10.3) +
-  c(470, 84, 500, kl('<span class="mute">التجربة</span>', "10.30"), 10.2) +
+  c(470, 84, 500, kl('<span class="mute">التجربة</span>', "10.3"), 10.2) +
   c(590, 56, 500, kl('<span class="mute">ثمّ</span>', "10.98"), 10.85) +
-  c(670, 120, 600, kl("التجربة", "11.20"), 11.05, "big", 1.2) +
+  c(670, 120, 600, kl("التجربة", "11.2"), 11.05, "big", 1.2) +
   c(840, 56, 500, kl('<span class="mute">ثمّ</span>', "11.72"), 11.6) +
   c(920, 190, 700, kl(mark(A("التجربة"), 12.1), "11.94"), 11.8, "big", 1.2)))
 # 6 — مزدوجة: جرّبه في
@@ -304,24 +304,41 @@ S.append(scene(15, 37.84,
   pill(750, 72, "صانع محتوى", "38.76,39.06", 38.65, "soft") +
   pill(910, 72, "طالب", "39.7", 39.55) +
   pill(1070, 72, "مدرّب", "40.06", 39.95, "soft")))
-# 16 — رسم + كلمة: انطلاقة
-S.append(scene(16, 41.1,
-  icon(80, 960, ic_journey(41.05, 42.2)) +
-  c(860, 72, 500, kl("وبإذن الله، هذه الدورة", "41.14,41.44,41.54,41.8"), 41.05) +
-  c(980, 108, 700, kl(f'ستكون {A("انطلاقةً")} لك', "42.02,42.26,42.7"), 41.9, "big", 1.2)))
+# 16 — رسم فقط: قبل الدورة ← بعد الدورة (عمودي، بلا كلام المتحدث)
+def journey_v(t):
+    X, Y1, Y2 = 830, 470, 1230                 # the track runs down the right side (RTL)
+    arrive = t + 1.55
+    svg = (f'<svg viewBox="0 0 1080 1920" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;overflow:visible">'
+           f'<path data-pop="{t}" d="M{X} {Y1} V{Y2}" stroke="#dfe5e7" stroke-width="12" stroke-dasharray="1 26"/>'
+           f'<path class="draw" data-draw="{t + 0.75}" d="M{X} {Y1} V{Y2}" stroke="{T}" stroke-width="12"/>'
+           f'<g data-pop="{t}"><circle cx="{X}" cy="{Y1}" r="30" fill="#fff" stroke="#9aa1a4" stroke-width="11"/></g>'
+           f'<circle data-ring="{arrive + 0.1}" opacity="0" cx="{X}" cy="{Y2}" r="48" stroke="{G}" stroke-width="10"/>'
+           f'<g data-pop="{t + 0.75}"><circle cx="{X}" cy="{Y2}" r="30" fill="#fff" stroke="{T}" stroke-width="11"/></g>'
+           f'<g data-pop="{arrive}"><circle cx="{X}" cy="{Y2}" r="30" fill="{G}" stroke="{T}" stroke-width="11"/>'
+           f'<path d="M{X - 13} {Y2} L{X - 3} {Y2 + 10} L{X + 14} {Y2 - 9}" stroke="#fff" stroke-width="8"/></g>'
+           f'<g data-out="{arrive - 0.05}"><g data-move="{t + 0.8},0.7,0,{Y2 - Y1}"><circle data-pop="{t + 0.75}" cx="{X}" cy="{Y1}" r="16" fill="{T}"/></g></g>'
+           f'</svg>')
+    lab = lambda top, at, html, cls: f'      <div class="jr {cls}" style="top:{top}px" data-in="{at}" data-fx="chip"><span>{html}</span></div>\n'
+    return ('      <div class="icon" style="top:0;left:0;margin:0;width:1080px;height:1920px">' + svg + '</div>\n'
+            + lab(Y1 - 46, t + 0.05, 'قبل الدورة', 'jt mute')
+            + lab(Y1 + 60, t + 0.25, '<i class="x"></i>معلومات عامة', 'ji')
+            + lab(Y1 + 150, t + 0.4, '<i class="x"></i>مهارات حُمّلت دون الاستفادة منها', 'ji')
+            + lab(Y2 - 52, arrive + 0.05, 'بعد الدورة', 'jt acc')
+            + lab(Y2 + 62, arrive + 0.25, '<i class="ok"></i>تطبيقات عملية مع Claude', 'ji good'))
+S.append(scene(16, 41.1, journey_v(41.05)))
 # 17 — مزدوجة: لا لابتوب — يكفي الآيباد أو الجوال
-S.append(scene(17, 42.84,
-  icon(380, 420, ic_devices(42.8, 43.5, 44.73, 45.42)) +
-  c(860, 76, 600, kl("لن تحتاج إلى لابتوب للتطبيق العملي", "42.88,42.96,43.2,43.4,43.66,44.16"), 42.75) +
-  c(990, 110, 700, kl(f'يكفيك {A("الآيباد")} أو الجوال', "44.5,44.73,45.4,45.54"), 44.4, "big", 1.2)))
+S.append(scene(17, 44.44,
+  icon(380, 420, ic_devices(44.4, 45.1, 46.33, 47.02)) +
+  c(860, 76, 600, kl("لن تحتاج إلى لابتوب للتطبيق العملي", "44.48,44.56,44.8,45.0,45.26,45.76"), 44.35) +
+  c(990, 110, 700, kl(f'يكفيك {A("الآيباد")} أو الجوال', "46.1,46.33,47.0,47.14"), 46.0, "big", 1.2)))
 # 18 — دعوة: حضوريًّا + سجّل اهتمامك (+ أيقونة المشاركة)
-S.append(scene(18, 46.02,
-  icon(300, 200, ic_pin(46.02)) +
-  c(530, 76, 600, kl(f'الدورة ستكون {A("حضوريّة")}', "46.06,46.54,47.18"), 45.97) +
-  pill(690, 110, "سجّل اهتمامك", "47.52,47.86", 47.37) +
-  icon(810, 200, tap(48.02)) +
-  c(1050, 68, 500, kl("من الرابط في البايو", "48.36,48.42,48.46"), 48.22) +
-  c(1150, 68, 500, kl(f'لتصلك التفاصيل {A("قريبًا")}', "48.94,49.32,49.96"), 48.82) +
+S.append(scene(18, 47.62,
+  icon(300, 200, ic_pin(47.62)) +
+  c(530, 76, 600, kl(f'الدورة ستكون {A("حضوريّة")}', "47.66,48.14,48.78"), 47.57) +
+  pill(690, 110, "سجّل اهتمامك", "49.12,49.46", 48.97) +
+  icon(810, 200, tap(49.62)) +
+  c(1050, 68, 500, kl("من الرابط في البايو", "49.96,50.02,50.06"), 49.82) +
+  c(1150, 68, 500, kl(f'لتصلك التفاصيل {A("قريبًا")}', "50.54,50.92,51.56"), 50.42) +
   '      <svg id="send" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">'
   '<path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/></svg>\n'))
 
@@ -389,6 +406,15 @@ HTML = r'''<!doctype html>
   .icon svg, .mini svg { width: 100%; height: 100%; overflow: visible; }
   .mini { position: absolute; border-radius: 40px; background: #fff; padding: 18px;
           box-shadow: 0 10px 0 -4px var(--card-edge), 0 24px 50px var(--card-shadow); }
+  .jr { position: absolute; right: 330px; left: 60px; text-align: right; direction: rtl; }
+  .jr span { display: inline-block; }
+  .jr.jt span { font-size: 64px; font-weight: 700; }
+  .jr.ji span { font-size: 46px; font-weight: 500; color: var(--muted); background: #fff; padding: 12px 30px 18px; border-radius: 22px;
+                box-shadow: 0 8px 0 -3px var(--card-edge), 0 18px 40px var(--card-shadow); white-space: nowrap; }
+  .jr.ji.good span { font-size: 52px; color: var(--ink); font-weight: 600; background: var(--hl); }
+  .jr i { display: inline-block; width: 26px; height: 26px; border-radius: 50%; margin-left: 16px; vertical-align: -2px; }
+  .jr i.x { background: #d7dfe1; }
+  .jr i.ok { background: var(--green); box-shadow: 0 0 0 5px rgba(27, 122, 156, .25); }
   .line.inl { display: inline-block; }
   .mute { color: var(--muted); }
   .pill.soft { background: var(--hl); color: var(--ink); }
