@@ -134,13 +134,18 @@ def ic_puzzle(t, join):    # building skills with Claude: two pieces click toget
         <g data-rise="{t}"><path d="{P}" fill="{G}" stroke="{T}" stroke-width="7"/></g>
         <g data-slidein="{join}"><path d="M120 100 Q140 100 140 116 Q140 132 120 132 V172 H184 V60 H120 Z" transform="translate(4 0)" fill="{HL}" stroke="{T}" stroke-width="7"/></g>''')
 
-def ic_rocket(t, go):      # a launch
-    flame = f'<g data-wave="{go}"><path d="M86 160 Q100 196 114 160 Z" fill="{G}"/><path d="M93 160 Q100 184 107 160 Z" fill="{HL}"/></g>'
-    return SVG.format(f'''<g data-fly="{go}">{flame}
-        <path d="M100 14 Q138 46 132 120 L132 160 H68 L68 120 Q62 46 100 14 Z" fill="#fff" stroke="{T}" stroke-width="7"/>
-        <circle cx="100" cy="82" r="16" fill="{TL}" stroke="{T}" stroke-width="5"/>
-        <path d="M68 118 L44 148 V164 L68 152 Z M132 118 L156 148 V164 L132 152 Z" fill="{G}" stroke="{T}" stroke-width="6"/></g>
-        <g data-pop="{t}">{d("M30 190 H170", t, TL, 6)}</g>''')
+def ic_journey(t, go):     # from «no experience» (empty point, right) to «experience» (lit point, left)
+    lab = lambda x, y, txt, col, w: f'<text x="{x}" y="{y}" text-anchor="middle" font-size="17" font-weight="{w}" fill="{col}" font-family="Plex Ar">{txt}</text>'
+    return SVG.format(f'''
+        <path data-pop="{t}" d="M168 150 C120 150 100 60 32 50" stroke="#dfe5e7" stroke-width="7" stroke-dasharray="2 12"/>
+        {d("M168 150 C120 150 100 60 32 50", t + 0.3, T, 7)}
+        <g data-pop="{t}"><circle cx="168" cy="150" r="15" fill="#fff" stroke="#9aa1a4" stroke-width="6"/></g>
+        <g data-pop="{t + 0.1}">{lab(168, 188, "بلا تجربة", "#7b8386", 500)}</g>
+        <circle data-ring="{go}" opacity="0" cx="32" cy="50" r="24" stroke="{G}" stroke-width="6"/>
+        <g data-pop="{t + 0.15}"><circle cx="32" cy="50" r="15" fill="#fff" stroke="{T}" stroke-width="6"/></g>
+        <g data-pop="{go}"><circle cx="32" cy="50" r="15" fill="{G}" stroke="{T}" stroke-width="6"/><path d="M25 50 L30 55 L40 44" stroke="#fff" stroke-width="4"/></g>
+        <g data-pop="{go + 0.15}">{lab(32, 100, "بالتجربة", "#1b7a9c", 700)}</g>
+        <g data-out="{go - 0.05}"><g data-move="{t + 0.3},{round(go - t - 0.35, 2)},-136,-100,-60,-46"><circle data-pop="{t + 0.25}" cx="168" cy="150" r="9" fill="{T}"/></g></g>''')
 
 def ic_devices(t, no, tab, ph):   # no laptop needed — the tablet or the phone is enough
     return SVG.format(f'''
@@ -260,7 +265,7 @@ S.append(scene(15, 37.4,
   pill(1160, 76, "ولديك دورات", "39.94,40.26", 39.81)))
 # 16 — رسم + كلمة: انطلاقة
 S.append(scene(16, 40.66,
-  icon(330, 460, ic_rocket(40.66, 41.76)) +
+  icon(300, 500, ic_journey(40.66, 41.76)) +
   c(860, 72, 500, kl("وبإذن الله، هذه الدورة", "40.7,41.0,41.1,41.36"), 40.61) +
   c(980, 108, 700, kl(f'ستكون {A("انطلاقةً")} لك', "41.58,41.82,42.26"), 41.46, "big", 1.2)))
 # 17 — مزدوجة: لا لابتوب — يكفي الآيباد أو الجوال
