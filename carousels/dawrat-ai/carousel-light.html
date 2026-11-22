@@ -137,21 +137,25 @@ b{font-weight:700;color:var(--blue)}
 .pills > span::before{content:"";width:14px;height:14px;border-radius:50%;background:#c9d2d7}
 .pills > span.on{background:var(--lime);color:#1c2806;font-weight:700;font-size:50px;border-color:var(--lime);box-shadow:0 8px 0 0 #9fcb3c}
 .pills > span.on::before{background:#7aa62a}
+.cover .ph-panel{position:absolute;left:0;bottom:0;width:480px;height:470px;border-radius:0 70px 0 0;background:linear-gradient(160deg,#1a7d9e 0%,#4fb0cc 55%,#b4dc52 115%)}
+.cover .ph{position:absolute;left:-40px;bottom:0;width:580px;height:auto}
+.cover .aud,.cover .info{max-width:510px;align-self:flex-start}
+.cover .aud{justify-content:flex-start}
+.cover .info .it{font-size:32px}
+.cover .info .it svg{width:52px;height:52px}
+.cover .aud span{font-size:34px}
+.cover .foot .swipe{left:auto;right:0}
+.cover .foot > span{position:absolute;right:170px}
 </style>
 </head>
 <body>
 
 <!-- 1 Cover -->
 <section class="slide cover cv2">
-  <svg class="ice" viewBox="0 0 200 200" fill="none">
-    <circle cx="100" cy="104" r="86" stroke="#1a7d9e" stroke-opacity=".14" stroke-width="1" stroke-dasharray="2 6"/>
-    <path d="M100 30 C106 78 122 94 170 100 C122 106 106 122 100 170 C94 122 78 106 30 100 C78 94 94 78 100 30 Z" fill="#1a7d9e" fill-opacity=".08" stroke="#1a7d9e" stroke-width="2.6" stroke-linejoin="round"/>
-    <path d="M156 34 C158 48 162 52 176 54 C162 56 158 60 156 74 C154 60 150 56 136 54 C150 52 154 48 156 34 Z" fill="#b4dc52"/>
-    <path d="M48 140 C49.5 150 52 152.5 62 154 C52 155.5 49.5 158 48 168 C46.5 158 44 155.5 34 154 C44 152.5 46.5 150 48 140 Z" fill="#1a7d9e" fill-opacity=".45"/>
-    <circle cx="100" cy="100" r="6" fill="#b4dc52" stroke="#ffffff" stroke-width="1.5"/>
-  </svg>
+  <div class="ph-panel"></div>
+  <img class="ph" src="presenter.png" alt="">
   <div class="body" style="justify-content:center;padding-bottom:40px">
-    <span class="kk">ذكاء اصطناعي</span>
+    <span class="kk">دورة تدريبية</span>
     <h1 class="c3">دورة أساسيات<br><span>كلود</span></h1>
     <p class="aud-l">الفئة المستهدفة</p>
     <div class="aud">
@@ -160,6 +164,7 @@ b{font-weight:700;color:var(--blue)}
     <div class="info">
       <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="#1a7d9e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5" fill="#b4dc52" stroke="none"/></svg><div><small>مكان الدورة</small>مركز شباب المحرق النموذجي</div></div>
       <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="#1a7d9e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1.8" fill="#b4dc52" stroke="none"/></svg><div><small>الاشتراك</small>٣٠ دينارًا بحرينيًا</div></div>
+      <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="#1a7d9e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/><circle cx="12" cy="8" r="1.6" fill="#b4dc52" stroke="none"/></svg><div><small>تقديم</small>م. عبدالله حمدان</div></div>
     </div>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
