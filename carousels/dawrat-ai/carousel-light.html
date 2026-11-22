@@ -110,6 +110,33 @@ b{font-weight:700;color:var(--blue)}
 .aud{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
 .aud span{font-size:38px;font-weight:600;padding:14px 30px 20px;border-radius:999px;background:var(--card);border:1px solid var(--border);box-shadow:0 6px 0 0 #e3e9ec}
 .aud span.on{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 6px 0 0 #135f78}
+.info{display:flex;flex-direction:column;gap:14px;margin-top:40px;border-top:1px solid var(--border);padding-top:32px}
+.info .it{display:flex;align-items:center;gap:20px;font-size:38px;font-weight:600;line-height:1.35}
+.info .it svg{width:58px;height:58px;flex:none;background:rgba(101,189,213,.14);border-radius:16px;padding:10px}
+.info small{display:block;font-size:24px;color:var(--muted);font-weight:400}
+.axi.c{padding:24px 34px 28px}
+.axi.c .h{font-size:42px}
+.axi.c .d{font-size:31px}
+.fits{display:flex;flex-direction:column;gap:22px;margin-top:40px}
+.fi{display:flex;gap:24px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:26px;padding:28px 34px;box-shadow:0 8px 0 0 #e3e9ec}
+.fi svg{width:52px;height:52px;flex:none;margin-top:6px}
+.fi p{font-size:38px;line-height:1.6}
+.tl{position:relative;padding-right:110px}
+.tl::before{content:"";position:absolute;right:40px;top:50px;bottom:200px;width:8px;border-radius:4px;background:var(--blue)}
+.node{position:relative;display:flex;align-items:center;min-height:100px}
+.node .dot{position:absolute;right:-110px;width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.node.a .dot{background:#fff;border:10px solid #9aa3a9}
+.node.b .dot{background:var(--blue);border:10px solid #fff;box-shadow:0 0 0 22px rgba(196,231,115,.25)}
+.node.b .dot svg{width:44px;height:44px}
+.node h3{font-size:72px;font-weight:700;line-height:1.3}
+.node.a h3{color:#8a939a}
+.node.b h3{color:var(--blue)}
+.node.b{margin-top:300px}
+.pills{display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-top:18px}
+.pills > span{font-size:42px;font-weight:500;color:var(--soft);background:var(--card);border:1px solid var(--border);border-radius:22px;padding:16px 32px 22px;box-shadow:0 8px 0 0 #e3e9ec;display:flex;align-items:center;gap:16px}
+.pills > span::before{content:"";width:14px;height:14px;border-radius:50%;background:#c9d2d7}
+.pills > span.on{background:var(--lime);color:#1c2806;font-weight:700;font-size:50px;border-color:var(--lime);box-shadow:0 8px 0 0 #9fcb3c}
+.pills > span.on::before{background:#7aa62a}
 </style>
 </head>
 <body>
@@ -130,34 +157,55 @@ b{font-weight:700;color:var(--blue)}
     <div class="aud">
       <span>المعلّمون</span><span>مقدّمو الدورات</span><span class="on">صنّاع المحتوى الهادف</span>
     </div>
+    <div class="info">
+      <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="#1a7d9e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5" fill="#b4dc52" stroke="none"/></svg><div><small>مكان الدورة</small>مركز شباب المحرق النموذجي</div></div>
+      <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="#1a7d9e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1.8" fill="#b4dc52" stroke="none"/></svg><div><small>الاشتراك</small>٣٠ دينارًا بحرينيًا</div></div>
+    </div>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
     <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#4d7410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
   </div>
 </section>
 
-<!-- 2 Axes 1-3 -->
+<!-- 2 Learn -->
 <section class="slide">
-  <div class="head">محاور الدورة<span class="count">٢ / ٤</span></div>
+  <div class="head">دورة أساسيات كلود<span class="count">٢ / ٥</span></div>
   <div class="body">
-    <p class="t" style="font-size:54px">ماذا ستتعلّم؟</p>
-    <div class="ax">
-      <div class="axi"><div class="n">01</div><div><div class="h">مدخل إلى الذكاء الاصطناعي</div><div class="d">تعرّف على <b>أبرز الأدوات</b>، وكيف تستخدمها.</div></div></div>
-      <div class="axi"><div class="n">02</div><div><div class="h">هندسة الأوامر <i dir="ltr">Prompt Engineering</i></div><div class="d">اكتب أوامر <b>احترافية</b>.. تحصل بها على نتائج مميزة.</div></div></div>
-      <div class="axi"><div class="n">03</div><div><div class="h">صناعة المحتوى النافع</div><div class="d">أعِدّ <b>منشورات الكاروسيل</b> وصمّمها بالذكاء الاصطناعي.</div></div></div>
+    <p class="t" style="font-size:60px;font-weight:700">ماذا ستتعلّم <b>في الدورة؟</b></p>
+    <div class="ax" style="gap:20px;margin-top:34px">
+      <div class="axi c"><div class="n">01</div><div><div class="h">التعرّف على الواجهة</div><div class="d">واجهة <span dir="ltr" style="font-family:PlexLat;unicode-bidi:isolate">Claude</span> و <span dir="ltr" style="font-family:PlexLat;unicode-bidi:isolate">Claude Code</span>.. خطوة بخطوة.</div></div></div>
+      <div class="axi c"><div class="n">02</div><div><div class="h">إمكانيات <span dir="ltr" style="font-family:PlexLat;unicode-bidi:isolate">Claude</span></div><div class="d">في <b>التصميم</b>، و<b>المونتاج</b>، و<b>التلخيص</b>، وعمل <b>المواقع التفاعلية</b>.</div></div></div>
+      <div class="axi c"><div class="n">03</div><div><div class="h">كيف تخاطب <span dir="ltr" style="font-family:PlexLat;unicode-bidi:isolate">Claude</span>؟</div><div class="d">لتحصل على <b>أفضل النتائج</b> من أول مرة.</div></div></div>
+      <div class="axi c"><div class="n">04</div><div><div class="h">قوالبك الاحترافية الخاصة</div><div class="d">في التصميم.. لتتفادى <span class="lime">ضياع الوقت في التعديل</span>.</div></div></div>
     </div>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
 </section>
 
-<!-- 3 Axes 4-6 -->
+<!-- 3 Fit -->
 <section class="slide">
-  <div class="head">محاور الدورة<span class="count">٣ / ٤</span></div>
+  <div class="head">دورة أساسيات كلود<span class="count">٣ / ٥</span></div>
   <div class="body">
-    <div class="ax" style="margin-top:0">
-      <div class="axi"><div class="n">04</div><div><div class="h">إنتاج الفيديو النافع</div><div class="d">من <b>كتابة السيناريو</b>، إلى إنشاء المشاهد، وإنتاج مقاطع قصيرة <span dir="ltr" style="font-family:PlexLat">(Reels)</span>.</div></div></div>
-      <div class="axi"><div class="n">05</div><div><div class="h">تصميم العروض التقديمية</div><div class="d">عروض <b>تعليمية ودعوية</b> من الصفر.. ولو كنت مبتدئًا.</div></div></div>
-      <div class="axi"><div class="n">06</div><div><div class="h">المراجعة والتحقق</div><div class="d">تأكّد من <span class="lime">صحة المحتوى الشرعي</span> وجودة المخرجات قبل النشر، بالربط مع <b dir="ltr" style="font-family:PlexLat">MCP</b> «تراث».</div></div></div>
+    <p class="t" style="font-size:60px;font-weight:700">الدورة <b>مناسبة لك</b><br>إذا كنت:</p>
+    <div class="fits">
+      <div class="fi"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#b4dc52"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1c2806" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><p><b>مبتدئًا</b>، أو لم تستخدم <span dir="ltr" style="font-family:PlexLat;unicode-bidi:isolate">Claude</span> إلى الآن.</p></div>
+      <div class="fi"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#b4dc52"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1c2806" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><p>تريد تصاميم <b>تمثّل هويتك</b>.. لا تشبه المنتشر والمستهلك في وسائل التواصل.</p></div>
+      <div class="fi"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#b4dc52"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1c2806" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><p>تريد أن <b>تلخّص موادك</b>، وتصمّم عرضًا تقديميًا <span dir="ltr" style="font-family:PlexLat;unicode-bidi:isolate">(Presentation)</span> احترافيًا.</p></div>
+      <div class="fi"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#b4dc52"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1c2806" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><p>لا تحب الدخول إلى <b>برامج التصميم والمونتاج</b>.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 4 Before/After -->
+<section class="slide">
+  <div class="head">دورة أساسيات كلود<span class="count">٤ / ٥</span></div>
+  <div class="body" style="justify-content:center">
+    <div class="tl">
+      <div class="node a"><span class="dot"></span><h3>قبل الدورة</h3></div>
+      <div class="pills"><span>معلومات عامة</span><span>مهارات حُمِّلت دون الاستفادة منها</span></div>
+      <div class="node b"><span class="dot"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12.5l3.5 3.5L17.5 8.5" stroke="#c4e773" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>بعد الدورة</h3></div>
+      <div class="pills"><span class="on">تطبيقات عملية مع <span dir="ltr" style="font-family:PlexLat;unicode-bidi:isolate">Claude</span></span></div>
     </div>
   </div>
   <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
@@ -165,7 +213,7 @@ b{font-weight:700;color:var(--blue)}
 
 <!-- 4 Practice + CTA -->
 <section class="slide">
-  <div class="head">التطبيق العملي<span class="count">٤ / ٤</span></div>
+  <div class="head">التطبيق العملي<span class="count">٥ / ٥</span></div>
   <div class="body">
     <p class="t" style="font-size:54px">ولن تكتفي بالتعلّم..<br>بل <b>ستُنتج بنفسك</b>:</p>
     <div class="outs">
