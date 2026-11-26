@@ -48,6 +48,7 @@ body{font-family:'Readex Pro',sans-serif;}
 .top .brand .bar{width:2px;height:34px;background:currentColor;opacity:.35}
 .top .num{font-size:22px;opacity:.7;letter-spacing:.06em}
 .foot{position:absolute;bottom:64px;left:0;right:0;text-align:center;font-size:22px;font-weight:300;opacity:.8;direction:ltr;letter-spacing:.02em}
+.foot .dot{margin:0 18px;opacity:.6}
 .paper .top .brand span{color:var(--blue)}
 .paper .top .num,.paper .foot{color:var(--blue)}
 
@@ -66,7 +67,7 @@ body{font-family:'Readex Pro',sans-serif;}
 .s1 .sun{width:560px;height:560px;top:-90px;left:-110px}
 .s1 .halo.h1{width:760px;height:760px;top:-190px;left:-210px}
 .s1 .halo.h2{width:980px;height:980px;top:-300px;left:-320px;border-style:dashed;border-color:rgba(255,255,255,.16)}
-.s1 .logo{position:absolute;top:92px;right:92px;width:250px;height:230px}
+.s1 .logo{position:absolute;top:100px;right:96px;width:190px;height:175px}
 .s1 .tag{position:absolute;top:340px;right:96px;font-size:21px;font-weight:300;opacity:.85;max-width:300px;line-height:1.6}
 .s1 .title{position:absolute;right:96px;top:470px}
 .s1 .title .a{font-size:250px;font-weight:700;line-height:1.08;display:block;text-shadow:0 10px 40px rgba(18,38,74,.18)}
@@ -110,11 +111,11 @@ body{font-family:'Readex Pro',sans-serif;}
 .s4 .note b{color:var(--blue)}
 
 /* ---------- slide 5 (tree) ---------- */
-.s5 .content{justify-content:flex-start;padding-top:210px}
+.s5 .content{justify-content:flex-start;padding-top:250px}
 .s5 p{font-size:46px;line-height:1.7;text-align:center}
 .s5 .big{font-size:58px;font-weight:700}
 .s5 .hl{color:#ffe1c9;font-weight:600}
-.s5 svg.tree{display:block;margin:40px auto 0;width:800px;height:484px;overflow:visible}
+.s5 svg.tree{display:block;margin:70px auto 0;width:860px;height:520px;overflow:visible}
 .s5 .legend{display:flex;justify-content:center;gap:48px;font-size:26px;margin-top:22px}
 .s5 .legend span{display:flex;align-items:center;gap:12px}
 .s5 .legend i{width:16px;height:16px;border-radius:50%;display:inline-block}
@@ -128,8 +129,20 @@ body{font-family:'Readex Pro',sans-serif;}
 .s6 .q{font-size:108px;font-weight:600;line-height:1.5;margin-top:34px;text-shadow:0 8px 30px rgba(18,38,74,.25)}
 .s6 .q .hl{color:#ffe4cf;text-shadow:0 6px 26px rgba(18,38,74,.35)}
 .s6 .src{font-size:26px;opacity:.8;margin-top:16px}
-.s6 .logo{position:absolute;bottom:150px;left:50%;transform:translateX(-50%);width:190px;height:175px}
+.s6 .logo{position:absolute;bottom:128px;left:50%;transform:translateX(-50%);width:150px;height:138px}
+.s6 .foot{color:var(--blue);opacity:.9;font-weight:400}
 .s6 .share{position:absolute;bottom:62px;left:88px;width:44px;height:44px;opacity:.9}
+
+/* ---------- slide 5 (fajr) ---------- */
+.s7 .sun{width:520px;height:520px;top:-150px;left:-130px;opacity:.9}
+.s7 .halo.h1{width:760px;height:760px;top:-270px;left:-250px}
+.s7 .content{text-align:center;align-items:center}
+.s7 .l{font-size:50px;line-height:1.75;font-weight:400}
+.s7 .fajr{display:inline-block;font-weight:700;font-size:64px;color:#ffe4cf;margin:6px 0 4px}
+.s7 .rule{width:120px;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--peach),#fff);margin:52px auto}
+.s7 .words{display:flex;justify-content:center;gap:22px;margin:30px 0 30px}
+.s7 .words span{font-size:54px;font-weight:700;padding:14px 38px 20px;border-radius:999px;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.35)}
+.s7 .words span.on{background:#fff;color:var(--blue);border-color:#fff}
 </style>
 </head>
 <body>
@@ -153,7 +166,7 @@ body{font-family:'Readex Pro',sans-serif;}
   <svg class="logo" fill="#fff"><use href="#logo"/></svg>
   <div class="title"><span class="a">سُنّةٌ</span><span class="b">حسنة</span></div>
   <div class="sub">خيرٌ تبدؤه <b>أنت</b>..<br>ويبقى أجره يجري إليك.</div>
-  <div class="foot">@abdulla_7amdan</div>
+  <div class="foot">@abdulla_7amdan<span class="dot">•</span>@fursan.alfajr</div>
   <div class="swipe">
     <svg width="34" height="20" viewBox="0 0 34 20" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10H3M11 2 3 10l8 8"/></svg>
     اسحب
@@ -169,7 +182,7 @@ body{font-family:'Readex Pro',sans-serif;}
     <div class="bad">وَمَنْ سَنَّ فِي الْإِسْلَامِ <span class="kw">سُنَّةً سَيِّئَةً</span>، كَانَ عَلَيْهِ وِزْرُهَا وَوِزْرُ مَنْ عَمِلَ بِهَا مِنْ بَعْدِهِ، مِنْ غَيْرِ أَنْ يَنْقُصَ مِنْ أَوْزَارِهِمْ شَيْءٌ»</div>
     <div class="src">[رواه مسلم]</div>
   </div>
-  <div class="foot">@abdulla_7amdan</div>
+  <div class="foot">@abdulla_7amdan<span class="dot">•</span>@fursan.alfajr</div>
 </section>
 
 <!-- 3 · MEANING -->
@@ -178,45 +191,15 @@ body{font-family:'Readex Pro',sans-serif;}
   <div class="content">
     <p>السنّة الحسنة ليست أن<br><span class="not">تأتي بخيرٍ لم يفعله أحد..</span></p>
     <div class="rule"></div>
-    <p>بل قد تكون أمرًا <span class="strong">يعرفه الجميع</span>،<br>وواجبًا من واجبات الدين..</p>
+    <p>بل قد تكون أمرًا <span class="strong">يعرفه الجميع</span>،<br>وواجبًا مثل <span class="strong">صلاة الفجر</span>..</p>
     <p style="margin-top:28px">ثم أنت <span class="hl">تُحييه</span> وتنشره بين الناس.</p>
   </div>
-  <div class="foot">@abdulla_7amdan</div>
-</section>
-
-<!-- 4 · EXAMPLES -->
-<section class="slide paper s4">
-  <div class="top"><div class="brand"><svg fill="url(#lg)"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٤ / ٦</div></div>
-  <div class="content">
-    <div class="head"><div class="a">أمثلة</div><div class="b">لسننٍ حسنة</div></div>
-    <div class="cards">
-      <div class="card">
-        <svg class="ic" viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
-          <path d="M60 34c-10-7-24-9-40-8v62c16-1 30 1 40 8 10-7 24-9 40-8V26c-16-1-30 1-40 8z"/><path d="M60 34v62"/>
-          <circle cx="60" cy="16" r="4" fill="#fff" stroke="none"/>
-        </svg>
-        <div class="n">١</div>
-        <h3>تعليم الأطفال</h3>
-        <p>الفاتحة والصلاة</p>
-      </div>
-      <div class="card">
-        <svg class="ic" viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
-          <rect x="36" y="12" width="48" height="96" rx="10"/><path d="M52 22h16"/>
-          <path d="M60 74c-8-6-13-10-13-16a7 7 0 0 1 13-3 7 7 0 0 1 13 3c0 6-5 10-13 16z" fill="#fff" stroke="none"/>
-        </svg>
-        <div class="n">٢</div>
-        <h3>نشرك للخير</h3>
-        <p>في وسائل التواصل</p>
-      </div>
-    </div>
-    <div class="note">ولك <b>أجر كل من عمل</b> بهذه الأعمال.</div>
-  </div>
-  <div class="foot">@abdulla_7amdan</div>
+  <div class="foot">@abdulla_7amdan<span class="dot">•</span>@fursan.alfajr</div>
 </section>
 
 <!-- 5 · MULTIPLY -->
 <section class="slide sky deep s5">
-  <div class="top"><div class="brand"><svg fill="#fff"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٥ / ٦</div></div>
+  <div class="top"><div class="brand"><svg fill="#fff"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٤ / ٦</div></div>
   <div class="content">
     <p>فالأعمار لا تكفي لأن تعمل<br><span class="big">جميع الأعمال الصالحة</span></p>
     <p style="margin-top:30px">لكن بإمكانك أن <span class="hl">تدلّ الناس عليها</span>،<br>وتحبّبهم فيها.</p>
@@ -308,13 +291,21 @@ body{font-family:'Readex Pro',sans-serif;}
 <circle cx="430" cy="443" r="70" fill="#f7b077" fill-opacity=".25"/><circle cx="430" cy="443" r="50" fill="#f7b077" fill-opacity=".45"/>
 <g fill="#fff"><circle cx="430" cy="428.8" r="15.400000000000002"/><path d="M402 482.0 Q402 451.2 430 451.2 Q458 451.2 458 482.0 Z"/></g>
 </svg>
-    <div class="legend">
-      <span><i style="background:#fff;box-shadow:0 0 0 5px rgba(247,176,119,.6)"></i>أنت</span>
-      <span><i style="background:#eac2ca"></i>من دللته</span>
-      <span><i style="background:#f7b077"></i>أجرٌ يعود إليك</span>
-    </div>
   </div>
-  <div class="foot">@abdulla_7amdan</div>
+  <div class="foot">@abdulla_7amdan<span class="dot">•</span>@fursan.alfajr</div>
+</section>
+
+<!-- 5 · FAJR -->
+<section class="slide sky deep s7">
+  <div class="top"><div class="brand"><svg fill="#fff"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٥ / ٦</div></div>
+  <div class="content">
+    <p class="l">شهودك<br><span class="fajr">لصلاة الفجر في جماعة</span>،<br>ودعوتك لذلك..</p>
+    <div class="rule"></div>
+    <p class="l">قد يكون سببًا لـ</p>
+    <div class="words"><span class="on">هداية</span><span>وتثبيت</span><span>وإقبال</span></div>
+    <p class="l">إخوانك، ومحبتهم للصلاة.</p>
+  </div>
+  <div class="foot">@abdulla_7amdan<span class="dot">•</span>@fursan.alfajr</div>
 </section>
 
 <!-- 6 · CLOSING -->
@@ -328,7 +319,7 @@ body{font-family:'Readex Pro',sans-serif;}
   </div>
   <svg class="logo" fill="url(#lg)"><use href="#logo"/></svg>
   <svg class="share" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-  <div class="foot">@abdulla_7amdan</div>
+  <div class="foot">@abdulla_7amdan<span class="dot">•</span>@fursan.alfajr</div>
 </section>
 </body>
 </html>
