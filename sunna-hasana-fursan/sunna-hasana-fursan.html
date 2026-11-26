@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>سنّة حسنة — فرسان الفجر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=block" rel="stylesheet">
+<style>
+:root{
+  --navy:#12264a; --blue:#6073bf; --lav:#b7a3df; --pink:#eac2ca; --peach:#f7b077; --orange:#fa9452;
+  --ink:#12264a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ddd}
+body{font-family:'Readex Pro',sans-serif;}
+@page{size:1080px 1350px;margin:0}
+.slide{width:1080px;height:1350px;position:relative;overflow:hidden;color:#fff;page-break-after:always;break-after:page}
+.slide:last-child{page-break-after:auto;break-after:auto}
+
+/* ---------- backgrounds ---------- */
+.sky{background:
+   radial-gradient(1100px 900px at 100% 0%, rgba(250,148,82,.95) 0%, rgba(247,176,119,.75) 18%, rgba(234,194,202,.55) 36%, rgba(234,194,202,0) 58%),
+   linear-gradient(205deg, #c3a7dc 0%, #b7a3df 26%, #8e8fd2 48%, #6073bf 68%, #4b5ea8 84%, #12264a 112%);}
+.sky.deep{background:
+   radial-gradient(900px 800px at 100% 0%, rgba(250,148,82,.9) 0%, rgba(247,176,119,.6) 18%, rgba(234,194,202,.35) 36%, rgba(234,194,202,0) 55%),
+   linear-gradient(205deg, #a99bdb 0%, #7f86cc 30%, #6073bf 55%, #3f5199 80%, #12264a 110%);}
+.paper{background:
+   radial-gradient(700px 600px at 100% 0%, rgba(247,176,119,.30), rgba(247,176,119,0) 70%),
+   radial-gradient(800px 700px at 0% 100%, rgba(183,163,223,.30), rgba(183,163,223,0) 70%),
+   #fbf8fb; color:var(--ink);}
+
+/* sun */
+.sun{position:absolute;border-radius:50%;
+  background:radial-gradient(circle, #fff 0%, #fff 34%, rgba(255,255,255,.75) 44%, rgba(255,240,232,.25) 62%, rgba(255,240,232,0) 72%);}
+.halo{position:absolute;border-radius:50%;border:2px solid rgba(255,255,255,.22);}
+
+/* clouds */
+.clouds{position:absolute;left:-80px;right:-80px;bottom:-60px;height:420px;filter:blur(2px)}
+.clouds i{position:absolute;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, rgba(255,255,255,.55), rgba(205,198,240,.35) 55%, rgba(150,150,220,.12) 80%);}
+.paper .clouds i{background:radial-gradient(circle at 40% 35%, rgba(255,255,255,.9), rgba(214,204,240,.45) 60%, rgba(183,163,223,.15) 85%);}
+
+/* ---------- chrome ---------- */
+.top{position:absolute;top:72px;right:88px;left:88px;display:flex;justify-content:space-between;align-items:center;font-size:24px;font-weight:400}
+.top .brand{display:flex;align-items:center;gap:18px}
+.top .brand svg{width:62px;height:57px}
+.top .brand span{opacity:.92}
+.top .brand .bar{width:2px;height:34px;background:currentColor;opacity:.35}
+.top .num{font-size:22px;opacity:.7;letter-spacing:.06em}
+.foot{position:absolute;bottom:64px;left:0;right:0;text-align:center;font-size:22px;font-weight:300;opacity:.8;direction:ltr;letter-spacing:.02em}
+.paper .top .brand span{color:var(--blue)}
+.paper .top .num,.paper .foot{color:var(--blue)}
+
+.content{position:absolute;inset:0;padding:0 110px;display:flex;flex-direction:column;justify-content:center}
+
+/* highlight styles */
+.hl{color:var(--peach)}
+.hl-u{background:linear-gradient(90deg,var(--orange),var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}
+.mark{position:relative;white-space:nowrap}
+.mark::after{content:"";position:absolute;right:-6px;left:-6px;bottom:.06em;height:.32em;border-radius:6px;background:linear-gradient(90deg,rgba(250,148,82,.55),rgba(247,176,119,.45));z-index:-1}
+.paper .mark::after{background:linear-gradient(90deg,rgba(247,176,119,.55),rgba(234,194,202,.7))}
+.blue{color:var(--blue)}
+.soft{opacity:.72}
+
+/* ---------- slide 1 ---------- */
+.s1 .sun{width:560px;height:560px;top:-90px;left:-110px}
+.s1 .halo.h1{width:760px;height:760px;top:-190px;left:-210px}
+.s1 .halo.h2{width:980px;height:980px;top:-300px;left:-320px;border-style:dashed;border-color:rgba(255,255,255,.16)}
+.s1 .logo{position:absolute;top:92px;right:92px;width:250px;height:230px}
+.s1 .tag{position:absolute;top:340px;right:96px;font-size:21px;font-weight:300;opacity:.85;max-width:300px;line-height:1.6}
+.s1 .title{position:absolute;right:96px;top:470px}
+.s1 .title .a{font-size:250px;font-weight:700;line-height:1.08;display:block;text-shadow:0 10px 40px rgba(18,38,74,.18)}
+.s1 .title .b{font-size:250px;font-weight:700;line-height:1.0;display:block;margin-top:-10px;
+  background:linear-gradient(90deg,#fff 0%, #fde3cf 45%, #f7b077 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 30px rgba(18,38,74,.15))}
+.s1 .sub{position:absolute;right:100px;top:1010px;font-size:40px;font-weight:300;line-height:1.7}
+.s1 .sub b{font-weight:500}
+.s1 .swipe{position:absolute;bottom:62px;left:88px;font-size:22px;display:flex;align-items:center;gap:12px;opacity:.9}
+.s1 .foot{left:auto;right:0;width:100%}
+
+/* ---------- slide 2 (hadith, paper) ---------- */
+.s2 .lead{font-size:30px;color:var(--blue);margin-bottom:44px;display:flex;align-items:center;gap:14px}
+.s2 .lead::before{content:"";width:46px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--peach),var(--orange))}
+.s2 .good{position:relative;isolation:isolate;font-size:50px;line-height:1.85;font-weight:500;color:var(--ink)}
+.s2 .good .kw{color:var(--blue);font-weight:700}
+.s2 .bad{font-size:38px;line-height:1.9;font-weight:300;color:#8b8fb0;margin-top:46px;padding-top:40px;border-top:2px dashed rgba(96,115,191,.25)}
+.s2 .bad .kw{font-weight:500;color:#6f7398}
+.s2 .src{margin-top:40px;font-size:24px;color:var(--blue);opacity:.8}
+
+/* ---------- slide 3 ---------- */
+.s3 .sun{width:420px;height:420px;bottom:-140px;left:-120px;opacity:.55}
+.s3 p{font-size:52px;line-height:1.75;font-weight:400}
+.s3 .not{position:relative;display:inline-block;opacity:.6;font-weight:300}
+.s3 .not::after{content:"";position:absolute;right:-10px;left:-10px;top:52%;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--orange),var(--peach));transform:rotate(-1.2deg)}
+.s3 .rule{width:120px;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--peach),#fff);margin:58px 0}
+.s3 .strong{font-weight:700}
+.s3 .hl{color:#ffe1c9;font-weight:700}
+
+/* ---------- slide 4 (examples, paper) ---------- */
+.s4 .head{text-align:center;color:var(--ink)}
+.s4 .head .a{font-size:52px;font-weight:300;color:var(--blue)}
+.s4 .head .b{font-size:104px;font-weight:700;line-height:1.2;background:linear-gradient(200deg,var(--orange) 0%,var(--lav) 45%,var(--blue) 75%,var(--navy) 110%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s4 .cards{display:flex;gap:36px;margin-top:70px}
+.s4 .card{flex:1;border-radius:44px;padding:56px 36px 52px;text-align:center;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(210deg,#f7b077 -10%,#eac2ca 18%,#b7a3df 45%,#6073bf 85%,#3f5199 115%);box-shadow:0 30px 60px -30px rgba(18,38,74,.45)}
+.s4 .card .n{width:62px;height:62px;border-radius:50%;background:#fff;color:var(--blue);font-weight:700;font-size:30px;display:grid;place-items:center;margin:28px auto 26px}
+.s4 .card svg.ic{width:120px;height:120px}
+.s4 .card h3{font-size:56px;font-weight:700;line-height:1.25}
+.s4 .card p{font-size:28px;font-weight:300;margin-top:16px;opacity:.95}
+.s4 .note{text-align:center;margin-top:64px;font-size:38px;color:var(--ink)}
+.s4 .note b{color:var(--blue)}
+
+/* ---------- slide 5 (tree) ---------- */
+.s5 .content{justify-content:flex-start;padding-top:210px}
+.s5 p{font-size:46px;line-height:1.7;text-align:center}
+.s5 .big{font-size:58px;font-weight:700}
+.s5 .hl{color:#ffe1c9;font-weight:600}
+.s5 svg.tree{display:block;margin:40px auto 0;width:800px;height:484px;overflow:visible}
+.s5 .legend{display:flex;justify-content:center;gap:48px;font-size:26px;margin-top:22px}
+.s5 .legend span{display:flex;align-items:center;gap:12px}
+.s5 .legend i{width:16px;height:16px;border-radius:50%;display:inline-block}
+
+/* ---------- slide 6 ---------- */
+.s6 .sun{width:640px;height:640px;bottom:-170px;left:50%;transform:translateX(-50%)}
+.s6 .halo.h1{width:900px;height:900px;bottom:-300px;left:50%;transform:translateX(-50%)}
+.s6 .halo.h2{width:1200px;height:1200px;bottom:-450px;left:50%;transform:translateX(-50%);border-style:dashed;border-color:rgba(255,255,255,.14)}
+.s6 .content{justify-content:flex-start;padding-top:280px;text-align:center}
+.s6 .lead{font-size:34px;opacity:.9}
+.s6 .q{font-size:108px;font-weight:600;line-height:1.5;margin-top:34px;text-shadow:0 8px 30px rgba(18,38,74,.25)}
+.s6 .q .hl{color:#ffe4cf;text-shadow:0 6px 26px rgba(18,38,74,.35)}
+.s6 .src{font-size:26px;opacity:.8;margin-top:16px}
+.s6 .logo{position:absolute;bottom:150px;left:50%;transform:translateX(-50%);width:190px;height:175px}
+.s6 .share{position:absolute;bottom:62px;left:88px;width:44px;height:44px;opacity:.9}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="lg" gradientUnits="userSpaceOnUse" x1="470" y1="236" x2="322" y2="378">
+      <stop offset="0" stop-color="#fa9452"/><stop offset=".18" stop-color="#f7b077"/>
+      <stop offset=".38" stop-color="#eac2ca"/><stop offset=".58" stop-color="#b7a3df"/>
+      <stop offset=".82" stop-color="#6073bf"/><stop offset="1" stop-color="#12264a"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/>
+    </linearGradient>
+    <symbol id="logo" viewBox="312 229 168 153"><path d="M 447.683594 266.675781 C 447.390625 265.148438 453.257812 261.558594 459.390625 262.363281 C 464.707031 263.0625 467.726562 266.742188 468.34375 267.53125 C 452.5 268.6875 447.925781 267.929688 447.683594 266.675781 M 402.503906 299.65625 L 402.503906 301.949219 L 417.070312 315.722656 C 417.070312 315.722656 434.125 304.199219 434.015625 286.503906 C 434.03125 289.613281 437.511719 295.726562 443.613281 298.691406 C 444.171875 298.960938 444.71875 299.1875 445.273438 299.375 C 442.960938 302.449219 442.726562 307.582031 445.546875 312.007812 C 445.722656 310.511719 446.273438 307.660156 448.367188 304.945312 C 450.957031 301.585938 454.515625 300.25 457.03125 299.710938 C 457.386719 299.671875 459.292969 299.4375 459.925781 299.347656 C 459.9375 299.347656 459.949219 299.347656 459.960938 299.347656 C 459.957031 299.347656 459.957031 299.34375 459.953125 299.34375 C 459.957031 299.34375 459.957031 299.34375 459.957031 299.34375 C 463.828125 298.789062 468.847656 297.742188 474.554688 295.679688 C 476.003906 290.789062 477.601562 283.21875 476.832031 274.074219 C 476.296875 267.695312 474.828125 250.207031 464.515625 246.753906 C 458.757812 244.820312 453.246094 248.273438 452.324219 248.871094 C 442.839844 255.054688 439.84375 272.300781 448.105469 278.890625 C 453.238281 282.984375 462.078125 282.453125 469.699219 277.792969 C 469.613281 274.679688 469.527344 271.570312 469.441406 268.457031 C 470.6875 272.933594 471.929688 277.40625 473.179688 281.878906 C 469.683594 282.964844 464.03125 283.777344 457.101562 284.195312 C 452.066406 284.503906 447.015625 284.847656 442.0625 281.667969 C 436.351562 277.40625 432.789062 268.753906 431.777344 265.710938 C 429.011719 266.875 426.738281 268.128906 423.96875 269.289062 C 423.96875 269.289062 427.519531 278.789062 425.070312 286.230469 C 420.628906 299.734375 402.503906 299.65625 402.503906 299.65625 "/><path d="M 357.269531 300.203125 C 355.445312 303.503906 355.722656 307.886719 358.355469 311.140625 C 358.332031 309.171875 358.796875 307.785156 359.21875 306.886719 C 360.667969 303.8125 363.59375 303.019531 369.296875 298.566406 C 373.320312 295.425781 377.011719 284.324219 378.652344 279.683594 C 377.773438 282.722656 377.269531 288.984375 377.285156 289.386719 C 377.265625 290.703125 377.113281 292.246094 376.6875 293.917969 C 375.417969 298.925781 372.464844 302.167969 370.902344 303.652344 C 374.210938 304.925781 377.925781 304.164062 380.320312 301.726562 C 381.078125 300.953125 381.699219 300.015625 382.125 298.984375 C 383.324219 299.699219 384.746094 300.183594 386.410156 300.390625 C 398.664062 301.921875 400.535156 291.136719 400.664062 286.472656 C 400.789062 291.359375 406.09375 296.902344 413.40625 294.347656 C 420.074219 292.019531 420.421875 285.398438 420.628906 284.460938 C 419.957031 277.082031 419.007812 269.058594 418.335938 261.675781 C 417.949219 261.707031 417.5625 261.738281 417.175781 261.769531 C 414.757812 263.710938 409.308594 267.199219 409.308594 267.199219 L 414.824219 276.488281 C 414.824219 276.488281 412.019531 282.074219 406.398438 279.925781 C 401.453125 278.035156 401.414062 271.3125 401.414062 271.3125 L 399.644531 271.902344 C 399.644531 271.902344 398.367188 285.347656 389.039062 284.164062 C 379.027344 283.273438 383.167969 267.40625 383.167969 267.40625 L 381.726562 267.308594 C 381.726562 267.308594 375.132812 280.167969 367.074219 283.335938 C 363.65625 284.675781 361.75 283.914062 361.75 283.914062 L 364.316406 241.203125 L 362.425781 241.203125 L 349.625 246.863281 C 349.625 246.863281 352.484375 280.945312 353.609375 300.167969 C 354.796875 300.167969 355.988281 300.191406 357.269531 300.203125 "/><path d="M 323.25 305.4375 C 327.347656 308.058594 333.203125 308.761719 338.308594 306.796875 C 345.460938 304.046875 350.308594 296.386719 350.316406 287.429688 C 349.609375 280.1875 348.90625 272.949219 348.203125 265.710938 L 346.59375 265.710938 C 344.058594 267.335938 341.519531 268.964844 338.984375 270.589844 C 340.910156 275.578125 342.839844 280.5625 344.765625 285.546875 C 339.667969 292.257812 329.742188 293.226562 323.734375 289.546875 C 318.378906 286.265625 317.097656 278.15625 320.203125 271.6875 C 319.605469 271.515625 319.011719 271.34375 318.417969 271.167969 C 312.046875 285.867188 314.992188 300.152344 323.25 305.4375 "/><path d="M 417.074219 252.308594 L 417.011719 251.296875 L 368.585938 259.339844 L 366.6875 262.875 L 366.675781 263.746094 L 414.847656 256.148438 Z M 417.074219 252.308594 "/><path d="M 460.113281 238.878906 L 452.820312 231.582031 L 445.527344 238.878906 L 452.820312 246.171875 Z M 460.113281 238.878906 "/><path d="M 337.425781 270.941406 L 330.132812 263.648438 L 322.839844 270.941406 L 330.132812 278.234375 Z M 337.425781 270.941406 "/><path d="M 382.355469 243.589844 C 386.101562 244.371094 389.113281 247.757812 390.089844 252.199219 L 390.804688 252.199219 C 390.929688 251.65625 392.0625 246.953125 395.988281 245.585938 C 396.597656 245.371094 397.457031 245.175781 398.542969 245.230469 C 399.207031 243.195312 399.871094 241.160156 400.53125 239.128906 C 399.484375 239.003906 398.019531 239.003906 396.464844 239.605469 C 391.605469 241.492188 390.621094 247.457031 390.558594 247.871094 C 390.953125 240.484375 387.335938 234.597656 382.597656 233.386719 C 381.71875 233.164062 379.382812 232.738281 376.21875 234.265625 C 376.511719 237.558594 376.804688 240.855469 377.097656 244.148438 C 378.183594 243.707031 380.121094 243.125 382.355469 243.589844 "/><path d="M 424.414062 257.648438 C 424.515625 257.847656 424.621094 258.050781 424.726562 258.25 C 427.101562 258.671875 429.136719 258.917969 430.730469 259.070312 C 432.199219 259.207031 433.339844 259.273438 434.589844 258.761719 C 435.15625 258.53125 435.652344 258.222656 436.421875 257.558594 C 437.363281 256.746094 438.707031 255.410156 439.988281 253.367188 C 439.785156 253.210938 439.464844 252.964844 439.078125 252.664062 C 435.027344 249.492188 434.277344 248.441406 432.53125 248.046875 C 432.375 248.011719 431.035156 247.726562 429.597656 248.125 C 426.84375 248.890625 424.941406 251.828125 424.546875 255.492188 C 424.917969 255.625 425.285156 255.757812 425.65625 255.890625 C 426.019531 254.769531 426.597656 254.363281 426.972656 254.191406 C 427.828125 253.796875 428.734375 254.125 431.597656 255.140625 C 433.195312 255.707031 434.417969 256.136719 434.929688 256.316406 C 433.710938 256.457031 432.480469 256.601562 431.246094 256.753906 C 428.933594 257.039062 426.65625 257.335938 424.414062 257.648438 "/><path d="M 428.648438 346.535156 C 424.0625 344.886719 420.566406 342.613281 420.722656 341.113281 C 420.914062 339.289062 425.378906 336.847656 429.648438 336.847656 C 435.417969 336.847656 441.226562 341.5625 440.957031 343.589844 C 440.796875 344.789062 436.734375 345.492188 428.648438 346.535156 M 462.398438 310.191406 L 458.792969 310.191406 L 449.578125 316.652344 C 449.578125 316.652344 452.164062 335.347656 453.75 344.609375 C 451.859375 345.785156 448.65625 347.171875 445.167969 347.921875 C 444.277344 348.113281 443.378906 348.25 442.476562 348.34375 C 445.007812 343.269531 446.257812 337.515625 444.578125 332.890625 C 442.777344 327.9375 437.425781 322.390625 431.234375 322.835938 C 424.929688 323.289062 420.5625 329.585938 419.648438 331.550781 C 416.984375 337.265625 417.40625 342.914062 419.140625 347.6875 C 408.363281 348.816406 402.636719 348.429688 399.5625 345.050781 C 399.46875 344.945312 399.378906 344.839844 399.292969 344.738281 C 399.292969 344.734375 399.292969 344.734375 399.292969 344.734375 C 400.058594 344.453125 400.902344 344.210938 401.828125 344.054688 C 403.488281 343.773438 405.007812 343.824219 406.289062 344.003906 C 407.039062 344.167969 407.789062 344.328125 408.535156 344.484375 L 411.800781 333.015625 C 411.800781 333.015625 409.179688 332.820312 400.460938 330.195312 C 384.777344 325.472656 373.363281 313.292969 364.484375 318.109375 C 360.132812 320.472656 357.839844 324.777344 357.628906 328.34375 C 357.324219 333.507812 357.808594 341.832031 357.808594 341.832031 L 358.972656 341.867188 C 358.972656 341.867188 359.753906 333.257812 365.539062 334.128906 C 368.511719 334.578125 377.328125 336.976562 387.8125 339.621094 C 387.292969 339.894531 386.785156 340.207031 386.296875 340.5625 C 378.707031 346.113281 364.757812 349.925781 355.105469 345.757812 C 345.34375 341.535156 341.328125 327.738281 341.328125 327.738281 L 333.519531 331.316406 C 333.519531 331.316406 336.957031 343.683594 333.796875 350.605469 C 331.234375 356.226562 321.429688 361.671875 314.96875 361.839844 L 314.96875 365.355469 C 320.664062 370.375 326.355469 375.394531 332.050781 380.417969 C 334.488281 378.28125 338.296875 374.367188 340.976562 368.363281 C 344.316406 360.878906 343.628906 352.296875 343.394531 347.582031 C 343.390625 347.5 343.386719 347.433594 343.382812 347.386719 C 343.773438 348.859375 346.277344 357.753906 354.1875 362.410156 C 351.339844 365.417969 349.9375 370.753906 352.203125 376.167969 C 352.988281 374.585938 354.238281 372.550781 356.230469 370.613281 C 360.195312 366.757812 364.808594 365.488281 367.394531 365.035156 C 370.390625 364.695312 372.613281 363.890625 373.375 363.597656 C 379.824219 361.121094 382.800781 356.511719 394.710938 347.363281 C 395.164062 347.015625 395.800781 346.53125 396.613281 346.039062 C 398.601562 354.992188 402.214844 363.597656 413.070312 363.597656 C 419.640625 363.597656 425.957031 362.429688 430.191406 360.824219 C 431.085938 361.277344 431.988281 361.660156 432.898438 361.988281 C 432.898438 361.988281 432.898438 361.988281 432.902344 361.988281 C 431.453125 363.628906 430.820312 366.050781 431.125 368.503906 C 432.449219 367.515625 434.238281 366.386719 436.492188 365.457031 C 439.148438 364.359375 446.0625 363.640625 446.8125 363.597656 C 452.832031 363.246094 457.964844 361.296875 460.703125 359.898438 C 461.628906 355.902344 462.554688 351.910156 463.484375 347.921875 C 463.359375 345.269531 463.25 342.613281 463.144531 339.945312 C 462.769531 330.449219 462.554688 319.449219 462.398438 310.191406 "/><path d="M 464.570312 314.054688 L 468.023438 363.597656 L 469.855469 363.597656 C 472.167969 360.042969 474.484375 356.492188 476.800781 352.941406 C 477.027344 338.429688 477.03125 307.765625 477.03125 307.765625 L 473.3125 307.765625 Z M 464.570312 314.054688 "/><path d="M 425.179688 314.054688 L 432.472656 321.347656 L 439.769531 314.054688 L 432.472656 306.761719 Z M 425.179688 314.054688 "/><path d="M 385.292969 362.90625 L 392.585938 370.199219 L 399.882812 362.90625 L 392.585938 355.613281 Z M 385.292969 362.90625 "/><path d="M 321.105469 320.625 C 324.851562 321.40625 327.859375 324.792969 328.839844 329.234375 L 329.554688 329.234375 C 329.679688 328.6875 330.8125 323.984375 334.738281 322.617188 C 335.351562 322.402344 336.207031 322.210938 337.292969 322.265625 C 337.957031 320.230469 338.617188 318.195312 339.28125 316.160156 C 338.234375 316.035156 336.769531 316.035156 335.214844 316.640625 C 330.355469 318.527344 329.367188 324.492188 329.308594 324.902344 C 329.703125 317.515625 326.085938 311.628906 321.34375 310.421875 C 320.46875 310.199219 318.132812 309.773438 314.96875 311.300781 C 315.261719 314.59375 315.554688 317.886719 315.84375 321.183594 C 316.933594 320.738281 318.871094 320.160156 321.105469 320.625 "/><path d="M 388.519531 319.828125 C 388.625 320.027344 388.730469 320.230469 388.832031 320.429688 C 391.210938 320.851562 393.246094 321.097656 394.839844 321.25 C 396.304688 321.390625 397.449219 321.453125 398.699219 320.941406 C 399.261719 320.714844 399.761719 320.402344 400.53125 319.738281 C 401.472656 318.925781 402.8125 317.589844 404.097656 315.550781 C 403.890625 315.390625 403.574219 315.144531 403.1875 314.84375 C 399.132812 311.675781 398.386719 310.621094 396.640625 310.226562 C 396.484375 310.191406 395.144531 309.90625 393.703125 310.308594 C 390.953125 311.070312 389.050781 314.011719 388.652344 317.671875 C 389.023438 317.804688 389.394531 317.9375 389.765625 318.070312 C 390.125 316.949219 390.707031 316.542969 391.078125 316.371094 C 391.9375 315.976562 392.84375 316.308594 395.703125 317.320312 C 397.304688 317.886719 398.527344 318.316406 399.039062 318.496094 C 397.816406 318.636719 396.589844 318.78125 395.351562 318.933594 C 393.039062 319.21875 390.761719 319.515625 388.519531 319.828125 "/><path d="M 350.800781 307.921875 C 345.863281 311.175781 343.714844 316.605469 345.21875 320.84375 C 346.265625 323.789062 348.78125 325.347656 349.859375 325.925781 C 351.40625 323.875 352.953125 321.824219 354.5 319.777344 C 354.058594 319.703125 351.21875 319.175781 349.769531 316.65625 C 348.3125 314.132812 348.855469 310.644531 351.238281 308.238281 C 351.09375 308.132812 350.945312 308.027344 350.800781 307.921875 "/></symbol>
+  </defs>
+</svg>
+
+<!-- 1 · COVER -->
+<section class="slide sky s1">
+  <div class="halo h2"></div><div class="halo h1"></div><div class="sun"></div>
+  <div class="clouds">
+    <i style="width:420px;height:420px;left:-40px;bottom:-200px"></i>
+    <i style="width:340px;height:340px;left:260px;bottom:-190px"></i>
+    <i style="width:460px;height:460px;left:520px;bottom:-280px"></i>
+    <i style="width:380px;height:380px;right:-20px;bottom:-200px"></i>
+  </div>
+  <svg class="logo" fill="#fff"><use href="#logo"/></svg>
+  <div class="title"><span class="a">سُنّةٌ</span><span class="b">حسنة</span></div>
+  <div class="sub">خيرٌ تبدؤه <b>أنت</b>..<br>ويبقى أجره يجري إليك.</div>
+  <div class="foot">@abdulla_7amdan</div>
+  <div class="swipe">
+    <svg width="34" height="20" viewBox="0 0 34 20" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10H3M11 2 3 10l8 8"/></svg>
+    اسحب
+  </div>
+</section>
+
+<!-- 2 · HADITH -->
+<section class="slide paper s2">
+  <div class="clouds" style="opacity:.8">
+    <i style="width:380px;height:380px;left:-60px;bottom:-250px"></i>
+    <i style="width:300px;height:300px;left:240px;bottom:-230px"></i>
+    <i style="width:420px;height:420px;right:-60px;bottom:-290px"></i>
+  </div>
+  <div class="top"><div class="brand"><svg fill="url(#lg)"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٢ / ٦</div></div>
+  <div class="content">
+    <div class="lead">قال رسول الله ﷺ:</div>
+    <div class="good">«مَنْ سَنَّ فِي الْإِسْلَامِ <span class="kw mark">سُنَّةً حَسَنَةً</span>، فَلَهُ أَجْرُهَا وَأَجْرُ مَنْ عَمِلَ بِهَا بَعْدَهُ، مِنْ غَيْرِ أَنْ يَنْقُصَ مِنْ أُجُورِهِمْ شَيْءٌ،</div>
+    <div class="bad">وَمَنْ سَنَّ فِي الْإِسْلَامِ <span class="kw">سُنَّةً سَيِّئَةً</span>، كَانَ عَلَيْهِ وِزْرُهَا وَوِزْرُ مَنْ عَمِلَ بِهَا مِنْ بَعْدِهِ، مِنْ غَيْرِ أَنْ يَنْقُصَ مِنْ أَوْزَارِهِمْ شَيْءٌ»</div>
+    <div class="src">[رواه مسلم]</div>
+  </div>
+  <div class="foot">@abdulla_7amdan</div>
+</section>
+
+<!-- 3 · MEANING -->
+<section class="slide sky deep s3">
+  <div class="sun"></div>
+  <div class="clouds">
+    <i style="width:400px;height:400px;left:-40px;bottom:-240px"></i>
+    <i style="width:320px;height:320px;left:300px;bottom:-220px"></i>
+    <i style="width:440px;height:440px;right:-40px;bottom:-270px"></i>
+  </div>
+  <div class="top"><div class="brand"><svg fill="#fff"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٣ / ٦</div></div>
+  <div class="content">
+    <p>السنّة الحسنة ليست أن<br><span class="not">تأتي بخيرٍ لم يفعله أحد..</span></p>
+    <div class="rule"></div>
+    <p>بل قد تكون أمرًا <span class="strong">يعرفه الجميع</span>،<br>وواجبًا من واجبات الدين..</p>
+    <p style="margin-top:28px">ثم أنت <span class="hl">تُحييه</span> وتنشره بين الناس.</p>
+  </div>
+  <div class="foot">@abdulla_7amdan</div>
+</section>
+
+<!-- 4 · EXAMPLES -->
+<section class="slide paper s4">
+  <div class="top"><div class="brand"><svg fill="url(#lg)"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٤ / ٦</div></div>
+  <div class="content">
+    <div class="head"><div class="a">أمثلة</div><div class="b">لسننٍ حسنة</div></div>
+    <div class="cards">
+      <div class="card">
+        <svg class="ic" viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M60 34c-10-7-24-9-40-8v62c16-1 30 1 40 8 10-7 24-9 40-8V26c-16-1-30 1-40 8z"/><path d="M60 34v62"/>
+          <circle cx="60" cy="16" r="4" fill="#fff" stroke="none"/>
+        </svg>
+        <div class="n">١</div>
+        <h3>تعليم الأطفال</h3>
+        <p>الفاتحة والصلاة</p>
+      </div>
+      <div class="card">
+        <svg class="ic" viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+          <rect x="36" y="12" width="48" height="96" rx="10"/><path d="M52 22h16"/>
+          <path d="M60 74c-8-6-13-10-13-16a7 7 0 0 1 13-3 7 7 0 0 1 13 3c0 6-5 10-13 16z" fill="#fff" stroke="none"/>
+        </svg>
+        <div class="n">٢</div>
+        <h3>نشرك للخير</h3>
+        <p>في وسائل التواصل</p>
+      </div>
+    </div>
+    <div class="note">ولك <b>أجر كل من عمل</b> بهذه الأعمال.</div>
+  </div>
+  <div class="foot">@abdulla_7amdan</div>
+</section>
+
+<!-- 5 · MULTIPLY -->
+<section class="slide sky deep s5">
+  <div class="top"><div class="brand"><svg fill="#fff"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٥ / ٦</div></div>
+  <div class="content">
+    <p>فالأعمار لا تكفي لأن تعمل<br><span class="big">جميع الأعمال الصالحة</span></p>
+    <p style="margin-top:30px">لكن بإمكانك أن <span class="hl">تدلّ الناس عليها</span>،<br>وتحبّبهم فيها.</p>
+    <svg class="tree" viewBox="0 0 860 520">
+<path d="M50 120 C50 80.0 20 80.0 20 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M50 120 C50 80.0 50 80.0 50 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M50 120 C50 80.0 80 80.0 80 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M150 120 C150 80.0 120 80.0 120 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M150 120 C150 80.0 150 80.0 150 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M150 120 C150 80.0 180 80.0 180 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M250 120 C250 80.0 220 80.0 220 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M250 120 C250 80.0 250 80.0 250 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M250 120 C250 80.0 280 80.0 280 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M330 120 C330 80.0 300 80.0 300 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M330 120 C330 80.0 330 80.0 330 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M330 120 C330 80.0 360 80.0 360 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M430 120 C430 80.0 400 80.0 400 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M430 120 C430 80.0 430 80.0 430 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M430 120 C430 80.0 460 80.0 460 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M530 120 C530 80.0 500 80.0 500 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M530 120 C530 80.0 530 80.0 530 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M530 120 C530 80.0 560 80.0 560 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M610 120 C610 80.0 580 80.0 580 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M610 120 C610 80.0 610 80.0 610 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M610 120 C610 80.0 640 80.0 640 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M710 120 C710 80.0 680 80.0 680 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M710 120 C710 80.0 710 80.0 710 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M710 120 C710 80.0 740 80.0 740 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M810 120 C810 80.0 780 80.0 780 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M810 120 C810 80.0 810 80.0 810 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M810 120 C810 80.0 840 80.0 840 40" stroke="#fff" stroke-opacity="0.35" stroke-width="1.6" fill="none" stroke-dasharray="2 6" stroke-linecap="round"/>
+<path d="M150 266 C150 217.0 50 217.0 50 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M150 266 C150 217.0 150 217.0 150 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M150 266 C150 217.0 250 217.0 250 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M430 266 C430 217.0 330 217.0 330 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M430 266 C430 217.0 430 217.0 430 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M430 266 C430 217.0 530 217.0 530 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M710 266 C710 217.0 610 217.0 610 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M710 266 C710 217.0 710 217.0 710 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M710 266 C710 217.0 810 217.0 810 168" stroke="#fff" stroke-opacity="0.55" stroke-width="2.4" fill="none" />
+<path d="M430 415 C430 368.5 150 368.5 150 322" stroke="#fff" stroke-opacity="0.8" stroke-width="3.2" fill="none" />
+<path d="M430 415 C430 368.5 430 368.5 430 322" stroke="#fff" stroke-opacity="0.8" stroke-width="3.2" fill="none" />
+<path d="M430 415 C430 368.5 710 368.5 710 322" stroke="#fff" stroke-opacity="0.8" stroke-width="3.2" fill="none" />
+<circle cx="346" cy="387" r="7" fill="#f7b077"/>
+<circle cx="256" cy="357" r="7" fill="#f7b077"/>
+<circle cx="430" cy="387" r="7" fill="#f7b077"/>
+<circle cx="430" cy="357" r="7" fill="#f7b077"/>
+<circle cx="514" cy="387" r="7" fill="#f7b077"/>
+<circle cx="604" cy="357" r="7" fill="#f7b077"/>
+<circle cx="20" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="50" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="80" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="120" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="150" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="180" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="220" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="250" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="280" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="300" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="330" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="360" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="400" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="430" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="460" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="500" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="530" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="560" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="580" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="610" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="640" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="680" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="710" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="740" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="780" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="810" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<circle cx="840" cy="40" r="5" fill="#fff" fill-opacity=".7"/>
+<g fill="#eac2ca"><circle cx="50" cy="131.6" r="8.8"/><path d="M34 162.0 Q34 144.4 50 144.4 Q66 144.4 66 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="150" cy="131.6" r="8.8"/><path d="M134 162.0 Q134 144.4 150 144.4 Q166 144.4 166 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="250" cy="131.6" r="8.8"/><path d="M234 162.0 Q234 144.4 250 144.4 Q266 144.4 266 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="330" cy="131.6" r="8.8"/><path d="M314 162.0 Q314 144.4 330 144.4 Q346 144.4 346 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="430" cy="131.6" r="8.8"/><path d="M414 162.0 Q414 144.4 430 144.4 Q446 144.4 446 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="530" cy="131.6" r="8.8"/><path d="M514 162.0 Q514 144.4 530 144.4 Q546 144.4 546 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="610" cy="131.6" r="8.8"/><path d="M594 162.0 Q594 144.4 610 144.4 Q626 144.4 626 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="710" cy="131.6" r="8.8"/><path d="M694 162.0 Q694 144.4 710 144.4 Q726 144.4 726 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="810" cy="131.6" r="8.8"/><path d="M794 162.0 Q794 144.4 810 144.4 Q826 144.4 826 162.0 Z"/></g>
+<g fill="#eac2ca"><circle cx="150" cy="274.7" r="12.100000000000001"/><path d="M128 316.5 Q128 292.3 150 292.3 Q172 292.3 172 316.5 Z"/></g>
+<g fill="#eac2ca"><circle cx="430" cy="274.7" r="12.100000000000001"/><path d="M408 316.5 Q408 292.3 430 292.3 Q452 292.3 452 316.5 Z"/></g>
+<g fill="#eac2ca"><circle cx="710" cy="274.7" r="12.100000000000001"/><path d="M688 316.5 Q688 292.3 710 292.3 Q732 292.3 732 316.5 Z"/></g>
+<circle cx="430" cy="443" r="70" fill="#f7b077" fill-opacity=".25"/><circle cx="430" cy="443" r="50" fill="#f7b077" fill-opacity=".45"/>
+<g fill="#fff"><circle cx="430" cy="428.8" r="15.400000000000002"/><path d="M402 482.0 Q402 451.2 430 451.2 Q458 451.2 458 482.0 Z"/></g>
+</svg>
+    <div class="legend">
+      <span><i style="background:#fff;box-shadow:0 0 0 5px rgba(247,176,119,.6)"></i>أنت</span>
+      <span><i style="background:#eac2ca"></i>من دللته</span>
+      <span><i style="background:#f7b077"></i>أجرٌ يعود إليك</span>
+    </div>
+  </div>
+  <div class="foot">@abdulla_7amdan</div>
+</section>
+
+<!-- 6 · CLOSING -->
+<section class="slide sky s6">
+  <div class="halo h2"></div><div class="halo h1"></div><div class="sun"></div>
+  <div class="top"><div class="brand"><svg fill="#fff"><use href="#logo"/></svg><div class="bar"></div><span>سنّة حسنة</span></div><div class="num">٦ / ٦</div></div>
+  <div class="content">
+    <div class="lead">قال رسول الله ﷺ:</div>
+    <div class="q">«مَنْ دَلَّ عَلَى خَيْرٍ<br><span class="hl">فَلَهُ مِثْلُ أَجْرِ<br>فَاعِلِهِ»</span></div>
+    <div class="src">[رواه مسلم]</div>
+  </div>
+  <svg class="logo" fill="url(#lg)"><use href="#logo"/></svg>
+  <svg class="share" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+  <div class="foot">@abdulla_7amdan</div>
+</section>
+</body>
+</html>
