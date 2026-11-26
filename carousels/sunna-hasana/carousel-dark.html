@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>سنّة حسنة — ليلي</title>
+<style>
+@font-face{font-family:"Orn";src:url(f/amiri-quran-arabic-400-normal.woff2);unicode-range:U+FD3E-FD3F,U+FDFA,U+FDFD}
+@font-face{font-family:"PlexLat";src:url(f/plex-r.ttf);font-weight:400;unicode-range:U+0000-00FF}
+@font-face{font-family:"PlexLat";src:url(f/plex-sb.ttf);font-weight:600 700;unicode-range:U+0000-00FF}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-300-normal.woff2);font-weight:300}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-400-normal.woff2);font-weight:400}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-600-normal.woff2);font-weight:600}
+@font-face{font-family:"Plex";src:url(f/ibm-plex-sans-arabic-arabic-700-normal.woff2);font-weight:700}
+
+:root{
+  --bg:#0f1012; --bg2:#161719; --line:rgba(255,255,255,.045);
+  --text:#eef0f2; --muted:#8b9198; --dim:#5b6067;
+  --blue:#65bdd5; --lime:#c4e773; --soft:#c9cdd2; --olive:#232f09; --card:#1b1d20; --border:#2a2d31;
+}
+@page{size:1080px 1350px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:"Orn","PlexLat","Plex",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+
+.slide{
+  width:1080px;height:1350px;position:relative;overflow:hidden;page-break-after:always;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 45%, transparent 40%, rgba(0,0,0,.55) 100%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/54px 54px,
+    var(--bg);
+  display:flex;flex-direction:column;padding:120px 110px 0;
+}
+.slide:last-child{page-break-after:auto}
+
+/* header */
+.head{display:flex;align-items:center;gap:18px;font-size:28px;font-weight:500;color:var(--muted)}
+.head::before{content:"";width:5px;height:40px;background:var(--blue);border-radius:3px}
+.count{margin-inline-start:auto;font-size:24px;color:var(--dim);font-weight:400;letter-spacing:.04em}
+
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px}
+
+p.t{font-size:58px;line-height:1.75;font-weight:400;text-align:right}
+p.t + p.t{margin-top:28px}
+p.s{font-size:44px;line-height:1.8;font-weight:400;color:#c9cdd2}
+b{font-weight:700;color:var(--blue)}
+.lime{color:var(--lime);font-weight:700}
+
+.tag{align-self:flex-start;display:inline-block;background:var(--olive);color:var(--lime);
+  font-size:40px;font-weight:700;padding:10px 30px 16px;border-radius:12px;margin-bottom:56px}
+
+.verse{text-align:center;margin:64px 0 0}
+.verse .v{font-size:56px;line-height:1.95;font-weight:500;color:var(--text)}
+.verse .br{color:var(--blue);font-size:60px}
+.verse .ref{margin-top:14px;font-size:28px;color:var(--muted)}
+
+.note{margin-top:70px;background:var(--card);border:1px solid var(--border);border-radius:28px;padding:44px 52px}
+.note .lbl{font-size:28px;color:var(--blue);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.note .lbl::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--lime)}
+.note p{font-size:44px;line-height:1.7}
+.note .src{font-size:26px;color:var(--muted);margin-top:18px}
+
+.hadith{margin-top:60px;border-inline-start:6px solid var(--lime);padding:16px 44px 20px;background:linear-gradient(270deg,rgba(196,231,115,.07),transparent)}
+.hadith p{font-size:52px;line-height:1.85;font-weight:500}
+.hadith .ref{font-size:28px;color:var(--muted);margin-top:12px}
+
+.foot{height:120px;display:flex;align-items:center;justify-content:center;font-family:"PlexLat";font-size:26px;color:var(--dim);letter-spacing:.02em;position:relative}
+.swipe{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:12px;font-family:"Plex";font-size:24px;color:var(--muted)}
+.swipe svg{width:40px;height:40px}
+.send{position:absolute;left:0;top:50%;transform:translateY(-55%);width:84px;height:84px}
+
+/* cover */
+.cover .body{justify-content:flex-start;padding-top:40px;padding-bottom:40px}
+.cover .kicker{font-size:34px;color:var(--lime);font-weight:600;margin-bottom:10px}
+.cover h1{font-size:176px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+.cover h1 span{color:var(--blue)}
+.cover .rule{width:140px;height:6px;background:var(--blue);border-radius:3px;margin:46px 0 46px}
+.cover .sub{font-size:50px;line-height:1.7;color:#c9cdd2;font-weight:400}
+.ring{position:absolute;left:-250px;bottom:150px;width:600px;height:600px;transform:rotate(180deg)}
+
+.cover h1.ct{font-size:112px;line-height:1.45;font-weight:700}
+.cover h1.ct span{font-size:170px;line-height:1.15;color:var(--blue);display:inline-block;margin:6px 0}
+.cover h1.ct em{display:block;margin-top:-6px;font-style:normal;font-size:52px;font-weight:500;color:var(--muted)}
+.big-q{font-size:200px;line-height:1;color:var(--blue);opacity:.18;font-family:"Plex";position:absolute;top:150px;left:100px}
+.slide{background:radial-gradient(circle 700px at 100% 0%, rgba(101,189,213,.10), transparent 70%),radial-gradient(circle 600px at 0% 100%, rgba(196,231,115,.07), transparent 70%),radial-gradient(ellipse 80% 60% at 50% 45%, transparent 40%, rgba(0,0,0,.5) 100%),var(--bg)}
+.rip{position:absolute;left:-180px;bottom:-60px;width:820px;height:820px}
+.cvh{font-size:200px;line-height:1.15;font-weight:700}
+.cvh span{display:block;color:var(--blue)}
+.cvs{font-size:42px;color:var(--soft);line-height:1.7;margin-top:30px}
+.hd .lbl{font-size:30px;color:var(--muted);margin-bottom:26px}
+.hd p{font-size:50px;line-height:1.85;font-weight:500}
+.hd .good{color:var(--text)}
+.hd .good b{color:var(--blue)}
+.hd .bad{color:#6f767d;margin-top:34px;font-size:44px}
+.hd .bad i{font-style:normal;color:#a8aeb3;font-weight:700}
+.sep{width:140px;height:6px;border-radius:3px;background:var(--lime);margin:54px 0 46px}
+.ref2,.hd p.ref2{font-size:28px;font-weight:400;color:var(--muted);margin-top:30px}
+.big{font-size:74px;line-height:1.5;font-weight:700}
+.big s{text-decoration:none;color:#6f767d;text-decoration-line:line-through;text-decoration-color:rgba(196,231,115,.7);text-decoration-thickness:6px}
+.mid{font-size:50px;line-height:1.75}
+.flow{display:flex;flex-direction:column;gap:0;margin-top:40px}
+.flow .st{display:flex;align-items:baseline;gap:26px;padding:22px 0}
+.flow .st .n{font-family:"PlexLat";font-size:26px;color:var(--dim);min-width:46px}
+.flow .st p{font-size:52px;font-weight:600;line-height:1.5}
+.quote{font-size:96px;line-height:1.45;font-weight:700;margin-top:20px}
+.quote .q{color:var(--blue)}
+</style>
+</head>
+<body>
+
+<!-- 1 Cover -->
+<section class="slide cover">
+  <svg class="rip" viewBox="0 0 400 400" fill="none">
+    <circle cx="200" cy="200" r="190" stroke="#65bdd5" stroke-opacity=".06" stroke-width="1"/>
+    <circle cx="200" cy="200" r="150" stroke="#65bdd5" stroke-opacity=".10" stroke-width="1.2"/>
+    <circle cx="200" cy="200" r="110" stroke="#65bdd5" stroke-opacity=".18" stroke-width="1.4" stroke-dasharray="2 6"/>
+    <circle cx="200" cy="200" r="72" stroke="#65bdd5" stroke-opacity=".35" stroke-width="1.8"/>
+    <circle cx="200" cy="200" r="38" stroke="#65bdd5" stroke-opacity=".6" stroke-width="2.2"/>
+    <circle cx="200" cy="200" r="9" fill="#c4e773"/>
+    <g fill="#65bdd5"><circle cx="272" cy="200" r="4" fill-opacity=".6"/><circle cx="200" cy="90" r="3.5" fill-opacity=".45"/><circle cx="94" cy="245" r="3" fill-opacity=".35"/><circle cx="330" cy="110" r="2.5" fill-opacity=".25"/><circle cx="160" cy="342" r="2.5" fill-opacity=".25"/></g>
+  </svg>
+  <div class="body" style="justify-content:flex-start;padding-top:60px">
+    <div style="width:40px;height:40px;border-radius:50%;background:var(--lime);background-clip:padding-box;border:8px solid rgba(196,231,115,.18);margin:0 0 44px"></div>
+    <h1 class="cvh">سُنّةٌ<span>حسنة</span></h1>
+    <p class="cvs">خيرٌ تبدؤه أنت..<br>ويبقى أجره يجري لك.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <div class="swipe"><svg viewBox="0 0 24 24" fill="none" stroke="#c4e773" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>اسحب</div>
+  </div>
+</section>
+
+<!-- 2 Hadith -->
+<section class="slide">
+  <div class="head">سنّة حسنة<span class="count">٢ / ٥</span></div>
+  <div class="body hd">
+    <p class="lbl">قال رسول الله ﷺ:</p>
+    <p class="good">«مَنْ سَنَّ فِي الإِسْلَامِ <b>سُنَّةً حَسَنَةً</b>، فَلَهُ أَجْرُهَا وَأَجْرُ مَنْ عَمِلَ بِهَا بَعْدَهُ، مِنْ غَيْرِ أَنْ يَنْقُصَ مِنْ أُجُورِهِمْ شَيْءٌ،</p>
+    <p class="bad">وَمَنْ سَنَّ فِي الإِسْلَامِ <i>سُنَّةً سَيِّئَةً</i>، كَانَ عَلَيْهِ وِزْرُهَا وَوِزْرُ مَنْ عَمِلَ بِهَا مِنْ بَعْدِهِ، مِنْ غَيْرِ أَنْ يَنْقُصَ مِنْ أَوْزَارِهِمْ شَيْءٌ»</p>
+    <p class="ref2">[رواه مسلم]</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 3 Meaning -->
+<section class="slide">
+  <div class="head">سنّة حسنة<span class="count">٣ / ٥</span></div>
+  <div class="body">
+    <p class="mid" style="color:var(--soft)">السنّة الحسنة ليست أن</p>
+    <p class="big"><s>تأتي بخيرٍ لم يفعله أحد..</s></p>
+    <div class="sep"></div>
+    <p class="mid">بل قد تكون أمرًا <b>يعرفه الجميع</b>،<br>وواجبًا من واجبات الدين..</p>
+    <p class="mid" style="margin-top:20px">ثم أنت <span class="lime">تُحييه</span> وتنشره بين الناس.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 4 Reward flows -->
+<section class="slide">
+  <div class="head">سنّة حسنة<span class="count">٤ / ٥</span></div>
+  <div class="body">
+    <p class="mid" style="color:var(--soft)">وكلُّ من يعمل بهذا الخير..</p>
+    <p style="font-size:110px;line-height:1.35;font-weight:700;color:var(--blue);margin-top:20px">يصبّ في<br>ميزان حسناتك</p>
+    <div class="sep"></div>
+    <p class="mid">الأعمار لا تكفي لأن تعمل<br><b>جميع الأعمال الصالحة</b>..</p>
+    <p class="mid" style="margin-top:14px">لكن بإمكانك أن <span class="lime">تدلّ الناس عليها</span>،<br>وتحبّبهم فيها.</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span></div>
+</section>
+
+<!-- 5 Closing -->
+<section class="slide">
+  <div class="head">سنّة حسنة<span class="count">٥ / ٥</span></div>
+  <div class="body">
+    <p class="mid" style="color:var(--soft)">قال رسول الله ﷺ:</p>
+    <p class="quote">«مَنْ دَلَّ عَلَى خَيْرٍ<br><span class="q">فَلَهُ مِثْلُ أَجْرِ</span><br><span class="q">فَاعِلِهِ</span>»</p>
+    <p class="ref2">[رواه مسلم]</p>
+  </div>
+  <div class="foot"><span dir="ltr">@abdulla_7amdan</span>
+    <svg class="send" viewBox="0 0 24 24" fill="none" stroke="#eef0f2" stroke-width="1.3" stroke-linejoin="round"><path d="M21.5 2.5 2.8 9.6l7.4 3.3 3.3 7.4z"/><path d="m21.5 2.5-11.3 10.4"/></svg>
+  </div>
+</section>
+
+</body>
+</html>
