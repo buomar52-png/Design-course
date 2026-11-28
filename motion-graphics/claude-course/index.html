@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تعلّم Claude — نهاري</title>
+<!-- ريل «تعلّم Claude في ٤ خطوات» بالقالب النهاري بدون مربعات، بلا عنوان ولا ترقيم. يُولَّد من tools/build.py -->
+<style>
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-400.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-500.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-600.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Plex Ar"; src: url("fonts/IBMPlexSansArabic-700.ttf") format("truetype"); font-weight: 700; }
+  /* القالب ٣ — النهاري بدون مربعات */
+  :root {
+    --bg: #f3f5f4; --ink: #151718; --muted: #7b8386; --teal: #1b7a9c; --teal-line: #4a93b0;
+    --green: #b5dc55; --hl: #d2ee94; --card: #ffffff;
+    --card-edge: rgba(215, 225, 228, .9); --card-shadow: rgba(30, 60, 70, .08); --handle: #9aa1a4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #1d2124; font-family: "Plex Ar", system-ui, sans-serif; color: var(--ink); overflow: hidden;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #viewport { position: relative; flex: 1; width: 100%; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 50% 50%; background: var(--bg); overflow: hidden; }
+  body.render { background: var(--bg); display: block; }
+  body.render #viewport { position: fixed; inset: 0; }
+  body.render #stage { left: 0; top: 0; transform: none !important; }
+  body.render #controls { display: none; }
+
+  .glow { position: absolute; inset: -160px; pointer-events: none; }
+  #glow-a { background: radial-gradient(circle at calc(100% - 160px) 160px, rgba(140, 196, 220, .42) 0px, rgba(140, 196, 220, .18) 270px, rgba(140, 196, 220, 0) 660px); }
+  #glow-b { background: radial-gradient(circle at 160px calc(100% - 160px), rgba(205, 232, 150, .45) 0px, rgba(205, 232, 150, .2) 270px, rgba(205, 232, 150, 0) 680px); }
+
+  .scene { position: absolute; inset: 0; --p: 0%;
+           -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p));
+                   mask-image: linear-gradient(to bottom, #000 0%, #000 calc(var(--p) - 22%), transparent var(--p)); }
+  .scene.out { -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p));
+                       mask-image: linear-gradient(to bottom, transparent 0%, transparent calc(var(--p) - 22%), #000 var(--p)); }
+  .scene.live { -webkit-mask-image: none; mask-image: none; }
+  /* day tide: a band of soft morning light */
+  #tide { position: absolute; left: -10%; right: -10%; height: 520px; top: 0; pointer-events: none; opacity: 0;
+          background: radial-gradient(ellipse 60% 46% at 50% 50%, rgba(255, 255, 255, .95), rgba(255, 255, 255, .5) 45%, transparent 72%),
+                      radial-gradient(ellipse 50% 30% at 50% 50%, rgba(181, 220, 85, .35), transparent 70%),
+                      radial-gradient(ellipse 80% 50% at 50% 50%, rgba(140, 196, 220, .25), transparent 70%); filter: blur(14px); }
+
+  .c { position: absolute; left: 0; right: 0; text-align: center; }
+  .line { display: block; white-space: nowrap; }
+  .k { display: inline-block; }
+  .acc { color: var(--teal); }
+  .mark { background-image: linear-gradient(var(--hl), var(--hl)); background-repeat: no-repeat; background-position: 100% 86%; background-size: 0% 38%; padding: 0 8px; }
+  .glass { position: absolute; left: 50px; right: 50px; border-radius: 48px; background: var(--card); padding: 58px 40px 44px; text-align: center;
+           box-shadow: 0 2px 0 rgba(30, 60, 70, .05), 0 14px 0 -4px var(--card-edge), 0 30px 60px var(--card-shadow); }
+  .glass .gl { display: block; white-space: nowrap; }
+  .pillrow { position: absolute; left: 0; right: 0; text-align: center; }
+  .pill { display: inline-block; padding: 14px 48px 22px; border-radius: 999px; font-weight: 600; white-space: nowrap; background: var(--teal); color: #fff; }
+  .pill.ghost { background: transparent; color: var(--muted); border: 4px dashed var(--teal-line); position: relative; }
+  .strike { position: absolute; left: 30px; right: 30px; top: 52%; height: 8px; border-radius: 8px; background: #d9534f; transform: scaleX(0); transform-origin: 100% 50%; }
+  .cardref { margin-top: 26px; font-size: 44px; font-weight: 500; color: var(--muted); }
+  .cardref span { display: inline-block; }
+  .refchip { position: absolute; left: 0; right: 0; text-align: center; font-size: 40px; color: var(--muted); }
+  .icon { position: absolute; left: 50%; }
+  .icon svg, .mini svg { width: 100%; height: 100%; overflow: visible; }
+  .mini { position: absolute; border-radius: 40px; background: #fff; padding: 18px;
+          box-shadow: 0 10px 0 -4px var(--card-edge), 0 24px 50px var(--card-shadow); }
+  .jr { position: absolute; right: 330px; left: 60px; text-align: right; direction: rtl; }
+  .jr span { display: inline-block; }
+  .jr.jt span { font-size: 64px; font-weight: 700; }
+  .jr.ji span { font-size: 46px; font-weight: 500; color: var(--muted); background: #fff; padding: 12px 30px 18px; border-radius: 22px;
+                box-shadow: 0 8px 0 -3px var(--card-edge), 0 18px 40px var(--card-shadow); white-space: nowrap; }
+  .jr.ji.good span { font-size: 52px; color: var(--ink); font-weight: 600; background: var(--hl); }
+  .jr i { display: inline-block; width: 26px; height: 26px; border-radius: 50%; margin-left: 16px; vertical-align: -2px; }
+  .jr i.x { background: #d7dfe1; }
+  .jr i.ok { background: var(--green); box-shadow: 0 0 0 5px rgba(27, 122, 156, .25); }
+  .line.inl { display: inline-block; }
+  .mute { color: var(--muted); }
+  .pill.soft { background: var(--hl); color: var(--ink); }
+  .pill.chip { background: #fff; color: var(--ink); box-shadow: 0 10px 0 -4px var(--card-edge), 0 24px 50px var(--card-shadow); padding: 18px 44px 26px 52px; }
+  .track { position: absolute; left: 0; right: 0; top: 280px; display: flex; justify-content: center; gap: 14px; direction: rtl; }
+  .track i { position: relative; width: 150px; height: 14px; border-radius: 7px; background: #dfe5e7; overflow: hidden; }
+  .track i.done { background: var(--teal); }
+  .track i b { position: absolute; inset: 0; border-radius: 7px; background: var(--green); transform: scaleX(0); transform-origin: 100% 50%; }
+  .track i.now b { display: block; }
+  .stepno { position: absolute; top: 34px; left: 0; right: 0; text-align: center; font-size: 44px; font-weight: 600; color: var(--teal); }
+  .ri { display: inline-block; width: 1.25em; height: 1.25em; vertical-align: -0.32em; margin-left: 0.35em; }
+  .ri svg { width: 100%; height: 100%; overflow: visible; }
+  #send { position: absolute; left: 110px; top: 1330px; width: 96px; height: 96px; }
+  .dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .dot i, .dot b { position: absolute; inset: 0; border-radius: 50%; }
+  .dot b { background: rgba(181, 220, 85, .35); }
+  .dot i { inset: 7px; background: var(--green); }
+  #handle { position: absolute; left: 0; right: 0; top: 1660px; text-align: center; direction: ltr; font-size: 36px; color: var(--handle); letter-spacing: .5px; }
+
+  #safe { display: none; pointer-events: none; } #safe.on { display: block; }
+  #safe div { position: absolute; background: rgba(255, 60, 60, .14); border: 2px dashed rgba(255, 60, 60, .5); }
+  #controls { width: min(760px, 100%); padding: 12px 16px 16px; display: flex; gap: 12px; align-items: center; color: #e8ecee; font-size: 15px; direction: ltr; }
+  #controls button { font: inherit; color: inherit; background: #2f3539; border: 1px solid #454c51; border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+  #controls input[type=range] { flex: 1; accent-color: #b5dc55; min-width: 60px; }
+  #time { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="glow" id="glow-a"></div>
+    <div class="glow" id="glow-b"></div>
+    <div class="dot" id="dot" style="left: 985px; top: 250px;"><b></b><i></i></div>
+
+    <!-- ===== S1 (0s) ===== -->
+    <section class="scene" id="s1" data-start="0">
+      <div class="c" style="top:330px;font-size:76px;font-weight:500;" data-in="0.0" data-fx="up"><span class="line kline " data-t="0.0,0.36,0.88">أفضل طريقة لتعلّم</span></div>
+      <div class="c" style="top:440px;font-size:150px;font-weight:700;line-height:1.2;" data-in="1.4" data-fx="big"><span class="line kline " data-t="1.56"><span class="acc">Claude</span></span></div>
+      <div class="pillrow" style="top:660px;font-size:56px" data-in="1.75" data-fx="pill"><span class="pill soft"><span class="kline" data-t="1.86,2.12">حسب تجربتي</span></span></div>
+      <div class="c" style="top:760px;font-size:560px;font-weight:700;line-height:1.0;" data-in="3.0" data-fx="big"><span class="line kline " data-t="3.18"><span class="acc">٤</span></span></div>
+      <div class="c" style="top:1260px;font-size:110px;font-weight:700;line-height:1.2;" data-in="3.4" data-fx="big"><span class="line kline " data-t="3.54">خطوات</span></div>
+    </section>
+
+    <!-- ===== S2 (3.86s) ===== -->
+    <section class="scene" id="s2" data-start="3.86">
+      <div class="track"><i class="now"><b data-grow="3.9,0.6"></b></i><i class=""><b></b></i><i class=""><b></b></i><i class=""><b></b></i><span class="stepno">الخطوة ١</span></div>
+      <div class="icon " style="top:470px;width:360px;height:360px;margin-left:-180px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><path class="draw" data-draw="3.8" stroke="var(--teal)" stroke-width="8" d="M14 192 H186"/><rect data-pop="3.9" x="30" y="150" width="44" height="38" rx="8" fill="#b5dc55" stroke="var(--teal)" stroke-width="5"/><rect data-pop="4.06" x="76" y="150" width="44" height="38" rx="8" fill="#d2ee94" stroke="var(--teal)" stroke-width="5"/><rect data-pop="4.22" x="122" y="150" width="44" height="38" rx="8" fill="var(--teal-line)" stroke="var(--teal)" stroke-width="5"/><rect data-pop="4.38" x="53" y="110" width="44" height="38" rx="8" fill="#fff" stroke="var(--teal)" stroke-width="5"/><rect data-pop="4.54" x="99" y="110" width="44" height="38" rx="8" fill="#b5dc55" stroke="var(--teal)" stroke-width="5"/><rect data-pop="4.7" x="76" y="70" width="44" height="38" rx="8" fill="#d2ee94" stroke="var(--teal)" stroke-width="5"/></svg></div>
+      <div class="c" style="top:900px;font-size:84px;font-weight:500;" data-in="3.8" data-fx="up"><span class="line kline " data-t="3.9">معرفة</span></div>
+      <div class="c" style="top:1010px;font-size:140px;font-weight:700;line-height:1.2;" data-in="4.15" data-fx="big"><span class="line kline " data-t="4.32"><span class="acc">الأساسيات</span></span></div>
+    </section>
+
+    <!-- ===== S3 (5.48s) ===== -->
+    <section class="scene" id="s3" data-start="5.48">
+      <div class="track"><i class="done"><b></b></i><i class="now"><b data-grow="5.52,0.6"></b></i><i class=""><b></b></i><i class=""><b></b></i><span class="stepno">الخطوة ٢</span></div>
+      <div class="icon " style="top:400px;width:470px;height:470px;margin-left:-235px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle data-pop="5.45" cx="100" cy="100" r="74" stroke="#dfe5e7" stroke-width="3" stroke-dasharray="3 7"/><path class="draw" data-draw="6.0" stroke="var(--teal-line)" stroke-width="3" d="M100.0 66.0 L100.0 44.0"/><g data-pop="6.1"><rect x="81.0" y="7.0" width="38" height="38" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="3"/><g transform="translate(100.0 26.0)"><path d='M-9 9 L5 -5 L9 -1 L-5 13 Z M-9 9 L-11 15 L-5 13' fill='#b5dc55' stroke='#1b7a9c' stroke-width='2.5'/></g></g><path class="draw" data-draw="6.12" stroke="var(--teal-line)" stroke-width="3" d="M132.3 89.5 L153.3 82.7"/><g data-pop="6.22"><rect x="151.4" y="58.1" width="38" height="38" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="3"/><g transform="translate(170.4 77.1)"><rect x='-12' y='-10' width='24' height='20' rx='3' fill='#fff' stroke='#1b7a9c' stroke-width='2.5'/><path d='M-10 8 L-2 -1 L4 5 L7 2 L11 8 Z' fill='#4a93b0'/><circle cx='5' cy='-4' r='3' fill='#b5dc55'/></g></g><path class="draw" data-draw="6.24" stroke="var(--teal-line)" stroke-width="3" d="M120.0 127.5 L132.9 145.3"/><g data-pop="6.34"><rect x="124.5" y="140.9" width="38" height="38" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="3"/><g transform="translate(143.5 159.9)"><rect x='-11' y='0' width='6' height='10' fill='#4a93b0'/><rect x='-3' y='-6' width='6' height='16' fill='#b5dc55'/><rect x='5' y='-11' width='6' height='21' fill='#1b7a9c'/></g></g><path class="draw" data-draw="6.36" stroke="var(--teal-line)" stroke-width="3" d="M80.0 127.5 L67.1 145.3"/><g data-pop="6.46"><rect x="37.5" y="140.9" width="38" height="38" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="3"/><g transform="translate(56.5 159.9)"><path d='M-6 -8 L-13 0 L-6 8 M6 -8 L13 0 L6 8 M3 -11 L-3 11' stroke='#1b7a9c' stroke-width='3' fill='none'/></g></g><path class="draw" data-draw="6.48" stroke="var(--teal-line)" stroke-width="3" d="M67.7 89.5 L46.7 82.7"/><g data-pop="6.58"><rect x="10.6" y="58.1" width="38" height="38" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="3"/><g transform="translate(29.6 77.1)"><path d='M-6 -10 L11 0 L-6 10 Z' fill='#b5dc55' stroke='#1b7a9c' stroke-width='2.5'/></g></g><g data-pop="5.55"><circle cx="100" cy="100" r="32" fill="#fff" stroke="#f0d9cf" stroke-width="4"/><g data-spin="5.75,6,90"><path d="M102.5 103.0 L123.8 102.9 L103.2 97.7 Z" fill="#d97757"/><path d="M101.4 103.6 L115.5 107.5 L103.7 98.9 Z" fill="#d97757"/><path d="M99.4 103.9 L113.4 119.9 L103.8 100.9 Z" fill="#d97757"/><path d="M97.0 102.5 L97.7 118.6 L102.3 103.2 Z" fill="#d97757"/><path d="M96.4 101.4 L90.3 119.8 L101.1 103.7 Z" fill="#d97757"/><path d="M96.1 99.4 L84.5 110.5 L99.1 103.8 Z" fill="#d97757"/><path d="M97.5 97.0 L76.2 97.1 L96.8 102.3 Z" fill="#d97757"/><path d="M98.6 96.4 L84.5 92.5 L96.3 101.1 Z" fill="#d97757"/><path d="M100.6 96.1 L86.6 80.1 L96.2 99.1 Z" fill="#d97757"/><path d="M103.0 97.5 L102.3 81.4 L97.7 96.8 Z" fill="#d97757"/><path d="M103.6 98.6 L109.7 80.2 L98.9 96.3 Z" fill="#d97757"/><path d="M103.9 100.6 L115.5 89.5 L100.9 96.2 Z" fill="#d97757"/><circle cx="100" cy="100" r="3.8" fill="#d97757"/></g></g></svg></div>
+      <div class="c" style="top:880px;font-size:84px;font-weight:600;" data-in="5.4" data-fx="up"><span class="line kline " data-t="5.52,5.88,6.34">معرفة <span class="acc">القدرات والإمكانات</span></span></div>
+      <div class="c" style="top:1000px;font-size:68px;font-weight:500;" data-in="6.75" data-fx="up"><span class="line kline " data-t="6.9,7.3,7.62,7.82,8.06">التي يقدّمها لك هذا التطبيق</span></div>
+    </section>
+
+    <!-- ===== S4 (8.5s) ===== -->
+    <section class="scene" id="s4" data-start="8.5">
+      <div class="icon " style="top:420px;width:560px;height:560px;margin-left:-280px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><path data-pop="9.15" d="M100 110 L10 92" stroke="#b5dc55" stroke-width="7"/><path data-pop="9.23" d="M100 110 L28 47" stroke="#b5dc55" stroke-width="7"/><path data-pop="9.31" d="M100 110 L73 20" stroke="#b5dc55" stroke-width="7"/><path data-pop="9.39" d="M100 110 L127 20" stroke="#b5dc55" stroke-width="7"/><path data-pop="9.47" d="M100 110 L172 47" stroke="#b5dc55" stroke-width="7"/><path data-pop="9.55" d="M100 110 L190 92" stroke="#b5dc55" stroke-width="7"/>
+        <rect x="66" y="56" width="68" height="124" rx="6" fill="#d2ee94"/>
+        <g data-sx="9.0,0.18,66,118"><rect x="66" y="56" width="68" height="124" rx="6" fill="#fff" stroke="var(--teal)" stroke-width="6"/>
+          <circle cx="122" cy="122" r="5" fill="var(--teal)"/></g>
+        <path class="draw" data-draw="8.5" stroke="var(--teal)" stroke-width="7" d="M58 48 H142 V184 H58 Z"/><path class="draw" data-draw="8.7" stroke="var(--teal)" stroke-width="7" d="M40 186 H160"/><path data-pop="9.5" d="M40 30 L43 37 L50 40 L43 43 L40 50 L37 43 L30 40 L37 37 Z" fill="var(--teal)"/><path data-pop="9.62" d="M164 42 L167 49 L174 52 L167 55 L164 62 L161 55 L154 52 L161 49 Z" fill="var(--teal)"/><path data-pop="9.74" d="M28 110 L31 117 L38 120 L31 123 L28 130 L25 123 L18 120 L25 117 Z" fill="var(--teal)"/><path data-pop="9.86" d="M176 120 L179 127 L186 130 L179 133 L176 140 L173 133 L166 130 L173 127 Z" fill="var(--teal)"/></svg></div>
+      <div class="c" style="top:1060px;font-size:72px;font-weight:500;" data-in="8.6" data-fx="up"><span class="line kline " data-t="8.72,8.96,9.16,9.36,9.8">تفتح لك <span class="acc">مجالًا واسعًا</span> للإبداع</span></div>
+    </section>
+
+    <!-- ===== S5 (10.26s) ===== -->
+    <section class="scene" id="s5" data-start="10.26">
+      <div class="track"><i class="done"><b></b></i><i class="done"><b></b></i><i class="now"><b data-grow="10.3,0.6"></b></i><i class=""><b></b></i><span class="stepno">الخطوة ٣</span></div>
+      <div class="c" style="top:470px;font-size:84px;font-weight:500;" data-in="10.2" data-fx="up"><span class="line kline " data-t="10.3"><span class="mute">التجربة</span></span></div>
+      <div class="c" style="top:590px;font-size:56px;font-weight:500;" data-in="10.85" data-fx="up"><span class="line kline " data-t="10.98"><span class="mute">ثمّ</span></span></div>
+      <div class="c" style="top:670px;font-size:120px;font-weight:600;line-height:1.2;" data-in="11.05" data-fx="big"><span class="line kline " data-t="11.2">التجربة</span></div>
+      <div class="c" style="top:840px;font-size:56px;font-weight:500;" data-in="11.6" data-fx="up"><span class="line kline " data-t="11.72"><span class="mute">ثمّ</span></span></div>
+      <div class="c" style="top:920px;font-size:190px;font-weight:700;line-height:1.2;" data-in="11.8" data-fx="big"><span class="line kline " data-t="11.94"><span class="mark" data-mark="12.1"><span class="acc">التجربة</span></span></span></div>
+    </section>
+
+    <!-- ===== S6 (12.36s) ===== -->
+    <section class="scene" id="s6" data-start="12.36">
+      <div class="c" style="top:420px;font-size:96px;font-weight:600;" data-in="12.3" data-fx="up"><span class="line kline " data-t="12.4,12.74">جرّبه في:</span></div>
+      <div class="pillrow" style="top:575px;font-size:76px" data-in="12.64" data-fx="pill"><span class="pill chip "><span class="ri" data-pop="12.790000000000001"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="40" width="168" height="120" rx="12" fill="#fff" stroke="var(--teal)" stroke-width="9"/><path d="M16 70 H184 M16 130 H184" stroke="var(--teal)" stroke-width="7"/><path d="M40 40 V70 M76 40 V70 M112 40 V70 M148 40 V70 M40 130 V160 M76 130 V160 M112 130 V160 M148 130 V160" stroke="var(--teal)" stroke-width="6"/><path d="M86 84 L116 100 L86 116 Z" fill="#b5dc55"/></svg></span><span class="kline inl" data-t="12.82">المونتاج</span></span></div>
+      <div class="pillrow" style="top:770px;font-size:76px" data-in="13.1" data-fx="pill"><span class="pill chip "><span class="ri" data-pop="13.25"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M100 26 Q30 26 30 96 Q30 170 92 172 Q112 172 106 150 Q100 132 122 132 H150 Q174 132 174 104 Q174 26 100 26 Z" fill="#fff" stroke="var(--teal)" stroke-width="9"/><circle cx="70" cy="84" r="13" fill="#b5dc55"/><circle cx="106" cy="62" r="13" fill="var(--teal-line)"/><circle cx="142" cy="88" r="13" fill="#d2ee94" stroke="var(--teal)" stroke-width="4"/></svg></span><span class="kline inl" data-t="13.26">التصميم</span></span></div>
+      <div class="pillrow" style="top:965px;font-size:76px" data-in="13.55" data-fx="pill"><span class="pill chip "><span class="ri" data-pop="13.700000000000001"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M36 40 H164 M36 76 H164 M36 112 H120" stroke="var(--teal-line)" stroke-width="12"/><path d="M60 150 H140 M100 130 V170" stroke="var(--teal)" stroke-width="0"/><rect x="36" y="140" width="128" height="34" rx="10" fill="#b5dc55"/></svg></span><span class="kline inl" data-t="13.72">التلخيص</span></span></div>
+      <div class="pillrow" style="top:1160px;font-size:76px" data-in="14.2" data-fx="pill"><span class="pill chip "><span class="ri" data-pop="14.35"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="20" y="30" width="160" height="110" rx="12" fill="#fff" stroke="var(--teal)" stroke-width="9"/><rect x="40" y="88" width="20" height="34" fill="var(--teal-line)"/><rect x="72" y="66" width="20" height="56" fill="#b5dc55"/><rect x="104" y="50" width="20" height="72" fill="var(--teal)"/><path d="M100 140 V170 M70 176 H130" stroke="var(--teal)" stroke-width="9"/></svg></span><span class="kline inl" data-t="14.38,14.58">العروض التقديمية</span></span></div>
+    </section>
+
+    <!-- ===== S7 (14.98s) ===== -->
+    <section class="scene" id="s7" data-start="14.98">
+      <div class="icon " style="top:400px;width:400px;height:400px;margin-left:-200px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><g data-rot="15.1,-30,40,170"><path d="M40 170 L132 78" stroke="var(--ink)" stroke-width="14"/>
+        <path d="M116 94 L132 78" stroke="#b5dc55" stroke-width="14"/></g><path data-pop="15.3" d="M150 18 L157 33 L172 40 L157 47 L150 62 L143 47 L128 40 L143 33 Z" fill="#b5dc55"/><path data-pop="15.4" d="M182 80 L186 88 L194 92 L186 96 L182 104 L178 96 L170 92 L178 88 Z" fill="var(--teal-line)"/><path data-pop="15.5" d="M112 12 L115 19 L122 22 L115 25 L112 32 L109 25 L102 22 L109 19 Z" fill="var(--teal)"/><path data-pop="15.600000000000001" d="M176 138 L180 148 L190 152 L180 156 L176 166 L172 156 L162 152 L172 148 Z" fill="#d2ee94"/><path data-pop="15.700000000000001" d="M128 71 L131 77 L137 80 L131 83 L128 89 L125 83 L119 80 L125 77 Z" fill="#b5dc55"/></svg></div>
+      <div class="c" style="top:860px;font-size:160px;font-weight:700;line-height:1.2;" data-in="14.9" data-fx="big"><span class="line kline " data-t="15.02"><span class="acc">ستنبهر</span></span></div>
+      <div class="c" style="top:1080px;font-size:84px;font-weight:500;" data-in="15.3" data-fx="up"><span class="line kline " data-t="15.44,15.9">بالنتائج الأوليّة</span></div>
+    </section>
+
+    <!-- ===== S8 (16.26s) ===== -->
+    <section class="scene" id="s8" data-start="16.26">
+      <div class="c" style="top:560px;font-size:96px;font-weight:500;" data-in="16.2" data-fx="up"><span class="line kline " data-t="16.3">ثمّ</span></div>
+      <div class="c" style="top:690px;font-size:130px;font-weight:700;line-height:1.2;" data-in="16.65" data-fx="big"><span class="line kline " data-t="16.8">الخطوة</span></div>
+      <div class="c" style="top:860px;font-size:230px;font-weight:700;line-height:1.1;" data-in="17.0" data-fx="big"><span class="line kline " data-t="17.14"><span class="mark" data-mark="17.4"><span class="acc">الأهمّ</span></span></span></div>
+    </section>
+
+    <!-- ===== S9 (17.5s) ===== -->
+    <section class="scene" id="s9" data-start="17.5">
+      <div class="track"><i class="done"><b></b></i><i class="done"><b></b></i><i class="done"><b></b></i><i class="now"><b data-grow="17.54,0.6"></b></i><span class="stepno">الخطوة ٤</span></div>
+      <div class="icon " style="top:430px;width:380px;height:380px;margin-left:-190px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="17.5" stroke="var(--teal-line)" stroke-width="8" d="M100 22 A78 78 0 0 1 178 100"/><path class="draw" data-draw="17.7" stroke="var(--teal-line)" stroke-width="8" d="M100 178 A78 78 0 0 1 22 100"/>
+        <path data-pop="18.0" d="M170 82 L178 100 L190 86" stroke="var(--teal-line)" stroke-width="8"/><path data-pop="18.1" d="M30 118 L22 100 L10 114" stroke="var(--teal-line)" stroke-width="8"/>
+        <g data-swing="18.7"><rect x="58" y="54" width="84" height="96" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="6"/>
+          <path d="M72 76 H128 M72 94 H120 M72 112 H126" stroke="#c4cacc" stroke-width="6"/>
+          <path data-draw="18.5" class="draw" d="M70 84 Q90 70 110 86 T132 80" stroke="#d9534f" stroke-width="5"/>
+          <path data-draw="19.1" class="draw" d="M120 120 L132 112" stroke="#d9534f" stroke-width="5"/></g>
+        <g data-pop="20.66"><rect x="58" y="54" width="84" height="96" rx="10" fill="#b5dc55" stroke="var(--teal)" stroke-width="6"/>
+          <path d="M80 102 L96 118 L124 86" stroke="#fff" stroke-width="10"/></g></svg></div>
+      <div class="c" style="top:860px;font-size:84px;font-weight:600;" data-in="17.4" data-fx="up"><span class="line kline " data-t="17.54,18.82,19.4">التعديل والملاحظات <span class="acc">المستمرّة</span></span></div>
+      <div class="c" style="top:990px;font-size:68px;font-weight:500;" data-in="19.8" data-fx="up"><span class="line kline " data-t="19.94,20.24,20.52,20.66">حتى تصل إلى <span class="mark" data-mark="20.8">القوالب</span></span></div>
+      <div class="c" style="top:1090px;font-size:68px;font-weight:500;" data-in="20.9" data-fx="up"><span class="line kline " data-t="21.06,21.42,21.86">التي تعتمدها لمشاريعك</span></div>
+    </section>
+
+    <!-- ===== S10 (22.48s) ===== -->
+    <section class="scene" id="s10" data-start="22.48">
+      <div class="c" style="top:440px;font-size:72px;font-weight:500;" data-in="22.4" data-fx="up"><span class="line kline " data-t="22.52,22.82,23.16,23.26,23.7">وهذا بالضبط ما سنتعلّمه في</span></div>
+      <div class="glass" style="top:600px" data-in="23.6" data-fx="card"><div style="font-size:64px;font-weight:500;color:var(--muted)"><span class="line kline " data-t="23.8">دورة</span></div><div style="font-size:120px;font-weight:700;line-height:1.3"><span class="line kline " data-t="24.36,24.96">أساسيات <span class="acc">Claude</span></span></div></div>
+      <div class="c" style="top:1030px;font-size:72px;font-weight:500;" data-in="25.15" data-fx="up"><span class="line kline " data-t="25.28,25.58,25.76">تتعلّم فيها الأساسيات</span></div>
+    </section>
+
+    <!-- ===== S11 (26.22s) ===== -->
+    <section class="scene" id="s11" data-start="26.22">
+      <div class="pillrow" style="top:340px;font-size:60px" data-in="26.15" data-fx="pill"><span class="pill soft"><span class="kline" data-t="26.26,26.64">المشروع النهائي</span></span></div>
+      <div class="icon " style="top:400px;width:520px;height:520px;margin-left:-260px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><g data-pop="26.9"><rect x="134" y="62" width="60" height="76" fill="#fff" stroke="#d7dfe1" stroke-width="1.5"/></g><g data-pop="27.049999999999997"><rect x="74" y="62" width="60" height="76" fill="#f4f8f1" stroke="#d7dfe1" stroke-width="1.5"/></g><g data-pop="27.2"><rect x="14" y="62" width="60" height="76" fill="#fff" stroke="#d7dfe1" stroke-width="1.5"/></g>
+        <rect data-grow="27.4,0.4" x="146" y="74" width="36" height="7" rx="3" fill="var(--teal)"/>
+        <path data-pop="27.5" d="M146 88 H178 M146 96 H170" stroke="var(--teal-line)" stroke-width="3"/>
+        <g data-pop="27.299999999999997"><rect x="146" y="104" width="36" height="24" rx="4" fill="#d2ee94"/><path d="M148 126 L158 114 L165 121 L170 116 L180 126 Z" fill="var(--teal-line)"/></g>
+        <circle cx="104" cy="96" r="13" stroke="#e3e8ea" stroke-width="6"/>
+        <circle class="draw" data-draw="28.94" cx="104" cy="96" r="13" stroke="#b5dc55" stroke-width="6"/>
+        <path data-pop="29.14" d="M86 124 H122" stroke="var(--teal-line)" stroke-width="3"/>
+        <rect data-pop="29.880000000000003" x="22" y="112" width="44" height="14" rx="7" fill="#b5dc55"/>
+        <path data-pop="29.78" d="M24 76 H58 M24 86 H50" stroke="var(--teal-line)" stroke-width="3"/><g data-pop="27.099999999999998"><g data-move="28.64,0.45,-60,0"><g data-move="29.48,0.45,-60,0"><rect x="130" y="56" width="68" height="88" rx="8" stroke="var(--ink)" stroke-width="3.5"/><rect x="152" y="51" width="24" height="5" rx="2.5" fill="var(--ink)"/></g></g></g><circle cx="112" cy="162" r="3.5" fill="#d7dfe1"/><circle cx="100" cy="162" r="3.5" fill="#d7dfe1"/><circle cx="88" cy="162" r="3.5" fill="#d7dfe1"/><g data-pop="27.2"><g data-move="28.64,0.45,-12,0"><g data-move="29.48,0.45,-12,0"><rect x="106" y="158.5" width="12" height="7" rx="3.5" fill="var(--teal)"/></g></g></g></svg></div>
+      <div class="c" style="top:920px;font-size:84px;font-weight:600;" data-in="28.15" data-fx="up"><span class="line kline " data-t="28.26,28.6,28.94">أن نصمّم <span class="acc">كاروسيل</span></span></div>
+      <div class="c" style="top:1040px;font-size:68px;font-weight:500;" data-in="29.25" data-fx="up"><span class="line kline " data-t="29.4,29.78,30.16,30.26">مثل الموجود في الحساب</span></div>
+    </section>
+
+    <!-- ===== S12 (30.5s) ===== -->
+    <section class="scene" id="s12" data-start="30.5">
+      <div class="icon " style="top:300px;width:520px;height:520px;margin-left:-260px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path class="draw" data-draw="30.6" stroke="var(--teal)" stroke-width="7" fill="#fff" d="M14 10 H186 V104 H14 Z"/>
+        <path data-pop="30.900000000000002" d="M40 84 C70 84 70 36 104 40 S150 70 164 30" stroke="var(--teal-line)" stroke-width="3" stroke-dasharray="5 7"/>
+        <g data-move="31.200000000000003,2.2,124,-50,62,-46"><circle cx="40" cy="84" r="13" fill="#b5dc55" stroke="var(--teal)" stroke-width="4"/></g>
+        <rect data-pop="30.85" x="138" y="70" width="34" height="24" rx="5" fill="#d2ee94" stroke="var(--teal)" stroke-width="3"/>
+        <path class="draw" data-draw="30.75" stroke="var(--teal)" stroke-width="6" d="M14 116 H186 V190 H14 Z"/>
+        <path d="M26 136 H174 M26 156 H174 M26 176 H174" stroke="#e3e8ea" stroke-width="10"/>
+        <rect data-grow="31.0,0.5" x="40" y="131" width="96" height="10" rx="5" fill="#b5dc55"/>
+        <rect data-grow="31.150000000000002,0.5" x="70" y="151" width="90" height="10" rx="5" fill="var(--teal-line)"/>
+        <rect data-grow="31.3,0.5" x="30" y="171" width="64" height="10" rx="5" fill="#d2ee94"/>
+        <path data-pop="31.5" d="M40 129 L47 136 L40 143 L33 136 Z" fill="#fff" stroke="var(--teal)" stroke-width="2.5"/><path data-pop="31.6" d="M136 129 L143 136 L136 143 L129 136 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="2.5"/><path data-pop="31.700000000000003" d="M70 149 L77 156 L70 163 L63 156 Z" fill="#fff" stroke="var(--teal)" stroke-width="2.5"/><path data-pop="31.8" d="M160 149 L167 156 L160 163 L153 156 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="2.5"/><path data-pop="31.900000000000002" d="M94 169 L101 176 L94 183 L87 176 Z" fill="#fff" stroke="var(--teal)" stroke-width="2.5"/>
+        <g data-move="31.200000000000003,2.2,140,0"><path d="M26 112 V194" stroke="#d9534f" stroke-width="4"/><path d="M20 108 H32 L26 116 Z" fill="#d9534f"/></g></svg></div>
+      <div class="c" style="top:860px;font-size:92px;font-weight:600;" data-in="30.45" data-fx="up"><span class="line kline " data-t="30.54,30.88,31.22">وفيديو <span class="acc">موشن جرافيك</span></span></div>
+      <div class="c" style="top:990px;font-size:68px;font-weight:500;" data-in="31.75" data-fx="up"><span class="line kline " data-t="31.9,32.36,32.56,32.84,33.1,33.4">تمامًا مثل الفيديو الذي تشاهده الآن</span></div>
+    </section>
+
+    <!-- ===== S13 (33.68s) ===== -->
+    <section class="scene" id="s13" data-start="33.68">
+      <div class="icon " style="top:380px;width:440px;height:440px;margin-left:-220px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g data-pop="33.7"><g transform="rotate(-15 100 96)"><rect x="26" y="40" width="148" height="100" rx="10" fill="#eef3f4" stroke="var(--teal)" stroke-width="3"/></g></g><g data-pop="33.82"><g transform="rotate(11 100 96)"><rect x="26" y="40" width="148" height="100" rx="10" fill="#d2ee94" stroke="var(--teal)" stroke-width="3"/></g></g>
+        <g data-pop="33.95"><rect x="22" y="34" width="156" height="108" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="4"/></g>
+        <rect data-grow="34.3,0.45" x="40" y="50" width="78" height="12" rx="4" fill="var(--teal)"/>
+        <path class="draw" data-draw="34.5" stroke="var(--teal-line)" stroke-width="5" d="M40 76 H100 M40 90 H94 M40 104 H98"/>
+        <circle cx="146" cy="96" r="20" stroke="#e3e8ea" stroke-width="9"/>
+        <circle class="draw" data-draw="34.65" cx="146" cy="96" r="20" stroke="#b5dc55" stroke-width="9"/>
+        <rect data-pop="34.8" x="40" y="118" width="12" height="12" rx="3" fill="#b5dc55"/><rect data-pop="34.9" x="58" y="118" width="12" height="12" rx="3" fill="var(--teal-line)"/>
+        <g data-pop="34.599999999999994"><circle cx="88" cy="158" r="4" fill="var(--teal)"/><circle cx="100" cy="158" r="4" fill="#d7dfe1"/><circle cx="112" cy="158" r="4" fill="#d7dfe1"/></g>
+        <g data-move="35.199999999999996,0.7,-38,-46"><path data-pop="35.099999999999994" d="M150 170 L150 196 L157 189 L162 200 L167 198 L162 187 L172 187 Z" fill="#fff" stroke="var(--ink)" stroke-width="3"/></g></svg></div>
+      <div class="c" style="top:860px;font-size:72px;font-weight:500;" data-in="33.6" data-fx="up"><span class="line kline " data-t="33.72,34.02,34.28,34.42">ومن خلال هذه التطبيقات</span></div>
+      <div class="c" style="top:970px;font-size:92px;font-weight:600;" data-in="35.0" data-fx="up"><span class="line kline " data-t="35.12,35.34,35.54,35.76">تستطيع صنع <span class="acc">عروضٍ تقديميّة</span></span></div>
+    </section>
+
+    <!-- ===== S14 (36.12s) ===== -->
+    <section class="scene" id="s14" data-start="36.12">
+      <div class="icon " style="top:400px;width:360px;height:360px;margin-left:-180px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g data-rise="36.1"><path d="M20 60 H70 Q70 40 86 40 Q102 40 102 60 H120 V100 Q140 100 140 116 Q140 132 120 132 V172 H20 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="7"/></g>
+        <g data-slidein="37.4"><path d="M120 100 Q140 100 140 116 Q140 132 120 132 V172 H184 V60 H120 Z" transform="translate(4 0)" fill="#d2ee94" stroke="var(--teal)" stroke-width="7"/></g></svg></div>
+      <div class="c" style="top:820px;font-size:72px;font-weight:500;" data-in="36.05" data-fx="up"><span class="line kline " data-t="36.16,36.56,36.74">ستتعلّم كيف تبني</span></div>
+      <div class="c" style="top:930px;font-size:110px;font-weight:700;line-height:1.2;" data-in="36.9" data-fx="big"><span class="line kline " data-t="37.0,37.44,37.58">المهارات مع <span class="acc">Claude</span></span></div>
+    </section>
+
+    <!-- ===== S15 (37.84s) ===== -->
+    <section class="scene" id="s15" data-start="37.84">
+      <div class="c" style="top:420px;font-size:96px;font-weight:600;" data-in="37.8" data-fx="up"><span class="line kline " data-t="37.88,38.16">سواء كنتَ</span></div>
+      <div class="pillrow" style="top:590px;font-size:72px" data-in="38.3" data-fx="pill"><span class="pill "><span class="kline" data-t="38.42">معلّم</span></span></div>
+      <div class="pillrow" style="top:750px;font-size:72px" data-in="38.65" data-fx="pill"><span class="pill soft"><span class="kline" data-t="38.76,39.06">صانع محتوى</span></span></div>
+      <div class="pillrow" style="top:910px;font-size:72px" data-in="39.55" data-fx="pill"><span class="pill "><span class="kline" data-t="39.7">طالب</span></span></div>
+      <div class="pillrow" style="top:1070px;font-size:72px" data-in="39.95" data-fx="pill"><span class="pill soft"><span class="kline" data-t="40.06">مدرّب</span></span></div>
+    </section>
+
+    <!-- ===== S16 (41.1s) ===== -->
+    <section class="scene" id="s16" data-start="41.1">
+      <div class="icon" style="top:0;left:0;margin:0;width:1080px;height:1920px"><svg viewBox="0 0 1080 1920" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;overflow:visible"><path data-pop="41.05" d="M830 470 V1230" stroke="#dfe5e7" stroke-width="12" stroke-dasharray="1 26"/><path class="draw" data-draw="41.25" d="M830 470 V1230" stroke="var(--teal)" stroke-width="12"/><g data-pop="41.05"><circle cx="830" cy="470" r="30" fill="#fff" stroke="#9aa1a4" stroke-width="11"/></g><circle data-ring="42.0" opacity="0" cx="830" cy="1230" r="48" stroke="#b5dc55" stroke-width="10"/><g data-pop="41.25"><circle cx="830" cy="1230" r="30" fill="#fff" stroke="var(--teal)" stroke-width="11"/></g><g data-pop="41.9"><circle cx="830" cy="1230" r="30" fill="#b5dc55" stroke="var(--teal)" stroke-width="11"/><path d="M817 1230 L827 1240 L844 1221" stroke="#fff" stroke-width="8"/></g><g data-out="41.85"><g data-move="41.3,0.6,0,760"><circle data-pop="41.25" cx="830" cy="470" r="16" fill="var(--teal)"/></g></g></svg></div>
+      <div class="jr jt mute" style="top:424px" data-in="41.099999999999994" data-fx="chip"><span>قبل الدورة</span></div>
+      <div class="jr ji" style="top:530px" data-in="41.169999999999995" data-fx="chip"><span><i class="x"></i>معلومات عامة</span></div>
+      <div class="jr ji" style="top:620px" data-in="41.269999999999996" data-fx="chip"><span><i class="x"></i>مهارات حُمّلت دون الاستفادة منها</span></div>
+      <div class="jr jt acc" style="top:1178px" data-in="41.949999999999996" data-fx="chip"><span>بعد الدورة</span></div>
+      <div class="jr ji good" style="top:1292px" data-in="42.019999999999996" data-fx="chip"><span><i class="ok"></i>تطبيقات عملية مع Claude</span></div>
+    </section>
+
+    <!-- ===== S17 (42.84s) ===== -->
+    <section class="scene" id="s17" data-start="42.84">
+      <div class="icon " style="top:380px;width:420px;height:420px;margin-left:-210px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g data-out="44.529999999999994"><path class="draw" data-draw="42.8" stroke="var(--teal)" stroke-width="7" fill="#fff" d="M40 40 H160 V112 H40 Z"/><path class="draw" data-draw="43.0" stroke="var(--teal)" stroke-width="6" d="M20 120 H180 L170 132 H30 Z"/>
+          <path data-draw="43.5" class="draw" d="M30 30 L170 140" stroke="#d9534f" stroke-width="10"/></g>
+        <g data-pop="44.73"><rect x="28" y="54" width="96" height="128" rx="14" fill="#fff" stroke="var(--teal)" stroke-width="7"/><rect x="40" y="68" width="72" height="96" rx="6" fill="#d2ee94"/><circle cx="76" cy="172" r="4" fill="var(--teal)"/></g>
+        <g data-pop="45.42"><rect x="134" y="84" width="50" height="98" rx="10" fill="#fff" stroke="var(--teal)" stroke-width="7"/><rect x="142" y="96" width="34" height="68" rx="4" fill="#b5dc55"/></g></svg></div>
+      <div class="c" style="top:860px;font-size:76px;font-weight:600;" data-in="42.75" data-fx="up"><span class="line kline " data-t="42.88,42.96,43.2,43.4,43.66,44.16">لن تحتاج إلى لابتوب للتطبيق العملي</span></div>
+      <div class="c" style="top:990px;font-size:110px;font-weight:700;line-height:1.2;" data-in="44.4" data-fx="big"><span class="line kline " data-t="44.5,44.73,45.4,45.54">يكفيك <span class="acc">الآيباد</span> أو الجوال</span></div>
+    </section>
+
+    <!-- ===== S18 (46.02s) ===== -->
+    <section class="scene" id="s18" data-start="46.02">
+      <div class="icon " style="top:300px;width:200px;height:200px;margin-left:-100px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round"><g data-rise="46.02"><path d="M100 186 Q40 116 40 80 A60 60 0 1 1 160 80 Q160 116 100 186 Z" fill="#b5dc55" stroke="var(--teal)" stroke-width="7"/>
+        <circle cx="100" cy="80" r="22" fill="#fff" stroke="var(--teal)" stroke-width="6"/></g></svg></div>
+      <div class="c" style="top:530px;font-size:76px;font-weight:600;" data-in="45.97" data-fx="up"><span class="line kline " data-t="46.06,46.54,47.18">الدورة ستكون <span class="acc">حضوريّة</span></span></div>
+      <div class="pillrow" style="top:690px;font-size:110px" data-in="47.37" data-fx="pill"><span class="pill "><span class="kline" data-t="47.52,47.86">سجّل اهتمامك</span></span></div>
+      <div class="icon " style="top:810px;width:200px;height:200px;margin-left:-100px"><svg viewBox="0 0 200 200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle data-ring="48.02" cx="70" cy="60" r="40" stroke="#b5dc55" stroke-width="6"/>
+        <g data-pop="47.720000000000006"><path d="M70 60 V150 Q70 172 92 176 H130 Q152 172 156 150 V110 Q156 98 144 98 Q132 98 132 110 V104 Q132 92 120 92 Q108 92 108 104 V100 Q108 88 96 88 Q86 88 86 98 V60 Q86 46 78 46 Q70 46 70 60 Z" fill="#fff" stroke="var(--ink)" stroke-width="6"/></g></svg></div>
+      <div class="c" style="top:1050px;font-size:68px;font-weight:500;" data-in="48.22" data-fx="up"><span class="line kline " data-t="48.36,48.42,48.46">من الرابط في البايو</span></div>
+      <div class="c" style="top:1150px;font-size:68px;font-weight:500;" data-in="48.82" data-fx="up"><span class="line kline " data-t="48.94,49.32,49.96">لتصلك التفاصيل <span class="acc">قريبًا</span></span></div>
+      <svg id="send" viewBox="0 0 48 48" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"><path d="M43 5 L5 19 L21 27 L29 43 Z"/><path d="M43 5 L21 27"/></svg>
+    </section>
+
+
+    <div id="tide"></div>
+    <div id="handle">@abdulla_7amdan</div>
+    <div id="safe" style="position:absolute;inset:0">
+      <div style="left:0;right:0;top:0;height:220px"></div>
+      <div style="left:0;right:0;bottom:0;height:380px"></div>
+      <div style="right:0;width:140px;top:1040px;bottom:380px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="play">▶ تشغيل</button>
+  <input type="range" id="scrub" min="0" max="40" step="0.01" value="0">
+  <span id="time"></span>
+  <button id="soundBtn" title="تشغيل مع الصوت">🔊</button>
+  <button id="safeBtn">Safe zone</button>
+</div>
+<audio id="voice" src="audio/voice-clean.m4a" preload="auto"></audio>
+
+<script src="gsap.min.js"></script>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  const END = 52.91;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const lines = $$('.kline').map(el => {
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(p => {
+          if (!p) return;
+          if (/^\s+$/.test(p)) return frag.appendChild(document.createTextNode(p));
+          const s = document.createElement('span'); s.className = 'k'; s.textContent = p; frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+    walk(el);
+    return { el, ws: $$('.k', el), times: el.dataset.t.split(',').map(Number) };
+  });
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const scenes = $$('.scene'), starts = scenes.map(s => +s.dataset.start);
+  scenes.forEach((s, i) => gsap.set(s, { '--p': i === 0 ? '130%' : '0%' }));
+  gsap.set(scenes[0], { className: 'scene live' });
+
+  const wordIn = (w, at) => tl.fromTo(w, { y: 56, opacity: 0, filter: 'blur(12px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6 }, at);
+  const bigIn  = (w, at) => tl.fromTo(w, { y: 80, opacity: 0, scale: 0.86, filter: 'blur(26px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' }, at);
+  const FX = {
+    card: (el, at) => tl.fromTo(el, { y: 150, opacity: 0, rotation: -1.2 }, { y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, at),
+    pill: (el, at) => tl.fromTo(el.firstElementChild, { y: 40, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.8)' }, at),
+    chip: (el, at) => tl.fromTo(el.firstElementChild, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, at),
+  };
+
+  /* «مدّ ضوئي» — continuous: the light descends as the next idea's first word is spoken */
+  const TIDE = 0.95;
+  const tide = (prev, next, a) => {
+    const t0 = a - 0.18;
+    tl.set(prev, { className: 'scene out', '--p': '0%' }, t0)
+      .set(next, { className: 'scene', '--p': '0%' }, t0)
+      .to([prev, next], { '--p': '130%', duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to($$(':scope > *', prev), { y: 40, filter: 'blur(8px)', duration: TIDE, ease: 'power2.in' }, t0)
+      .fromTo('#tide', { y: -520, opacity: 0 }, { y: 1920, duration: TIDE, ease: 'power2.inOut' }, t0)
+      .to('#tide', { opacity: 1, duration: TIDE * 0.35, ease: 'sine.out' }, t0)
+      .to('#tide', { opacity: 0, duration: TIDE * 0.4, ease: 'sine.in' }, t0 + TIDE * 0.6)
+      .set(next, { className: 'scene live' }, t0 + TIDE)
+      .set(prev, { autoAlpha: 0 }, t0 + TIDE);
+  };
+
+  tl.fromTo('#glow-a', { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0)
+    .fromTo('#glow-b', { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0.1)
+    .to('#glow-a', { x: -70, y: 60, duration: END, ease: 'sine.inOut' }, 0)
+    .to('#glow-b', { x: 70, y: -50, duration: END, ease: 'sine.inOut' }, 0)
+    .fromTo('#handle', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 0.5)
+    .fromTo('#dot', { scale: 0 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' }, 0.1)
+    .fromTo('#dot b', { scale: 1, opacity: 1 }, { scale: 2.4, opacity: 0, duration: 1.4, ease: 'sine.out', repeat: Math.floor(END / 1.4) - 1 }, 0.7);
+
+  scenes.forEach((S, i) => {
+    const a = starts[i];
+    if (i > 0) tide(scenes[i - 1], S, a);
+    $$('[data-in]', S).forEach(el => { if (FX[el.dataset.fx]) FX[el.dataset.fx](el, +el.dataset.in); });
+    $$('[data-mark]', S).forEach(m => tl.to(m, { backgroundSize: '100% 38%', duration: 0.5, ease: 'power2.inOut' }, +m.dataset.mark));
+    const ic = $('.icon', S);
+    if (ic) tl.fromTo(ic, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5 }, a - 0.12);
+    if (i === scenes.length - 1) tl.to($$(':scope > *', S), { scale: 1.025, duration: END - a - 0.6, ease: 'sine.inOut', transformOrigin: '50% 40%' }, a + 0.5);
+  });
+
+  /* ---- icon motion ---- */
+  $$('svg path.draw, svg circle.draw').forEach(p => { const L = p.getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
+  $$('svg [data-draw]').forEach(p => tl.to(p, { strokeDashoffset: 0, duration: p.closest('.fast') ? 0.6 : 0.7, ease: 'power2.inOut' }, +p.dataset.draw));
+  $$('svg [data-pop]').forEach(g => tl.fromTo(g, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(2.4)' }, +g.dataset.pop));
+  $$('svg [data-rise]').forEach(g => tl.fromTo(g, { y: 46, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' }, +g.dataset.rise)
+      .to(g, { y: -4, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1 }, +g.dataset.rise + 1.1));
+  $$('svg [data-wave]').forEach(g => [...g.children].forEach((w, k) =>
+      tl.fromTo(w, { opacity: 0.35, scaleY: 0.35, transformOrigin: '50% 100%' }, { opacity: 1, scaleY: 1, duration: 0.28, ease: 'sine.inOut', yoyo: true, repeat: 9 }, +g.dataset.wave + k * 0.09)));
+  $$('svg [data-fill]').forEach(p => tl.to(p, { attr: { 'fill-opacity': 0.9 }, duration: 0.7, ease: 'power2.out' }, +p.dataset.fill));
+  $$('.icon').forEach(ic => { const r = ic.querySelector('[data-beat]'); if (r) {      // heartbeat once the heart is full
+      const t = +r.dataset.beat;
+      [0, 0.55].forEach(d => tl.to(ic, { keyframes: { scale: [1, 1.08, 1, 1.04, 1] }, duration: 0.45, ease: 'none' }, t + d)); } });
+  if (document.getElementById('send'))                   // share icon flies in at the end
+    tl.fromTo('#send', { x: -140, y: 140, opacity: 0, rotation: -25 }, { x: 0, y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: 'expo.out' }, 50.45)
+      .to('#send', { x: 10, y: -10, duration: 0.45, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 50.45 + 0.9);
+
+  $$('svg [data-shoot]').forEach(g => tl.fromTo(g, { x: 110, y: -110, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.4, ease: 'power4.in' }, +g.dataset.shoot)
+      .to(g.closest('.icon'), { keyframes: { x: [0, -10, 6, 0] }, duration: 0.35, ease: 'none' }, +g.dataset.shoot + 0.4));
+  $$('svg [data-tilt]').forEach(g => { const [t, lv] = g.dataset.tilt.split(',').map(Number);
+      gsap.set(g, { svgOrigin: '100 62' });
+      tl.fromTo(g, { rotation: -16 }, { rotation: 12, duration: 1.0, ease: 'sine.inOut' }, t)
+        .to(g, { rotation: -8, duration: 0.9, ease: 'sine.inOut' }, t + 1.0)
+        .to(g, { rotation: 5, duration: 0.8, ease: 'sine.inOut' }, t + 1.9)
+        .to(g, { rotation: 0, duration: 0.7, ease: 'back.out(2)' }, lv); });
+  $$('svg [data-drip]').forEach(g => [...g.children].forEach((w, k) =>
+      tl.fromTo(w, { y: 0, opacity: 0 }, { keyframes: { y: [0, 40, 90], opacity: [0, 1, 0] }, duration: 0.7, ease: 'power1.in', repeat: 2, repeatDelay: 0.2 }, +g.dataset.drip + k * 0.3)));
+  $$('svg [data-swing]').forEach(g => { gsap.set(g, { svgOrigin: '100 104' });
+      tl.to(g, { keyframes: { rotation: [0, -14, 10, -6, 3, 0] }, duration: 1.2, ease: 'none' }, +g.dataset.swing); });
+  $$('[data-strike]').forEach(s => tl.to(s, { scaleX: 1, duration: 0.45, ease: 'power2.inOut' }, +s.dataset.strike)
+      .to(s.closest('.pillrow'), { opacity: 0.45, duration: 0.4 }, +s.dataset.strike + 0.3));
+
+  $$('svg [data-grow]').forEach(r => { const [t, du] = r.dataset.grow.split(',').map(Number);
+      tl.fromTo(r, { scaleX: 0, transformOrigin: '100% 50%' }, { scaleX: 1, duration: du, ease: 'none' }, t); });
+  $$('svg [data-slide]').forEach(g => { const [a1, a2, dx] = g.dataset.slide.split(',').map(Number);
+      tl.to(g, { x: dx, duration: 0.5, ease: 'power3.inOut' }, a1).to(g, { x: 2 * dx, duration: 0.5, ease: 'power3.inOut' }, a2); });
+  $$('svg [data-rot]').forEach(g => { const [t, from, ox, oy] = g.dataset.rot.split(',').map(Number);
+      gsap.set(g, { svgOrigin: ox + ' ' + oy, rotation: from });
+      tl.to(g, { rotation: 0, duration: 0.22, ease: 'power4.in' }, t).to(g.closest('.icon'), { keyframes: { y: [0, 8, 0] }, duration: 0.25 }, t + 0.22); });
+  $$('svg [data-out]').forEach(g => tl.to(g, { opacity: 0, y: 10, duration: 0.35 }, +g.dataset.out));
+  $$('svg [data-ring]').forEach(r => [0, 0.7, 1.4].forEach(dl =>
+      tl.fromTo(r, { scale: 0.3, opacity: 1, transformOrigin: '50% 50%' }, { scale: 1.8, opacity: 0, duration: 0.7, ease: 'sine.out', immediateRender: false }, +r.dataset.ring + dl)));
+  $$('.track b[data-grow]').forEach(r => { const [t, du] = r.dataset.grow.split(',').map(Number);
+      tl.fromTo(r, { scaleX: 0 }, { scaleX: 1, duration: du, ease: 'power2.out' }, t); });
+  $$('svg [data-sx]').forEach(g => { const [t, to, ox, oy] = g.dataset.sx.split(',').map(Number);
+      gsap.set(g, { svgOrigin: ox + ' ' + oy }); tl.to(g, { scaleX: to, duration: 0.6, ease: 'power3.inOut' }, t); });
+  $$('svg [data-fly]').forEach(g => tl.fromTo(g, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.6)' }, +g.dataset.fly - 0.9)
+      .to(g, { y: -70, duration: 1.2, ease: 'power2.in' }, +g.dataset.fly).to(g, { y: -50, duration: 0.6, ease: 'sine.out' }, +g.dataset.fly + 1.2));
+  $$('svg [data-slidein]').forEach(g => tl.fromTo(g, { x: 60, opacity: 0 }, { x: 40, opacity: 1, duration: 0.4 }, +g.dataset.slidein - 0.8)
+      .to(g, { x: 0, duration: 0.35, ease: 'back.out(3)' }, +g.dataset.slidein));
+  $$('svg [data-spin]').forEach(g => { const [t, du, deg] = g.dataset.spin.split(',').map(Number);
+      gsap.set(g, { svgOrigin: '100 100' }); tl.to(g, { rotation: deg, duration: du, ease: 'none' }, t); });
+  $$('svg [data-move]').forEach(g => { const v = g.dataset.move.split(',').map(Number), [t, du, dx, dy] = v;
+      const kx = v.length > 4 ? [0, v[4], dx] : [0, dx], ky = v.length > 4 ? [0, v[5], dy] : [0, dy];
+      tl.fromTo(g, { x: 0, y: 0 }, { keyframes: { x: kx, y: ky }, duration: du, ease: 'sine.inOut' }, t); });
+  $$('.ri[data-pop]').forEach(g => tl.fromTo(g, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.4)' }, +g.dataset.pop));
+
+  /* recap: the four blessings gather, then glow together on «فضلٌ ورحمة» */
+  $$('.mini').forEach((m, k) => {
+    const t = +m.dataset.mini;
+    tl.fromTo(m, { y: 120, opacity: 0, scale: 0.6, rotation: (k - 1.5) * 8 }, { y: 0, opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.7)' }, t)
+      .to(m, { boxShadow: '0 0 0 6px rgba(181,220,85,.9), 0 24px 60px rgba(181,220,85,.45)', duration: 0.5, ease: 'power2.out' }, 15.05 + k * 0.12)
+      .to(m, { y: -10, duration: 0.6, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 15.05 + k * 0.12);
+  });
+
+  /* words appear when they are spoken */
+  lines.forEach(L => {
+    const big = L.el.closest('[data-fx="big"]');
+    L.ws.forEach((w, i) => {
+      const t = L.times[Math.min(i, L.times.length - 1)] + Math.max(0, i - L.times.length + 1) * 0.12;
+      big ? bigIn(w, t - 0.12) : wordIn(w, t - 0.06);
+    });
+  });
+
+  tl.eventCallback('onUpdate', sync);
+  tl.to({}, { duration: 0.001 }, END - 0.001);
+
+  const stage = $('#stage'), vp = $('#viewport'), voice = $('#voice');
+  const fit = () => { stage.style.transform = `translate(-50%, -50%) scale(${Math.min(vp.clientWidth / 1080, vp.clientHeight / 1920)})`; };
+  if (params.has('render')) document.body.classList.add('render'); else { addEventListener('resize', fit); fit(); }
+  window.__duration = END;
+  window.__scenes = Object.fromEntries(starts.map((s, i) => ['s' + (i + 1), s]).concat([['end', END]]));
+  window.__seek = t => { tl.seek(t, false); };
+  /* keep a wide margin on both sides: shrink any line or pill wider than the safe column */
+  const MAXW = 1080 - 2 * 120;
+  const fitW = () => {
+    $$('.c').forEach(el => {
+      const r = el.style.right, w0 = el.style.width;
+      el.style.right = 'auto'; el.style.width = 'max-content';
+      const w = el.offsetWidth; el.style.right = r; el.style.width = w0;
+      if (w > MAXW) el.style.fontSize = (parseFloat(el.style.fontSize) * MAXW / w).toFixed(1) + 'px';
+    });
+    $$('.pillrow').forEach(el => { const w = el.firstElementChild.offsetWidth;
+      if (w > MAXW) el.style.fontSize = (parseFloat(el.style.fontSize) * MAXW / w).toFixed(1) + 'px'; });
+  };
+  window.__ready = document.fonts.ready.then(() => { fitW(); return true; });
+
+  const playBtn = $('#play'), scrub = $('#scrub'), time = $('#time');
+  let withSound = false;
+  scrub.max = END;
+  function sync() { scrub.value = tl.time(); time.textContent = `${tl.time().toFixed(2)} / ${END.toFixed(1)}`; }
+  sync();
+  tl.eventCallback('onComplete', () => { playBtn.textContent = '↺ إعادة'; voice.pause(); });
+  const play = () => { if (withSound) { voice.currentTime = tl.time(); voice.play().catch(() => {}); } tl.play(); };
+  const pause = () => { tl.pause(); voice.pause(); };
+  playBtn.onclick = () => {
+    if (tl.progress() >= 1) { tl.seek(0); play(); } else if (tl.paused()) play(); else pause();
+    playBtn.textContent = tl.paused() ? '▶ تشغيل' : '❚❚ إيقاف';
+  };
+  $('#soundBtn').onclick = () => { withSound = !withSound; $('#soundBtn').style.opacity = withSound ? 1 : .5; if (!tl.paused()) { voice.currentTime = tl.time(); withSound ? voice.play() : voice.pause(); } };
+  $('#soundBtn').style.opacity = .5;
+  scrub.oninput = () => { pause(); tl.seek(+scrub.value); playBtn.textContent = '▶ تشغيل'; sync(); };
+  $('#safeBtn').onclick = () => $('#safe').classList.toggle('on');
+  addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+  if (params.has('t')) tl.seek(+params.get('t'));
+  else if (!params.has('render')) window.__ready.then(() => { tl.play(); playBtn.textContent = '❚❚ إيقاف'; });
+})();
+</script>
+</body>
+</html>
